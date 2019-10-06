@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using SimpleJSON;
 using System.IO;
+using TMPro;
 using UnityEngine.UI;
-using Microsoft.CSharp;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -14,27 +14,37 @@ public class DialogueManager : MonoBehaviour
 
     private int dialogueIdx = 0;
     private int lineIdx = 0;
-    private JSONNode currScene;
-    private Text nameTxt;
-    private Text dialogueTxt;
+    private JSONNode currScene = null;
+    private Canvas canvas;
+    private Image image;
+    private TextMeshProUGUI nameTxt;
+    private TextMeshProUGUI dialogueTxt;
+
+    private float dialogueStartTime = 0;
+    private bool isRenderingText = false;
+    private float textSpeed = 1f;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        this.SetFile("goblin_encounter_1");
-        this.SetScene("scene1");
-        this.nameTxt = GameObject.Find("DialogueName").GetComponentInChildren<Text>();
-        this.dialogueTxt = GameObject.Find("DialogueText").GetComponentInChildren<Text>();
-        this.Display();
+        this.canvas = GameObject.Find("DialogueCanvas").GetComponentInChildren<Canvas>();
+        this.image = GameObject.Find("BgImage").GetComponentInChildren<Image>();
+        this.nameTxt = GameObject.Find("DialogueName").GetComponentInChildren<TextMeshProUGUI>();
+        this.dialogueTxt = GameObject.Find("DialogueText").GetComponentInChildren<TextMeshProUGUI>();
+
+        this.canvas.enabled = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))
+        if (this.currScene != null)
         {
-            this.Step();
+            if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))
+            {
+                this.Step();
+            }
             this.Display();
         }
     }
@@ -42,6 +52,7 @@ public class DialogueManager : MonoBehaviour
     public void SetFile(string filename) {
         // invalidate the current scene
         this.currScene = null;
+        this.isRenderingText = false;
         
         // load json from file
         string path = "Assets/Text/" + filename + ".json";
@@ -54,7 +65,9 @@ public class DialogueManager : MonoBehaviour
         // invalidate scene indexes
         this.dialogueIdx = 0;
         this.lineIdx = 0;
+        this.isRenderingText = false;
         this.endOfScene = false;
+        this.canvas.enabled = true;
 
         // set the scene
         this.currScene = this.json[scene];
@@ -66,23 +79,32 @@ public class DialogueManager : MonoBehaviour
     }
     public void Display()
     {
-        if (!this.endOfScene)
+        if (!this.endOfScene && this.isRenderingText == true)
         {
             if (this.lineIdx == 0)
             {
                 this.nameTxt.text = GetCurrentSpeaker();
             }
-            this.dialogueTxt.text = this.currScene["dialogue"][this.dialogueIdx]["lines"][this.lineIdx];
-        }
-        else
-        {
-            Debug.Log("The scene is done");
+            string fullText = this.currScene["dialogue"][this.dialogueIdx]["lines"][this.lineIdx];
+
+            float deltaTime = Time.realtimeSinceStartup - this.dialogueStartTime;
+            int length = Mathf.Min(fullText.Length, Mathf.RoundToInt(fullText.Length * deltaTime * this.textSpeed));
+
+            this.dialogueTxt.text = fullText.Substring(0, length);
+            
+            if (length == fullText.Length)
+            {
+                this.isRenderingText = false;
+            }
         }
     }
     public void Step()
     {
-        if (!this.endOfScene)
+        if (!this.endOfScene && !this.isRenderingText)
         {
+            this.dialogueStartTime = Time.realtimeSinceStartup;
+            this.isRenderingText = true;
+
             bool endOfLines = this.currScene["dialogue"][this.dialogueIdx]["lines"].AsArray.Count <= this.lineIdx + 1;
             if (endOfLines)
             {
@@ -91,6 +113,7 @@ public class DialogueManager : MonoBehaviour
                 if (endOfDialogue)
                 {
                     this.lineIdx = 0;
+                    this.EndScene();
                     this.endOfScene = true;
                 }
                 else
@@ -103,5 +126,15 @@ public class DialogueManager : MonoBehaviour
                 this.lineIdx++;
             }
         }
+        else if (this.isRenderingText)
+        {
+            this.dialogueStartTime = 0;
+        }
+    }
+
+    public void EndScene()
+    {
+        this.canvas.enabled = false;
+        this.endOfScene = true;
     }
 }
