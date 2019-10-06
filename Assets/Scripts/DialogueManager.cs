@@ -32,7 +32,6 @@ public class DialogueManager : MonoBehaviour
         this.image = GameObject.Find("BgImage").GetComponentInChildren<Image>();
         this.nameTxt = GameObject.Find("DialogueName").GetComponentInChildren<TextMeshProUGUI>();
         this.dialogueTxt = GameObject.Find("DialogueText").GetComponentInChildren<TextMeshProUGUI>();
-
         this.canvas.enabled = false;
     }
 
@@ -61,16 +60,21 @@ public class DialogueManager : MonoBehaviour
         reader.Close();
     }
 
-    public void SetScene(string scene) {
+    public void StartScene(string scene) {
         // invalidate scene indexes
         this.dialogueIdx = 0;
         this.lineIdx = 0;
         this.isRenderingText = false;
         this.endOfScene = false;
-        this.canvas.enabled = true;
+
+        // freeze time
+        Time.timeScale = 0.0f;
 
         // set the scene
         this.currScene = this.json[scene];
+        this.dialogueStartTime = Time.realtimeSinceStartup;
+        this.isRenderingText = true;
+        this.canvas.enabled = true;
     }
 
     public string GetCurrentSpeaker()
@@ -135,6 +139,7 @@ public class DialogueManager : MonoBehaviour
     public void EndScene()
     {
         this.canvas.enabled = false;
+        Time.timeScale = 1.0f;
         this.endOfScene = true;
     }
 }

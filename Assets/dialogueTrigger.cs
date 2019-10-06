@@ -10,8 +10,7 @@ public class dialogueTrigger : MonoBehaviour, IPointerDownHandler
         DialogueManager dm = GameObject.Find("DialogueManager").GetComponent<DialogueManager>();
 
         dm.SetFile("goblin_encounter_1");
-        dm.SetScene("scene1");
-        dm.Step();
+        dm.StartScene("scene1");
     }
 
     // Start is called before the first frame update
