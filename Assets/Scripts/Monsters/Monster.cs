@@ -10,8 +10,8 @@ public class Monster : MonoBehaviour {
     private readonly static float FIGHT_TIME = 2f;
     private readonly static float POST_FIGHT_TIME = 3f;
     private readonly static float DYING_TIME = 2f;
-    private readonly static float DEVOUR_TIME = 2f;
-    private readonly static float DIGEST_TIME = 2f;
+    private readonly static float DEVOUR_TIME = 1f;
+    private readonly static float DIGEST_TIME = 4f;
     private readonly static float GOO_TIME = 5f;
     private float stateTimer;
     private Vector2 velocity;
@@ -103,7 +103,7 @@ public class Monster : MonoBehaviour {
             }
             // Transitions.
             foreach (Monster monster in FindObjectsOfType<Monster>()) {
-                if (monster == this || this.state != State.WANDER || monster.state != State.WANDER) {
+                if (monster == this || this.state != State.WANDER || monster.state != State.WANDER || monster.item.state != Item.State.ON_GROUND) {
                     continue;
                 }
                 Vector2 monsterDisplacement = monster.transform.position - this.transform.position;
@@ -125,7 +125,7 @@ public class Monster : MonoBehaviour {
                             this.target = monster;
                         }
                         if (monsterChoice == State.FLEE) {
-                            monsterChoice = State.FLEE;
+                            monster.state = State.FLEE;
                             monster.target = this;
                         }
                         if (choice == State.THREATEN) {
@@ -154,10 +154,14 @@ public class Monster : MonoBehaviour {
                         if (choice == State.LURE) {
                             this.state = State.LURE;
                             monster.state = State.MESMERIZED;
+                            this.target = monster;
+                            monster.target = this;
                         }
                         if (monsterChoice == State.LURE) {
                             this.state = State.MESMERIZED;
                             monster.state = State.LURE;
+                            this.target = monster;
+                            monster.target = this;
                         }
                     }
                 }
@@ -270,9 +274,8 @@ public class Monster : MonoBehaviour {
         }
         else if (this.state == State.LURE) {
             Monster monster = this.target;
-            Collider2D collider = this.GetComponentInChildren<Collider2D>();
-            Collider2D monsterCollider = monster.GetComponentInChildren<Collider2D>();
-            if (collider.IsTouching(monsterCollider)) {
+            float distance = (monster.transform.position - this.transform.position).magnitude;
+            if (distance < 0.5f) {
                 this.state = State.DEVOURING;
                 monster.state = State.BEING_DEVOURED;
                 this.stateTimer = Monster.DEVOUR_TIME;
@@ -323,7 +326,8 @@ public class Monster : MonoBehaviour {
                     monster.state = State.GOOED;
                     monster.stateTimer = Monster.GOO_TIME;
                     monster.Extinguish();
-                    monster.velocity = 2f * Random.insideUnitCircle;
+                    float angle = 2f * Mathf.PI * Random.value;
+                    monster.velocity = Random.Range(1f, 2f) * new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
                 }
             }
         }
@@ -407,9 +411,11 @@ public class Monster : MonoBehaviour {
     }
 
     public void Extinguish() {
-        this.enflamed = false;
-        Destroy(this.fire.gameObject);
-        this.fire = null;
+        if (this.enflamed) {
+            this.enflamed = false;
+            Destroy(this.fire.gameObject);
+            this.fire = null;
+        }
     }
 
     public bool IsFiery() {
