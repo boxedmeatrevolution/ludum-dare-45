@@ -28,6 +28,7 @@ public class Monster : MonoBehaviour
     protected Vector2 deadVel;
     protected Item item;
     protected bool isThreatened;
+    protected FightCloud fightCloud;
     public bool canPickUp = true;
     public float encounterTime = 1f;
     public float averageWaitTime = 4f;
@@ -49,6 +50,7 @@ public class Monster : MonoBehaviour
         this.state = State.WANDER;
         this.isThreatened = false;
         this.item = GetComponent<Item>();
+        this.fightCloud = null;
         this.ChooseWaypoint();
     }
 
@@ -168,7 +170,17 @@ public class Monster : MonoBehaviour
             Monster monster = this.fightTarget;
             this.transform.position = monster.transform.position;
             this.fightTimer -= Time.deltaTime;
+            if (this.fightCloud == null) {
+                GameObject fightCloudObj = Instantiate(PrefabManager.FIGHT_CLOUD_PREFAB, this.transform.position, Quaternion.identity);
+                this.fightCloud = fightCloudObj.GetComponent<FightCloud>();
+                monster.fightCloud = this.fightCloud;
+                this.fightCloud.fighter1 = this;
+                this.fightCloud.fighter2 = monster;
+            }
             if (this.fightTimer < 0f && monster.fightTimer < 0f) {
+                this.fightCloud.FightOver();
+                this.fightCloud = null;
+                monster.fightCloud = null;
                 if (!this.SurviveFight(monster)) {
                     this.state = State.DEAD;
                     this.deadVel = new Vector2(
