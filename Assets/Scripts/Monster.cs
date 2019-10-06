@@ -5,28 +5,32 @@ using UnityEngine;
 public class Monster : MonoBehaviour
 {
     protected enum State {
-        Wander,
-        Encounter,
-        Threaten,
-        PreFight,
-        Fight,
-        PostFight,
-        Panic,
-        Dead
+        HELD,
+        WANDER,
+        THREATEN,
+        PRE_FIGHT,
+        FIGHT,
+        POST_FIGHT,
+        PANIC,
+        DEAD
     }
     private Pen pen;
     private Vector2 waypoint;
     protected State state;
     protected Monster fightTarget;
     protected float fightTimer;
+    protected float avoidTimer;
     protected Monster panicTarget;
     protected Vector2 panicVel;
     protected Monster threatenTarget;
     protected float threatenTimer;
     protected Vector2 fightVel;
+    protected Item item;
+    public bool canPickUp = true;
     public float encounterTime = 1f;
     public float averageWaitTime = 4f;
     public float speed = 0.35f;
+    public float avoidTime = 10f;
     public float panicSpeed = 0.8f;
     public float panicAccel = 2f;
     public float fightSpeed = 2f;
@@ -40,19 +44,26 @@ public class Monster : MonoBehaviour
     protected virtual void Start()
     {
         this.pen = FindObjectOfType<Pen>();
-        this.state = State.Wander;
+        this.state = State.WANDER;
+        this.item = GetComponent<Item>();
         this.ChooseWaypoint();
     }
 
     // Update is called once per frame
     protected virtual void Update()
     {
-        if (this.state == State.Wander) {
+        if (this.state == State.HELD) {
+            if (this.item.state == Item.State.ON_GROUND) {
+                this.state = State.WANDER;
+            }
+        }
+        if (this.state == State.WANDER) {
             Vector2 displacement = this.waypoint - (Vector2)this.transform.position;
             if (displacement.magnitude > 0.01) {
                 Vector2 direction = displacement.normalized;
                 Vector2 proposedMove = (Vector3)direction * speed * Time.deltaTime;
                 if (this.panicTarget != null) {
+                    this.avoidTimer -= Time.deltaTime;
                     Monster monster = this.panicTarget;
                     Vector2 panic_displacement = this.transform.position - monster.transform.position;
                     if (panic_displacement.magnitude != 0 && panic_displacement.magnitude < this.panicRadius) {
@@ -66,6 +77,9 @@ public class Monster : MonoBehaviour
                     }
                 }
                 this.transform.position += (Vector3)proposedMove;
+                if (this.avoidTimer < 0f) {
+                    this.panicTarget = null;
+                }
             } else if (Random.value > (1 - (Time.deltaTime / this.averageWaitTime))) {
                 this.ChooseWaypoint();
             }
@@ -74,30 +88,30 @@ public class Monster : MonoBehaviour
                 if (monster == this) {
                     continue;
                 }
-                if (monster.state == State.Wander) {
+                if (monster.state == State.WANDER) {
                     Vector2 monster_displacement = monster.transform.position - this.transform.position;
                     if (monster_displacement.magnitude < this.aggressionRadius) {
                         this.state = this.ChooseThreatenOffensive(monster);
                         monster.state = monster.ChooseThreatenOffensive(this);
-                        if (monster.state == State.Threaten && this.state == State.Wander) {
+                        if (monster.state == State.THREATEN && this.state == State.WANDER) {
                             this.state = this.ChooseThreatenDefensive(monster);
                         }
-                        if (this.state == State.Threaten && monster.state == State.Wander) {
+                        if (this.state == State.THREATEN && monster.state == State.WANDER) {
                             monster.state = monster.ChooseThreatenDefensive(this);
                         }
-                        if (this.state == State.Threaten) {
+                        if (this.state == State.THREATEN) {
                             this.threatenTarget = monster;
                             this.threatenTimer = this.threatenTime;
                         }
-                        if (monster.state == State.Threaten) {
+                        if (monster.state == State.THREATEN) {
                             monster.threatenTarget = this;
                             monster.threatenTimer = monster.threatenTime;
                         }
-                        if (this.state == State.Panic) {
+                        if (this.state == State.PANIC) {
                             this.panicTarget = monster;
                             this.panicVel = new Vector2();
                         }
-                        if (monster.state == State.Panic) {
+                        if (monster.state == State.PANIC) {
                             monster.panicTarget = this;
                             monster.panicVel = new Vector2();
                         }
@@ -105,24 +119,24 @@ public class Monster : MonoBehaviour
                 }
             }
         }
-        if (this.state == State.Threaten) {
+        if (this.state == State.THREATEN) {
             this.threatenTimer -= Time.deltaTime;
             if (this.threatenTimer < 0f) {
                 Monster monster = this.threatenTarget;
                 float distance = (monster.transform.position - this.transform.position).magnitude;
-                if (this.threatenTarget.state == State.Threaten && this.threatenTarget.threatenTarget == this) {
+                if (this.threatenTarget.state == State.THREATEN && this.threatenTarget.threatenTarget == this) {
                     this.fightTarget = monster;
-                    this.state = State.PreFight;
+                    this.state = State.PRE_FIGHT;
                     this.fightVel = new Vector2();
                     monster.fightTarget = this;
-                    monster.state = State.PreFight;
+                    monster.state = State.PRE_FIGHT;
                     monster.fightVel = new Vector2();
                 } else if (distance > this.panicRadius && distance > monster.panicRadius) {
-                    this.state = State.Wander;
+                    this.state = State.WANDER;
                 }
             }
         }
-        if (this.state == State.PreFight) {
+        if (this.state == State.PRE_FIGHT) {
             // Charge at one another.
             Monster monster = this.threatenTarget;
             Vector2 displacement = monster.transform.position - this.transform.position;
@@ -133,59 +147,60 @@ public class Monster : MonoBehaviour
                 }
                 this.transform.position += (Vector3)this.fightVel * Time.deltaTime;
             } else {
-                this.state = State.Fight;
+                this.state = State.FIGHT;
                 this.fightTimer = this.fightTime;
-                monster.state = State.Fight;
+                monster.state = State.FIGHT;
                 monster.fightTimer = monster.fightTime;
             }
         }
-        if (this.state == State.Fight) {
+        if (this.state == State.FIGHT) {
             Monster monster = this.fightTarget;
             this.transform.position = monster.transform.position;
             this.fightTimer -= Time.deltaTime;
             if (this.fightTimer < 0f && monster.fightTimer < 0f) {
                 if (!this.SurviveFight(monster)) {
-                    this.state = State.Dead;
+                    this.state = State.DEAD;
                     monster.fightTarget = null;
                 } else {
-                    this.state = State.PostFight;
+                    this.state = State.POST_FIGHT;
                     this.transform.position += new Vector3(
                         Random.Range(-0.1f, 0.1f),
                         Random.Range(-0.1f, 0.1f));
                 }
                 if (!monster.SurviveFight(this)) {
-                    monster.state = State.Dead;
+                    monster.state = State.DEAD;
                     this.fightTarget = null;
                 } else {
-                    monster.state = State.PostFight;
+                    monster.state = State.POST_FIGHT;
                     monster.transform.position += new Vector3(
                         Random.Range(-0.1f, 0.1f),
                         Random.Range(-0.1f, 0.1f));
                 }
             }
         }
-        if (this.state == State.PostFight) {
+        if (this.state == State.POST_FIGHT) {
             Monster monster = this.fightTarget;
             if (monster == null) {
-                this.state = State.Wander;
+                this.state = State.WANDER;
             } else {
                 Vector2 displacement = monster.transform.position - this.transform.position;
                 if (displacement.magnitude != 0f) {
                     this.transform.position -= (Vector3)displacement / displacement.magnitude * this.speed * Time.deltaTime;
                 }
                 if (displacement.magnitude > this.panicRadius && displacement.magnitude > monster.panicRadius) {
-                    this.state = State.Wander;
-                    monster.state = State.Wander;
+                    this.state = State.WANDER;
+                    monster.state = State.WANDER;
                 }
             }
         }
-        if (this.state == State.Panic) {
+        if (this.state == State.PANIC) {
             // Charge away from one another.
             Monster monster = this.panicTarget;
             Vector2 displacement = monster.transform.position - this.transform.position;
             if (displacement.magnitude > this.panicRadius && displacement.magnitude > monster.panicRadius) {
                 if (this.panicVel.magnitude < this.speed) {
-                    this.state = State.Wander;
+                    this.state = State.WANDER;
+                    this.avoidTimer = this.avoidTime;
                 }
                 else {
                     this.panicVel -= this.panicAccel * this.panicVel.normalized * Time.deltaTime;
@@ -197,28 +212,21 @@ public class Monster : MonoBehaviour
                 }
             }
             this.transform.position += (Vector3)this.panicVel * Time.deltaTime;
-            /*
-            // OLD
-            Monster monster = this.panicTarget;
-            Vector2 displacement = monster.transform.position - this.transform.position;
-            if (displacement.magnitude != 0f) {
-                this.transform.position -= (Vector3)displacement / displacement.magnitude * this.panicSpeed * Time.deltaTime;
-            }
-            if (displacement.magnitude > this.panicRadius && displacement.magnitude > monster.panicRadius) {
-                this.state = State.Wander;
-                monster.state = State.Wander;
-            }*/
         }
+    }
+
+    public bool CanPickup() {
+        return this.canPickUp && (this.state == State.WANDER || this.state == State.DEAD);
     }
 
     // Choose whether to threaten, panic, or just keep wandering when another monster wanders into range.
     protected virtual State ChooseThreatenOffensive(Monster other) {
-        return State.Wander;
+        return State.WANDER;
     }
 
     // Choose whether to threaten, panic, or just keep wandering when another monster threatens.
     protected virtual State ChooseThreatenDefensive(Monster other) {
-        return State.Panic;
+        return State.PANIC;
     }
     
     // Choose whether you survive the fight with the other monster.

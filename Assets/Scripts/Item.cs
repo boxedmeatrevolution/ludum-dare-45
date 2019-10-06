@@ -11,9 +11,9 @@ public class Item : MonoBehaviour
     private float pickupAccel = 5.0f;
     private float pickupVelZ;
     private float pickupZ;
-    private State state;
+    public State state;
 
-    private enum State {
+    public enum State {
         ON_GROUND,
         BEING_LIFTED,
         PICKED_UP,
@@ -77,9 +77,15 @@ public class Item : MonoBehaviour
         this.sprite.transform.localPosition = newSpritePos;
     }
 
-    public void Pickup() {
-        this.pickedUp = true;
-        this.state = State.BEING_LIFTED;
+    public bool Pickup() {
+        Monster monster = this.GetComponent<Monster>();
+        if (monster == null || monster.CanPickup()) {
+            this.pickedUp = true;
+            this.state = State.BEING_LIFTED;
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void Drop() {

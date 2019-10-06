@@ -63,8 +63,9 @@ public class Main : MonoBehaviour
         }
         // If you don't already have an item, then pick it up.
         if (this.item == null && this.targetItem != null && displacement.magnitude < this.pickupRange) {
-            this.item = this.targetItem;
-            this.item.Pickup();
+            if (this.targetItem.Pickup()) {
+                this.item = this.targetItem;
+            }
             this.waypoint = this.targetItem.transform.position;
             this.targetItem = null;
         }

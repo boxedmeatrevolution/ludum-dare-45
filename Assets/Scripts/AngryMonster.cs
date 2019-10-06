@@ -18,12 +18,12 @@ public class AngryMonster : Monster
 
     // Choose whether to threaten, panic, or just keep wandering when another monster wanders into range.
     protected override State ChooseThreatenOffensive(Monster other) {
-        return State.Threaten;
+        return State.THREATEN;
     }
 
     // Choose whether to threaten, panic, or just keep wandering when another monster threatens.
     protected override State ChooseThreatenDefensive(Monster other) {
-        return State.Threaten;
+        return State.THREATEN;
     }
 
     // Choose whether you survive the fight with the other monster.
