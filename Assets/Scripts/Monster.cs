@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Monster : MonoBehaviour
 {
-    protected enum State {
+    public enum State {
         HELD,
         WANDER,
         THREATEN,
@@ -14,6 +14,7 @@ public class Monster : MonoBehaviour
         PANIC,
         DEAD
     }
+    private Emotion emotion;
     private Pen pen;
     private Vector2 waypoint;
     protected State state;
@@ -46,6 +47,7 @@ public class Monster : MonoBehaviour
     // Start is called before the first frame update
     protected virtual void Start()
     {
+        this.emotion = GetComponentInChildren<Emotion>();
         this.pen = FindObjectOfType<Pen>();
         this.state = State.WANDER;
         this.isThreatened = false;
@@ -57,6 +59,7 @@ public class Monster : MonoBehaviour
     // Update is called once per frame
     protected virtual void Update()
     {
+        this.emotion.UpdateFromState(this.state);
         if (this.state == State.HELD) {
             if (this.item.state == Item.State.ON_GROUND) {
                 this.state = State.WANDER;
