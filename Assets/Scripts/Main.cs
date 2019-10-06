@@ -33,10 +33,7 @@ public class Main : MonoBehaviour
     void Update() {
         // Drop items if commanded.
         if (Input.GetAxis("Fire2") > 0f) {
-            if (this.item != null) {
-                this.item.Drop();
-                this.item = null;
-            }
+            this.DropItem();
         }
 
         // Look for any items being targeted by the left click.
@@ -111,6 +108,7 @@ public class Main : MonoBehaviour
             // If character has made it to the machine, then interact with the machine
             if (this.isTargettingMachine)
             {
+                this.DropItem();
                 this.machine.Interact();
                 this.isTargettingMachine = false;
             }
@@ -122,6 +120,15 @@ public class Main : MonoBehaviour
             }
             this.waypoint = this.targetItem.transform.position;
             this.targetItem = null;
+        }
+    }
+
+    public void DropItem()
+    {
+        if (this.item != null)
+        {
+            this.item.Drop();
+            this.item = null;
         }
     }
 }
