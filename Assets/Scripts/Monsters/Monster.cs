@@ -112,6 +112,9 @@ public class Monster : MonoBehaviour
                     if (monster == this) {
                         continue;
                     }
+                    if (this.isThreatened || this.state != State.WANDER) {
+                        break;
+                    }
                     if (monster.state == State.WANDER && !monster.isThreatened && monster.item.state == Item.State.ON_GROUND) {
                         Vector2 monster_displacement = monster.transform.position - this.transform.position;
                         if (monster_displacement.magnitude < this.aggressionRadius) {
@@ -142,9 +145,6 @@ public class Monster : MonoBehaviour
                                 monster.panicVel = Vector2.zero;
                             }
                         }
-                    }
-                    if (this.isThreatened || this.state != State.WANDER) {
-                        break;
                     }
                 }
             }
