@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Main : MonoBehaviour
 {
+    private Animator animator;
     private new Camera camera;
     private Vector2 waypoint;
     private Item targetItem = null;
@@ -16,13 +17,13 @@ public class Main : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        this.animator = GetComponentInChildren<Animator>();
         this.camera = FindObjectOfType<Camera>();
         this.waypoint = this.transform.position;
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
         // Drop items if commanded.
         if (Input.GetAxis("Fire2") > 0f) {
             if (this.item != null) {
@@ -60,6 +61,22 @@ public class Main : MonoBehaviour
             Vector2 direction = displacement.normalized;
             direction *= Time.deltaTime * this.speed;
             this.transform.position += (Vector3)direction;
+
+            if (Mathf.Abs(direction.x) < Mathf.Abs(direction.y)) {
+                if (direction.y < 0) {
+                    this.animator.Play("Main_Down");
+                } else {
+                    this.animator.Play("Main_Up");
+                }
+            } else {
+                if (direction.x < 0) {
+                    this.animator.Play("Main_Left");
+                } else {
+                    this.animator.Play("Main_Right");
+                }
+            }
+        } else {
+            this.animator.Play("Main_Idle");
         }
         // If you don't already have an item, then pick it up.
         if (this.item == null && this.targetItem != null && displacement.magnitude < this.pickupRange) {
