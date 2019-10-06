@@ -18,6 +18,7 @@ public class Monster : MonoBehaviour
     private Pen pen;
     private Vector2 waypoint;
     protected State state;
+    protected float postFightTimer;
     protected Monster fightTarget;
     protected float fightTimer;
     protected float avoidTimer;
@@ -33,6 +34,7 @@ public class Monster : MonoBehaviour
     public bool canPickUp = true;
     public float encounterTime = 1f;
     public float averageWaitTime = 4f;
+    public float postFightTime = 1f;
     public float speed = 0.35f;
     public float avoidTime = 10f;
     public float panicSpeed = 0.8f;
@@ -192,6 +194,7 @@ public class Monster : MonoBehaviour
                     monster.fightTarget = null;
                 } else {
                     this.state = State.POST_FIGHT;
+                    this.postFightTimer = this.postFightTime;
                     this.transform.position += new Vector3(
                         Random.Range(-0.1f, 0.1f),
                         Random.Range(-0.1f, 0.1f));
@@ -204,6 +207,7 @@ public class Monster : MonoBehaviour
                     this.fightTarget = null;
                 } else {
                     monster.state = State.POST_FIGHT;
+                    monster.postFightTimer = monster.postFightTime;
                     monster.transform.position += new Vector3(
                         Random.Range(-0.1f, 0.1f),
                         Random.Range(-0.1f, 0.1f));
@@ -212,9 +216,12 @@ public class Monster : MonoBehaviour
         }
         if (this.state == State.POST_FIGHT) {
             Monster monster = this.fightTarget;
+            this.postFightTimer -= Time.deltaTime;
             if (monster == null) {
-                this.isThreatened = false;
-                this.state = State.WANDER;
+                if (this.postFightTimer < 0f) {
+                    this.isThreatened = false;
+                    this.state = State.WANDER;
+                }
             } else {
                 Vector2 displacement = monster.transform.position - this.transform.position;
                 if (displacement.magnitude != 0f) {
