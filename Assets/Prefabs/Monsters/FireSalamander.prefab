@@ -1,32 +1,32 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &1781281320579649107
+--- !u!114 &7663378561142375306
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 749479084716213232}
+  m_GameObject: {fileID: 8771925034287457327}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f8bdb0cdd528854aa6e79f792a2e8e8, type: 3}
+  m_Script: {fileID: 11500000, guid: f9ff1640d321e024289e9ec040a95137, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fireHeight: 1
+  fireHeight: 0.2
   canPickUp: 1
   averageWaitTime: 6
   postFightTime: 1
-  speed: 0.2
+  speed: 0.1
   avoidTime: 5
-  panicSpeed: 0.3
+  panicSpeed: 0.15
   panicAccel: 1
-  fightSpeed: 0.3
+  fightSpeed: 0.2
   fightAccel: 1
   aggressionRadius: 1
-  panicRadius: 1.5
+  panicRadius: 2
   fightTime: 2
-  threatenTime: 4
---- !u!1001 &3082298036071797924
+  threatenTime: 2
+--- !u!1001 &6421017810744816507
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -36,7 +36,7 @@ PrefabInstance:
     - target: {fileID: 2350926259135567700, guid: d9f950da24d5aac4d85f8f7989c3878c,
         type: 3}
       propertyPath: m_Name
-      value: PlantOgre
+      value: FireSalamander
       objectReference: {fileID: 0}
     - target: {fileID: 2350926259135567698, guid: d9f950da24d5aac4d85f8f7989c3878c,
         type: 3}
@@ -93,33 +93,73 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2350926259135567697, guid: d9f950da24d5aac4d85f8f7989c3878c,
+        type: 3}
+      propertyPath: averageWaitTime
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2350926259135567697, guid: d9f950da24d5aac4d85f8f7989c3878c,
+        type: 3}
+      propertyPath: speed
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2350926259135567697, guid: d9f950da24d5aac4d85f8f7989c3878c,
+        type: 3}
+      propertyPath: avoidTime
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2350926259135567697, guid: d9f950da24d5aac4d85f8f7989c3878c,
+        type: 3}
+      propertyPath: panicSpeed
+      value: 0.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 2350926259135567697, guid: d9f950da24d5aac4d85f8f7989c3878c,
+        type: 3}
+      propertyPath: panicAccel
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2350926259135567697, guid: d9f950da24d5aac4d85f8f7989c3878c,
+        type: 3}
+      propertyPath: fightSpeed
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2350926259135567697, guid: d9f950da24d5aac4d85f8f7989c3878c,
+        type: 3}
+      propertyPath: fightAccel
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2350926259135567697, guid: d9f950da24d5aac4d85f8f7989c3878c,
+        type: 3}
+      propertyPath: aggressionRadius
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2350926259135567697, guid: d9f950da24d5aac4d85f8f7989c3878c,
+        type: 3}
+      propertyPath: panicRadius
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2350926258969330476, guid: d9f950da24d5aac4d85f8f7989c3878c,
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: fd2f37ce4c7c78c45b2451d7cc0846e1,
+      objectReference: {fileID: 21300000, guid: f29604688a032624dafba4cddcf702c3,
         type: 3}
     - target: {fileID: 2350926259135567699, guid: d9f950da24d5aac4d85f8f7989c3878c,
         type: 3}
       propertyPath: m_Radius
-      value: 0.25
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 2350926258969330477, guid: d9f950da24d5aac4d85f8f7989c3878c,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4862028965401385086, guid: d9f950da24d5aac4d85f8f7989c3878c,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.75
+      value: 0.2
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2350926259135567697, guid: d9f950da24d5aac4d85f8f7989c3878c, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: d9f950da24d5aac4d85f8f7989c3878c, type: 3}
---- !u!1 &749479084716213232 stripped
+--- !u!1 &8771925034287457327 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2350926259135567700, guid: d9f950da24d5aac4d85f8f7989c3878c,
     type: 3}
-  m_PrefabInstance: {fileID: 3082298036071797924}
+  m_PrefabInstance: {fileID: 6421017810744816507}
   m_PrefabAsset: {fileID: 0}

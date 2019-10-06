@@ -18,6 +18,8 @@ public class Monster : MonoBehaviour
     private Pen pen;
     private Vector2 waypoint;
     private Fire fire;
+    private bool exploded;
+    private float explosionTimer;
     protected State state;
     protected float postFightTimer;
     protected Monster fightTarget;
@@ -60,6 +62,8 @@ public class Monster : MonoBehaviour
         this.item = GetComponent<Item>();
         this.fightCloud = null;
         this.enflamed = false;
+        this.exploded = false;
+        this.explosionTimer = 1f;
         this.ChooseWaypoint();
     }
 
@@ -79,7 +83,18 @@ public class Monster : MonoBehaviour
             }
         }
         this.emotion.UpdateFromState(this.state);
-        if (this.item.state == Item.State.ON_GROUND) {
+        if (this.item.state != Item.State.ON_GROUND) {
+            if (this.isThreatened) {
+                foreach (Monster monster in FindObjectsOfType<Monster>()) {
+                    if (monster.threatenTarget == this) {
+                        monster.isThreatened = false;
+                        this.isThreatened = false;
+                        monster.state = State.WANDER;
+                        monster.threatenTarget = null;
+                    }
+                }
+            }
+        } else {
             if (this.state == State.WANDER) {
                 Vector2 displacement = this.waypoint - (Vector2)this.transform.position;
                 if (displacement.magnitude > 0.01) {
@@ -153,7 +168,7 @@ public class Monster : MonoBehaviour
                 if (this.threatenTimer < 0f) {
                     Monster monster = this.threatenTarget;
                     float distance = (monster.transform.position - this.transform.position).magnitude;
-                    if (this.threatenTarget.state == State.THREATEN && this.threatenTarget.threatenTarget == this) {
+                    if (this.threatenTarget.state != State.PANIC) {
                         this.fightTarget = monster;
                         this.state = State.PRE_FIGHT;
                         this.fightVel = Vector2.zero;
@@ -178,6 +193,7 @@ public class Monster : MonoBehaviour
                     if (this.fightVel.magnitude > this.fightSpeed) {
                         this.fightVel *= this.fightSpeed / this.fightVel.magnitude;
                     }
+                    this.fightVel = this.fightVel.magnitude * displacement.normalized;
                     this.transform.position += (Vector3)this.fightVel * Time.deltaTime;
                 }
                 else {
@@ -185,6 +201,8 @@ public class Monster : MonoBehaviour
                     this.fightTimer = this.fightTime;
                     monster.state = State.FIGHT;
                     monster.fightTimer = monster.fightTime;
+                    this.fightTarget = monster;
+                    monster.fightTarget = this;
                     if (this.IsFirey() || this.enflamed) {
                         if (monster.CanBurn()) {
                             monster.Enflame();
@@ -294,10 +312,15 @@ public class Monster : MonoBehaviour
             if (this.state == State.DEAD) {
                 this.transform.position += (Vector3)this.deadVel * Time.deltaTime;
                 if (this.deadVel.magnitude > 1f) {
-                    this.deadVel -= this.deadVel.normalized * 4f * Time.deltaTime;
+                    this.deadVel -= this.deadVel.normalized * 3f * Time.deltaTime;
                 }
                 else {
                     this.deadVel = Vector2.zero;
+                    this.explosionTimer -= Time.deltaTime;
+                    if (this.explosionTimer < 0f && this.IsExplosive() && !this.exploded) {
+                        this.exploded = true;
+                        Instantiate(PrefabManager.EXPLOSION_PREFAB, this.transform.position, Quaternion.identity);
+                    }
                 }
             }
         }
@@ -309,6 +332,10 @@ public class Monster : MonoBehaviour
 
     public virtual bool CanBurn() {
         return true;
+    }
+
+    public virtual bool IsExplosive() {
+        return false;
     }
 
     public void Enflame() {
