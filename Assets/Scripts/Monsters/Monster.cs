@@ -32,7 +32,6 @@ public class Monster : MonoBehaviour
     protected FightCloud fightCloud;
     protected bool dead;
     public bool canPickUp = true;
-    public float encounterTime = 1f;
     public float averageWaitTime = 4f;
     public float postFightTime = 1f;
     public float speed = 0.35f;
