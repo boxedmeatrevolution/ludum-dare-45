@@ -1,0 +1,59 @@
+{
+    "speakers": {
+        1: "Goblin",
+        2: "You"
+    },
+    "scene1" : {
+        "dialogue": [
+        {
+            "speaker": 1,
+            "lines": [
+                "Thank you for freeing me from the Neverending Dark.",
+                "Are you Master of this realm?"
+            ]
+        },
+        {
+            "speaker": 2,
+            "lines": [
+                "There is no freedom.",
+                "Only Master Ghostighost"
+            ],
+        },
+        {
+            "speaker": 1,
+            "lines": [
+                "This news saddens me.",
+                "Master Ghostighost is a cruel master."
+            ]
+        },
+        {
+            "speaker": 2,
+            "lines": [
+                "Cruel?"
+            ],
+        },
+        {
+            "speaker": 1,
+            "lines": [
+                "I had a puppy once.",
+                "Master Ghostighost took him as a slave.",
+                "He was only 2 dog years old."
+            ]
+        },
+        {
+            "speaker": 2,
+            "lines": [
+                ">:|"
+            ],
+        },
+        {
+            "speaker": 1,
+            "lines": [
+                "Together we can overthrow Master Ghostighost!",
+                "Send me back with something HOT!",
+                "Master Ghostighost will burn >:)"
+            ]
+        },
+        ]
+    },
+}	

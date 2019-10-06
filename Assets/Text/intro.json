@@ -1,0 +1,83 @@
+{
+    "speakers": {
+        1: "Master Ghostighost"
+    },
+    "scene1" : {
+        "dialogue": [
+        {
+            "speaker": 1,
+            "lines": [
+                "Slave.",
+                "Amuse me.",
+                "Earth and Fire a Salamander make."
+            ]
+        },
+        ]
+    },
+    "scene2": {
+        "dialogue": [
+        {
+            "speaker": 1,
+            "lines": [
+                "Earth and Water to summon the Ogre"
+            ]
+        },
+        ]
+    },
+    "scene3": {
+        "dialogue": [
+        {
+            "speaker": 1,
+            "lines": [
+                "Haha.",
+                "See how they fight."
+            ]
+        },
+        ]
+    },
+    "scene4": {
+        "dialogue": [
+        {
+            "speaker": 1,
+            "lines": [
+                "From nothing they come,",
+                "To nothing they return."
+            ]
+        },
+        ]
+    },
+    "scene5": {
+        "dialogue": [
+        {
+            "speaker": 1,
+            "lines": [
+                "Again.",
+                "Amuse Me.",
+                "Earth and Fire a salamander make."
+            ]
+        },
+        ],
+    },
+    "scene6": {
+        "dialogue": [
+        {
+            "speaker": 1,
+            "lines": [
+                "You Dare Defy Me?"
+            ]
+        },
+        ],
+    },
+    "scene6": {
+        "dialogue": [
+        {
+            "speaker": 1,
+            "lines": [
+                "INSOLENCE WILL NOT BE TOLERATED.",
+                "I will return in 1000 years.",
+                "Think on the errors in your ways."
+            ]
+        },
+        ],
+    }, 
+}	
