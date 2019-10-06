@@ -14,11 +14,22 @@ public class Item : MonoBehaviour
     private Vector2 initialOffset;
     public State state;
 
+    private float initialZ;
+
+    private Transform waypoint;
+    private float waypointAccel = 0.0005f;
+    private float waypointVel = 0.0f;
+
     public enum State {
         ON_GROUND,
         BEING_LIFTED,
         PICKED_UP,
-        BEING_DROPPED
+        BEING_DROPPED,
+        
+        // Orbs only
+        BEING_PUT_IN_MACHINE,
+        IN_MACHINE,
+        TRANSFORMING
     }
 
     // Start is called before the first frame update
@@ -30,6 +41,8 @@ public class Item : MonoBehaviour
         this.state = State.ON_GROUND;
         this.pickupVelZ = 0f;
         this.pickupZ = 0f;
+        this.waypointVel = 0f;
+        this.initialZ = this.transform.position.z;
     }
 
     // Update is called once per frame
@@ -73,6 +86,23 @@ public class Item : MonoBehaviour
         if (this.state == State.ON_GROUND) {
             this.pickupZ = 0f;
         }
+        if (this.state == State.BEING_PUT_IN_MACHINE)
+        {
+            Vector3 setZ = this.transform.position;
+            setZ.z = 6;
+            this.transform.position = setZ;
+            if (this.pickupZ > 0.00001f)
+            {
+                Vector3 removePickupZ = new Vector3(0, this.pickupZ, 0);
+                this.transform.position += removePickupZ;
+                this.pickupZ = 0f;
+            }
+            this.MoveToWaypoint();
+            if (this.IsAtWaypoint())
+            {
+                this.state = State.IN_MACHINE;
+            }
+        }
 
         Vector3 newSpritePos = this.initialOffset;
         newSpritePos.y += this.pickupZ;
@@ -93,5 +123,48 @@ public class Item : MonoBehaviour
     public void Drop() {
         this.pickedUp = false;
         this.state = State.BEING_DROPPED;
+    }
+
+    private void MoveToWaypoint()
+    {
+        if (this.waypoint == null)
+        {
+            Debug.Log("Cannot move to waypoint: waypoint is null");
+            return;
+        }
+        Vector2 displacement = this.waypoint.position - this.transform.position;
+        Vector2 direction = displacement.normalized;
+        this.waypointVel += this.waypointAccel;
+        Vector2 delta = direction * waypointVel;
+        if (delta.magnitude > displacement.magnitude) {
+            // move the rest of the way
+            this.transform.position += (Vector3)displacement;
+        }
+        else {
+            // move a bit closer
+            this.transform.position += (Vector3)delta;
+        }
+
+        if (this.IsAtWaypoint())
+        {
+            this.waypointVel = 0f;
+        }
+    }
+
+    private bool IsAtWaypoint()
+    {
+        if (this.waypoint == null)
+        {
+            Debug.Log("Cannot move to waypoint: waypoint is null");
+            return true;
+        }
+        return ((Vector2)this.waypoint.position - (Vector2)this.transform.position).magnitude < 0.0001f;
+    }
+
+    public void PutInMachine(Transform transform)
+    {
+        this.pickedUp = false;
+        this.state = State.BEING_PUT_IN_MACHINE;
+        this.waypoint = transform;
     }
 }

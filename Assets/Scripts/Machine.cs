@@ -9,6 +9,8 @@ public class Machine : MonoBehaviour
     private Transform emptyWaypoint;
     private Transform slot1Waypoint;
     private Transform slot2Waypoint;
+    private Transform slot1OrbWaypoint;
+    private Transform slot2OrbWaypoint;
 
     // Start is called before the first frame update
     void Start()
@@ -17,6 +19,8 @@ public class Machine : MonoBehaviour
         this.emptyWaypoint = GameObject.Find("EmptyWaypoint").GetComponentInChildren<Transform>();
         this.slot1Waypoint = GameObject.Find("Slot1Waypoint").GetComponentInChildren<Transform>();
         this.slot2Waypoint = GameObject.Find("Slot2Waypoint").GetComponentInChildren<Transform>();
+        this.slot1OrbWaypoint = GameObject.Find("Slot1OrbWaypoint").GetComponentInChildren<Transform>();
+        this.slot2OrbWaypoint = GameObject.Find("Slot2OrbWaypoint").GetComponentInChildren<Transform>();
 
     }
 
@@ -61,9 +65,15 @@ public class Machine : MonoBehaviour
     }
     public void PutOrb(Orb orb)
     {
-        if (this.orbs.Count <= 2)
+        if (this.orbs.Count == 0)
         {
             this.orbs.Add(orb);
+            orb.item.PutInMachine(this.slot1OrbWaypoint);
+        }
+        else if (this.orbs.Count == 1)
+        {
+            this.orbs.Add(orb);
+            orb.item.PutInMachine(this.slot2OrbWaypoint);
         }
     }
 
