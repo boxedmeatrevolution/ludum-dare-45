@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlantOgre : Monster {
+public class LivingFlame : Monster {
     // Start is called before the first frame update
     protected override void Start() {
         base.Start();
@@ -16,9 +16,11 @@ public class PlantOgre : Monster {
     // Choose whether to threaten, panic, or just keep wandering when another monster wanders into range.
     protected override State ChooseThreatenOffensive(Monster other) {
         if (other is PlantOgre) {
-            return State.WANDER;
-        } else {
             return State.THREATEN;
+        } else if (false) {
+            return State.PANIC;
+        } else {
+            return State.WANDER;
         }
     }
 
@@ -29,6 +31,10 @@ public class PlantOgre : Monster {
 
     // Choose whether you survive the fight with the other monster.
     protected override bool SurviveFight(Monster other) {
-        return true;
+        if (other is PlantOgre) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }
