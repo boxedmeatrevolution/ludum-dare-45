@@ -17,7 +17,7 @@ public class FireSalamander : Monster {
         return false;
     }
 
-    public override bool IsFirey() {
+    public override bool IsFireElemental() {
         return true;
     }
 
@@ -27,18 +27,21 @@ public class FireSalamander : Monster {
 
     // Choose whether to threaten, panic, or just keep wandering when another monster wanders into range.
     protected override State ChooseThreatenOffensive(Monster other) {
+        if (other is GhostSlug) {
+            return State.FLEE;
+        }
         return State.WANDER;
     }
 
     // Choose whether to threaten, panic, or just keep wandering when another monster threatens.
     protected override State ChooseThreatenDefensive(Monster other) {
+        if (other is GhostSlug) {
+            return State.FLEE;
+        }
         return State.WANDER;
     }
 
     // Choose whether you survive the fight with the other monster.
-    /*protected override bool SurviveFight(Monster other) {
-        return false;
-    }*/
     public override bool KillOpponent(Monster other) {
         if (other is GhostSlug || other is FireSalamander) {
             return true;

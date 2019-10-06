@@ -9,6 +9,10 @@ public class Emotion : MonoBehaviour
     public Sprite fleeSprite;
     public Sprite fightSprite;
     public Sprite postFightSprite;
+    public Sprite firePanicSprite;
+    public Sprite lureSprite;
+    public Sprite mesmerizeSprite;
+    public Sprite digestingSprite;
     public Sprite deadSprite;
 
     private new SpriteRenderer renderer;
@@ -30,6 +34,14 @@ public class Emotion : MonoBehaviour
             sprite = this.fightSprite;
         } else if (state == Monster.State.POST_FIGHT) {
             sprite = this.postFightSprite;
+        } else if (state == Monster.State.ENFLAMED_PANIC) {
+            sprite = this.firePanicSprite;
+        } else if (state == Monster.State.LURE) {
+            sprite = this.lureSprite;
+        } else if (state == Monster.State.MESMERIZED) {
+            sprite = this.mesmerizeSprite;
+        } else if (state == Monster.State.DIGESTING) {
+            sprite = this.digestingSprite;
         } else if (state == Monster.State.DYING) {
             sprite = this.deadSprite;
         }

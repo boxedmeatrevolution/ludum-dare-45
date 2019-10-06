@@ -24,13 +24,6 @@ public class Goblin : Monster {
     }
 
     // Choose whether you survive the fight with the other monster.
-    /*protected override bool SurviveFight(Monster other) {
-        if (other is FireSalamander) {
-            return true;
-        } else {
-            return false;
-        }
-    }*/
     public override bool KillOpponent(Monster other) {
         if (other is GhostSlug || other is FireSalamander || other is Goblin) {
             return true;

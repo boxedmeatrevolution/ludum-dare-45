@@ -17,6 +17,8 @@ public class PlantOgre : Monster {
     protected override State ChooseThreatenOffensive(Monster other) {
         if (other is PlantOgre) {
             return State.WANDER;
+        } if (other is GhostSlug) {
+            return State.FLEE;
         } else {
             return State.THREATEN;
         }
@@ -24,7 +26,7 @@ public class PlantOgre : Monster {
 
     // Choose whether to threaten, panic, or just keep wandering when another monster threatens.
     protected override State ChooseThreatenDefensive(Monster other) {
-        return this.ChooseThreatenDefensive(other);
+        return this.ChooseThreatenOffensive(other);
     }
 
     // Choose whether you survive the fight with the other monster.

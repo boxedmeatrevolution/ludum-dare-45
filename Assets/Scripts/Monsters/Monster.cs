@@ -9,7 +9,10 @@ using UnityEngine;
 public class Monster : MonoBehaviour {
     private readonly static float FIGHT_TIME = 2f;
     private readonly static float POST_FIGHT_TIME = 3f;
-    private readonly static float DYING_TIME = 1f;
+    private readonly static float DYING_TIME = 2f;
+    private readonly static float DEVOUR_TIME = 2f;
+    private readonly static float DIGEST_TIME = 2f;
+    private readonly static float GOO_TIME = 5f;
     private float stateTimer;
     private Vector2 velocity;
     private State state;
@@ -50,6 +53,9 @@ public class Monster : MonoBehaviour {
         ENFLAMED_PANIC,
         LURE, // One monster lures, the other is mesmerized.
         MESMERIZED,
+        DEVOURING,
+        BEING_DEVOURED,
+        DIGESTING,
         GOOED, // Get gooed by slugs
         DYING,
         DEAD
@@ -73,6 +79,9 @@ public class Monster : MonoBehaviour {
     }
 
     protected virtual void Update() {
+        if (this.item.state != Item.State.ON_GROUND) {
+            return;
+        }
         if (this.state == State.WANDER) {
             // Actions.
             Vector2 displacement = this.waypoint - (Vector2)this.transform.position;
@@ -94,17 +103,23 @@ public class Monster : MonoBehaviour {
             }
             // Transitions.
             foreach (Monster monster in FindObjectsOfType<Monster>()) {
-                if (monster == this || this.state != State.WANDER) {
+                if (monster == this || this.state != State.WANDER || monster.state != State.WANDER) {
                     continue;
                 }
-                // Can only interact with monsters in the wander state.
-                if (monster.state == State.WANDER) {
-                    Vector2 monsterDisplacement = monster.transform.position - this.transform.position;
-                    // Can only interact with monsters smaller than threaten radius.
-                    if (monsterDisplacement.magnitude < this.threatenRadius) {
-                        State choice = this.ChooseThreatenOffensive(monster);
-                        State monsterChoice = monster.ChooseThreatenOffensive(this);
-                        bool isThreaten = false;
+                Vector2 monsterDisplacement = monster.transform.position - this.transform.position;
+                // Can only interact with monsters smaller than threaten radius.
+                if (monsterDisplacement.magnitude < this.threatenRadius) {
+                    State choice = this.ChooseThreatenOffensive(monster);
+                    State monsterChoice = monster.ChooseThreatenOffensive(this);
+                    if (choice == State.THREATEN || choice == State.LURE) {
+                        monsterChoice = monster.ChooseThreatenDefensive(this);
+                    }
+                    if (monsterChoice == State.THREATEN || monsterChoice == State.LURE) {
+                        choice = this.ChooseThreatenDefensive(monster);
+                    }
+                    bool isThreaten = (choice == State.THREATEN || monsterChoice == State.THREATEN);
+                    bool isLure = (choice == State.LURE || monsterChoice == State.LURE);
+                    if (!isLure) {
                         if (choice == State.FLEE) {
                             this.state = State.FLEE;
                             this.target = monster;
@@ -114,26 +129,35 @@ public class Monster : MonoBehaviour {
                             monster.target = this;
                         }
                         if (choice == State.THREATEN) {
-                            isThreaten = true;
                             this.state = State.THREATEN;
                             this.stateTimer = this.threatenTime;
                             this.target = monster;
                             monster.avoid = this;
                         }
                         if (monsterChoice == State.THREATEN) {
-                            isThreaten = true;
                             monster.state = State.THREATEN;
                             monster.stateTimer = monster.threatenTime;
                             monster.target = this;
                             this.avoid = monster;
                         }
-                        if (isThreaten && choice == State.IGNORE) {
-                            this.state = State.IGNORE;
-                            this.target = monster;
+                        if (isThreaten) {
+                            if (choice == State.IGNORE) {
+                                this.state = State.IGNORE;
+                                this.target = monster;
+                            }
+                            if (monsterChoice == State.IGNORE) {
+                                monster.state = State.IGNORE;
+                                monster.target = this;
+                            }
                         }
-                        if (isThreaten && monsterChoice == State.IGNORE) {
-                            monster.state = State.IGNORE;
-                            monster.target = this;
+                    } else {
+                        if (choice == State.LURE) {
+                            this.state = State.LURE;
+                            monster.state = State.MESMERIZED;
+                        }
+                        if (monsterChoice == State.LURE) {
+                            this.state = State.MESMERIZED;
+                            monster.state = State.LURE;
                         }
                     }
                 }
@@ -155,7 +179,6 @@ public class Monster : MonoBehaviour {
             }
         }
         else if (this.state == State.THREATEN) {
-            this.stateTimer -= Time.deltaTime;
             if (this.stateTimer < 0f) {
                 Monster monster = this.target;
                 float distance = (monster.transform.position - this.transform.position).magnitude;
@@ -178,10 +201,10 @@ public class Monster : MonoBehaviour {
                 this.stateTimer = Monster.FIGHT_TIME;
                 monster.state = State.FIGHT;
                 monster.stateTimer = Monster.FIGHT_TIME;
-                if (this.IsFirey() || this.enflamed) {
+                if (this.IsFiery()) {
                     monster.Enflame();
                 }
-                if (monster.IsFirey() || monster.enflamed) {
+                if (monster.IsFiery()) {
                     this.Enflame();
                 }
 
@@ -196,7 +219,6 @@ public class Monster : MonoBehaviour {
         else if (state == State.FIGHT) {
             Monster monster = this.target;
             this.velocity = Vector2.zero;
-            this.stateTimer -= Time.deltaTime;
             if (this.stateTimer < 0f) {
                 // Destroy fight cloud.
                 Destroy(this.fightCloud.gameObject);
@@ -229,11 +251,14 @@ public class Monster : MonoBehaviour {
         }
         else if (this.state == State.POST_FIGHT) {
             Monster monster = this.target;
-            this.stateTimer -= Time.deltaTime;
             Vector2 displacement = monster.transform.position - this.transform.position;
-            if (this.stateTimer < 0f && displacement.magnitude > this.fleeRadius && displacement.magnitude > monster.fleeRadius) {
-                this.state = State.WANDER;
-                this.waypoint = this.ChooseWaypoint(this.pen);
+            if (this.stateTimer < 0f) {
+                bool farEnough = (displacement.magnitude > this.fleeRadius && displacement.magnitude > monster.fleeRadius);
+                bool monsterDead = (monster.state == State.DEAD || monster.state == State.DYING);
+                if (farEnough || monsterDead) {
+                    this.state = State.WANDER;
+                    this.waypoint = this.ChooseWaypoint(this.pen);
+                }
             }
             else {
                 if (displacement.magnitude == 0f) {
@@ -241,6 +266,70 @@ public class Monster : MonoBehaviour {
                     displacement = 0.1f * new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
                 }
                 this.velocity -= this.accel * displacement.normalized * Time.deltaTime;
+            }
+        }
+        else if (this.state == State.LURE) {
+            Monster monster = this.target;
+            Collider2D collider = this.GetComponentInChildren<Collider2D>();
+            Collider2D monsterCollider = monster.GetComponentInChildren<Collider2D>();
+            if (collider.IsTouching(monsterCollider)) {
+                this.state = State.DEVOURING;
+                monster.state = State.BEING_DEVOURED;
+                this.stateTimer = Monster.DEVOUR_TIME;
+                monster.stateTimer = Monster.DEVOUR_TIME;
+            }
+        }
+        else if (this.state == State.MESMERIZED) {
+            Monster monster = this.target;
+            Vector2 displacement = monster.transform.position - this.transform.position;
+            if (displacement.magnitude == 0f) {
+                float angle = 2 * Mathf.PI * Random.value;
+                displacement = 0.1f * new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+            }
+            this.velocity += this.accel * displacement.normalized * Time.deltaTime;
+        }
+        else if (this.state == State.DEVOURING) {
+            Monster monster = this.target;
+            if (this.stateTimer < 0f) {
+                this.state = State.DIGESTING;
+                this.stateTimer = Monster.DIGEST_TIME;
+                monster.gameObject.SetActive(false);
+            }
+        }
+        else if (this.state == State.BEING_DEVOURED) {
+            Monster monster = this.target;
+            float scale = this.stateTimer / Monster.DEVOUR_TIME;
+            Vector2 mouthPosition = monster.transform.position;
+            Vector2 displacement = mouthPosition - (Vector2)this.transform.position;
+            if (displacement.magnitude == 0f) {
+                float angle = 2 * Mathf.PI * Random.value;
+                displacement = 0.1f * new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+            }
+            this.velocity = Vector2.zero;
+            this.transform.position = mouthPosition - displacement * scale;
+            this.transform.localScale = new Vector3(scale, scale, 1f);
+        }
+        else if (this.state == State.DIGESTING) {
+            Monster monster = this.target;
+            if (this.stateTimer < 0f) {
+                this.state = State.WANDER;
+                this.target = null;
+                monster.target = null;
+                monster.gameObject.SetActive(true);
+                monster.transform.localScale = new Vector3(1f, 1f, 1f);
+                if (this.KillDigestedOpponent(monster)) {
+                    Destroy(monster.gameObject);
+                } else {
+                    monster.state = State.GOOED;
+                    monster.stateTimer = Monster.GOO_TIME;
+                    monster.Extinguish();
+                    monster.velocity = 2f * Random.insideUnitCircle;
+                }
+            }
+        }
+        else if (this.state == State.GOOED) {
+            if (this.stateTimer < 0f) {
+                this.state = State.WANDER;
             }
         }
         else if (this.state == State.FLEE) {
@@ -259,7 +348,6 @@ public class Monster : MonoBehaviour {
             }
         }
         else if (this.state == State.DYING) {
-            this.stateTimer -= Time.deltaTime;
             if (this.stateTimer < 0f) {
                 this.state = State.DEAD;
                 if (this.IsExplosive()) {
@@ -268,9 +356,10 @@ public class Monster : MonoBehaviour {
             }
         }
 
+        this.stateTimer -= Time.deltaTime;
         // Physics
         float speed = this.velocity.magnitude;
-        float maxSpeed = (this.state == State.WANDER || this.state == State.POST_FIGHT || this.state == State.IGNORE) ?
+        float maxSpeed = (this.state == State.WANDER || this.state == State.POST_FIGHT || this.state == State.IGNORE || this.state == State.MESMERIZED) ?
             this.wanderSpeed : this.sprintSpeed;
         if (speed != 0f) {
             Vector2 frictionChange = this.velocity.normalized * this.friction * Time.deltaTime;
@@ -287,12 +376,12 @@ public class Monster : MonoBehaviour {
         this.emotion.UpdateFromState(state);
     }
 
-    // Choose whether to threaten, flee, or ignore when another monster wanders into range.
+    // Choose whether to threaten, hypnotize, flee, or ignore when another monster wanders into range.
     protected virtual State ChooseThreatenOffensive(Monster other) {
         return State.WANDER;
     }
 
-    // Choose whether to threaten, flee, or ignore when another monster threatens.
+    // Choose whether to threaten, hypnotize, flee, or ignore when another monster threatens.
     protected virtual State ChooseThreatenDefensive(Monster other) {
         return State.FLEE;
     }
@@ -323,7 +412,11 @@ public class Monster : MonoBehaviour {
         this.fire = null;
     }
 
-    public virtual bool IsFirey() {
+    public bool IsFiery() {
+        return this.IsFireElemental() || this.enflamed;
+    }
+
+    public virtual bool IsFireElemental() {
         return false;
     }
 
@@ -332,6 +425,10 @@ public class Monster : MonoBehaviour {
     }
 
     public virtual bool IsExplosive() {
+        return false;
+    }
+
+    public virtual bool KillDigestedOpponent(Monster other) {
         return false;
     }
 
@@ -348,6 +445,6 @@ public class Monster : MonoBehaviour {
             }
             return true;
         }
-        return this.state == State.WANDER || this.state == State.DYING;
+        return this.state == State.WANDER || this.state == State.DYING || this.state == State.DEAD || this.state == State.GOOED;
     }
 }

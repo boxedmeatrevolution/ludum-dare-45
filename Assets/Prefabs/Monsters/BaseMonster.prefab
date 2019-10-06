@@ -264,4 +264,8 @@ MonoBehaviour:
   fleeSprite: {fileID: 21300000, guid: 4a674747d92aafe44be0a13fda792585, type: 3}
   fightSprite: {fileID: 21300000, guid: e84cb19498000f447a5928a31dff79d4, type: 3}
   postFightSprite: {fileID: 21300000, guid: 0c3a2eda92459264488a2f91beb717ad, type: 3}
+  firePanicSprite: {fileID: 21300000, guid: 3f0097fadc0efe7498cdee82894be8f3, type: 3}
+  lureSprite: {fileID: 21300000, guid: 5574c4662529ae64bb5a144c4128c2aa, type: 3}
+  mesmerizeSprite: {fileID: 21300000, guid: 3449b7b921edc68418d46cfc3c9cb619, type: 3}
+  digestingSprite: {fileID: 21300000, guid: 9ec2b6a3b07bec5469a1415d51f704b8, type: 3}
   deadSprite: {fileID: 21300000, guid: a65e5bd8b413a7c48a2f356f59ba0a93, type: 3}

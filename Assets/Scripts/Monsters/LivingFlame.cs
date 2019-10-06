@@ -17,15 +17,15 @@ public class LivingFlame : Monster {
         return false;
     }
 
-    public override bool IsFirey() {
+    public override bool IsFireElemental() {
         return true;
     }
 
     // Choose whether to threaten, panic, or just keep wandering when another monster wanders into range.
     protected override State ChooseThreatenOffensive(Monster other) {
-        if (other is PlantOgre) {
+        if (other is PlantOgre || other is Goblin) {
             return State.THREATEN;
-        } else if (false) {
+        } else if (other is GhostSlug) {
             return State.FLEE;
         } else {
             return State.WANDER;
@@ -34,17 +34,10 @@ public class LivingFlame : Monster {
 
     // Choose whether to threaten, panic, or just keep wandering when another monster threatens.
     protected override State ChooseThreatenDefensive(Monster other) {
-        return this.ChooseThreatenDefensive(other);
+        return this.ChooseThreatenOffensive(other);
     }
 
     // Choose whether you survive the fight with the other monster.
-    /*protected override bool SurviveFight(Monster other) {
-        if (other is PlantOgre) {
-            return false;
-        } else {
-            return true;
-        }
-    }*/
     public override bool KillOpponent(Monster other) {
         if (other is FireSalamander || other is GhostSlug || other is Goblin || other is LivingFlame) {
             return true;

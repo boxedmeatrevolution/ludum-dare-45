@@ -19,6 +19,9 @@ public class GhostSlug : Monster {
 
     // Choose whether to threaten, panic, or just keep wandering when another monster wanders into range.
     protected override State ChooseThreatenOffensive(Monster other) {
+        if (other.IsFiery()) {
+            return State.LURE;
+        }
         return State.WANDER;
     }
 
@@ -28,9 +31,6 @@ public class GhostSlug : Monster {
     }
 
     // Choose whether you survive the fight with the other monster.
-    /*protected override bool SurviveFight(Monster other) {
-        return false;
-    }*/
     public override bool KillOpponent(Monster other) {
         return false;
     }

@@ -12,18 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7be6091ed11d40149a26820470846855, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canPickUp: 1
+  friction: 2
+  fireHeight: 0.5
+  accel: 3
+  wanderSpeed: 0.75
+  sprintSpeed: 2
+  fleeRadius: 2.5
+  threatenRadius: 1.5
   averageWaitTime: 0.5
-  postFightTime: 1
-  speed: 0.7
-  avoidTime: 5
-  panicSpeed: 2
-  panicAccel: 2
-  fightSpeed: 4
-  fightAccel: 4
-  aggressionRadius: 2
-  panicRadius: 3
-  fightTime: 2
   threatenTime: 2
 --- !u!1001 &2205350075863252645
 PrefabInstance:
