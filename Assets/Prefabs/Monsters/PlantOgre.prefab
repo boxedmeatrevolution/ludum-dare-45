@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f8bdb0cdd528854aa6e79f792a2e8e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fireHeight: 1
   canPickUp: 1
   averageWaitTime: 6
   postFightTime: 1

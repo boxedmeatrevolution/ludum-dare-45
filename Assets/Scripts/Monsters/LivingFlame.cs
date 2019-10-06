@@ -13,6 +13,14 @@ public class LivingFlame : Monster {
         base.Update();
     }
 
+    public override bool CanBurn() {
+        return false;
+    }
+
+    public override bool IsFirey() {
+        return true;
+    }
+
     // Choose whether to threaten, panic, or just keep wandering when another monster wanders into range.
     protected override State ChooseThreatenOffensive(Monster other) {
         if (other is PlantOgre) {

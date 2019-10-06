@@ -45,3 +45,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fightCloudPrefab: {fileID: 1847268696225185359, guid: c11913b353e5b17439958fffa5acc6c3,
     type: 3}
+  firePrefab: {fileID: 4289417400230478369, guid: b01a2de8da48ece4ca93c244e101e20d,
+    type: 3}

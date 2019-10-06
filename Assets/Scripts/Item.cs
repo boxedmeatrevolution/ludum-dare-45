@@ -11,6 +11,7 @@ public class Item : MonoBehaviour
     private float pickupAccel = 5.0f;
     private float pickupVelZ;
     private float pickupZ;
+    private Vector2 initialOffset;
     public State state;
 
     public enum State {
@@ -25,6 +26,7 @@ public class Item : MonoBehaviour
     {
         this.main = FindObjectOfType<Main>();
         this.sprite = GetComponentInChildren<SpriteRenderer>();
+        this.initialOffset = this.sprite.transform.localPosition;
         this.state = State.ON_GROUND;
         this.pickupVelZ = 0f;
         this.pickupZ = 0f;
@@ -72,8 +74,8 @@ public class Item : MonoBehaviour
             this.pickupZ = 0f;
         }
 
-        Vector3 newSpritePos = this.sprite.transform.localPosition;
-        newSpritePos.y = this.pickupZ;
+        Vector3 newSpritePos = this.initialOffset;
+        newSpritePos.y += this.pickupZ;
         this.sprite.transform.localPosition = newSpritePos;
     }
 

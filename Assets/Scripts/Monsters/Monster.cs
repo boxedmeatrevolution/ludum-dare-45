@@ -14,8 +14,10 @@ public class Monster : MonoBehaviour
         DEAD
     }
     private Emotion emotion;
+    private SpriteRenderer renderer;
     private Pen pen;
     private Vector2 waypoint;
+    private Fire fire;
     protected State state;
     protected float postFightTimer;
     protected Monster fightTarget;
@@ -31,6 +33,8 @@ public class Monster : MonoBehaviour
     protected bool isThreatened;
     protected FightCloud fightCloud;
     protected bool dead;
+    protected bool enflamed;
+    public float fireHeight = 0.2f;
     public bool canPickUp = true;
     public float averageWaitTime = 4f;
     public float postFightTime = 1f;
@@ -48,18 +52,32 @@ public class Monster : MonoBehaviour
     // Start is called before the first frame update
     protected virtual void Start()
     {
+        this.renderer = GetComponentInChildren<SpriteRenderer>();
         this.emotion = GetComponentInChildren<Emotion>();
         this.pen = FindObjectOfType<Pen>();
         this.state = State.WANDER;
         this.isThreatened = false;
         this.item = GetComponent<Item>();
         this.fightCloud = null;
+        this.enflamed = false;
         this.ChooseWaypoint();
     }
 
     // Update is called once per frame
     protected virtual void Update()
     {
+        if (this.enflamed) {
+            if (this.fire == null) {
+                GameObject fireObj = Instantiate(PrefabManager.FIRE_PREFAB, this.renderer.transform);
+                this.fire = fireObj.GetComponentInChildren<Fire>();
+                this.fire.transform.localPosition = new Vector2(0, this.fireHeight - this.renderer.transform.localPosition.y);
+            }
+        } else {
+            if (this.fire != null) {
+                this.fire.FireOver();
+                this.fire = null;
+            }
+        }
         this.emotion.UpdateFromState(this.state);
         if (this.item.state == Item.State.ON_GROUND) {
             if (this.state == State.WANDER) {
@@ -167,6 +185,16 @@ public class Monster : MonoBehaviour
                     this.fightTimer = this.fightTime;
                     monster.state = State.FIGHT;
                     monster.fightTimer = monster.fightTime;
+                    if (this.IsFirey() || this.enflamed) {
+                        if (monster.CanBurn()) {
+                            monster.Enflame();
+                        }
+                    }
+                    if (monster.IsFirey() || monster.enflamed) {
+                        if (this.CanBurn()) {
+                            this.Enflame();
+                        }
+                    }
                 }
             }
             if (this.state == State.FIGHT) {
@@ -273,6 +301,24 @@ public class Monster : MonoBehaviour
                 }
             }
         }
+    }
+
+    public virtual bool IsFirey() {
+        return false;
+    }
+
+    public virtual bool CanBurn() {
+        return true;
+    }
+
+    public void Enflame() {
+        if (this.CanBurn()) {
+            this.enflamed = true;
+        }
+    }
+
+    public void Extinguish() {
+        this.enflamed = false;
     }
 
     public bool CanPickup() {
