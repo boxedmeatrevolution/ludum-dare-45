@@ -20,11 +20,10 @@ public class Machine : MonoBehaviour
     private SpriteRenderer openSprite;
     private SpriteRenderer closedSprite;
 
-    public SpriteState spriteState;
+    public State state;
     private float closedStartTime = 0f;
-    private float maxCloseTime = 1f;
 
-    public enum SpriteState
+    public enum State
     {
         OPEN,
         CLOSING,
@@ -53,28 +52,29 @@ public class Machine : MonoBehaviour
         this.closedSprite = GameObject.Find("SlotMachineClosed").GetComponentInChildren<SpriteRenderer>();
 
 
-        this.spriteState = SpriteState.OPEN;
+        this.state = State.OPEN;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (this.spriteState == SpriteState.CLOSING)
+        if (this.state == State.CLOSING)
         {
             this.closedStartTime = Time.realtimeSinceStartup;
-            this.spriteState = SpriteState.CLOSED;
+            this.state = State.CLOSED;
         }
-        else if (this.spriteState == SpriteState.CLOSED)
+        else if (this.state == State.CLOSED)
         {
             this.openSprite.enabled = false;
             this.drawerSprite.enabled = false;
 
-            if (Time.realtimeSinceStartup - this.closedStartTime > this.maxCloseTime)
+            if (this.orbs[0].item.state == Item.State.TRANSFORMED && this.orbs[1].item.state == Item.State.TRANSFORMED)
             {
-                this.spriteState = SpriteState.OPEN;
+                this.SpawnMonster();
+                this.state = State.OPEN;
             }
         }
-        else if (this.spriteState == SpriteState.OPEN)
+        else if (this.state == State.OPEN)
         {
             this.openSprite.enabled = true;
             this.drawerSprite.enabled = true;
@@ -100,6 +100,11 @@ public class Machine : MonoBehaviour
 
     public void Interact()
     {
+        if (this.state != State.OPEN)
+        {
+            return;
+        }
+
         if (this.orbManager.IsOrbPickedUp() && this.orbs.Count < 2)
         {
             Debug.Log("Loading orb");
@@ -111,7 +116,7 @@ public class Machine : MonoBehaviour
             this.PullLever();
         }
     }
-    public void PutOrb(Orb orb)
+    private void PutOrb(Orb orb)
     {
         if (this.orbs.Count == 0)
         {
@@ -125,21 +130,26 @@ public class Machine : MonoBehaviour
         }
     }
 
-    public void PullLever()
+    private void PullLever()
     {
         if (this.orbs.Count == 2)
         {
-            this.spriteState = SpriteState.CLOSING;
-            
+            this.state = State.CLOSING;
             this.orbs[0].item.MachineLeverPull(orbPath);
             this.orbs[1].item.MachineLeverPull(orbPath);
+        }
+    }
 
+    private void SpawnMonster()
+    {
+        if (this.orbs.Count == 2)
+        {
             if (orbs[0].orbColor == Orb.OrbColor.BLUE && orbs[1].orbColor == Orb.OrbColor.BLUE)
             {
                 //Ghost slug
                 Debug.Log("MACHINE MAKES Ghost slug");
             }
-            else if(orbs[0].orbColor == Orb.OrbColor.RED && orbs[1].orbColor == Orb.OrbColor.RED)
+            else if (orbs[0].orbColor == Orb.OrbColor.RED && orbs[1].orbColor == Orb.OrbColor.RED)
             {
                 //Living flame
                 Debug.Log("MACHINE MAKES Living flame");
@@ -166,7 +176,7 @@ public class Machine : MonoBehaviour
                 Debug.Log("MACHINE MAKES Fire salamander");
             }
 
-            // orbs are now monsters
+            // orbs are no longer in machine
             this.orbs.Clear();
         }
     }
