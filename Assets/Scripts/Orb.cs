@@ -38,6 +38,13 @@ public class Orb : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (this.item.state == Item.State.TRANSFORMED)
+        {
+            this.spriteRenderer.enabled = false;
+        }
+        else 
+        {
+            this.spriteRenderer.enabled = true;
+        }
     }
 }

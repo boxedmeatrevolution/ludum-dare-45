@@ -16,7 +16,9 @@ public class Item : MonoBehaviour
 
     private float initialZ;
 
-    private Transform waypoint;
+    private Transform waypoint; // a single location to go to...
+    private List<Transform> waypointPath; //many locations to go to...
+    private int pathIdx;
     private float waypointAccel = 0.0005f;
     private float waypointVel = 0.0f;
 
@@ -29,7 +31,8 @@ public class Item : MonoBehaviour
         // Orbs only
         BEING_PUT_IN_MACHINE,
         IN_MACHINE,
-        TRANSFORMING
+        TRANSFORMING, 
+        TRANSFORMED
     }
 
     // Start is called before the first frame update
@@ -89,10 +92,11 @@ public class Item : MonoBehaviour
         if (this.state == State.BEING_PUT_IN_MACHINE)
         {
             Vector3 setZ = this.transform.position;
-            setZ.z = 6;
+            setZ.z = 6; // this puts it between the drawer of the machine and the machine
             this.transform.position = setZ;
             if (this.pickupZ > 0.00001f)
             {
+                // undo the pickupz but keep the ball in place
                 Vector3 removePickupZ = new Vector3(0, this.pickupZ, 0);
                 this.transform.position += removePickupZ;
                 this.pickupZ = 0f;
@@ -101,6 +105,17 @@ public class Item : MonoBehaviour
             if (this.IsAtWaypoint())
             {
                 this.state = State.IN_MACHINE;
+            }
+        }
+        if (this.state == State.TRANSFORMING)
+        {
+            Vector3 setZ = this.transform.position;
+            setZ.z = 10; // this puts it behind the machine
+            this.transform.position = setZ;
+            this.MoveAlongPath();
+            if (this.IsAtEndOfPath())
+            {
+                this.state = State.TRANSFORMED;
             }
         }
 
@@ -151,6 +166,24 @@ public class Item : MonoBehaviour
         }
     }
 
+    private void MoveAlongPath()
+    {
+        if (this.waypointPath == null)
+        {
+            Debug.Log("Cannot along path: path is null");
+            return;
+        }
+        this.waypoint = this.waypointPath[this.pathIdx];
+        this.MoveToWaypoint();
+        if (this.IsAtWaypoint())
+        {
+            if (!this.IsAtEndOfPath())
+            {
+                this.pathIdx++;
+            }
+        }
+    }
+
     private bool IsAtWaypoint()
     {
         if (this.waypoint == null)
@@ -161,10 +194,30 @@ public class Item : MonoBehaviour
         return ((Vector2)this.waypoint.position - (Vector2)this.transform.position).magnitude < 0.0001f;
     }
 
+    private bool IsAtEndOfPath()
+    {
+        if (this.waypointPath == null)
+        {
+            Debug.Log("Cannot along path: path is null");
+            return true;
+        }
+
+        return this.pathIdx == this.waypointPath.Count - 1 
+            && ((Vector2)this.waypointPath[this.waypointPath.Count - 1].position - (Vector2)this.transform.position).magnitude < 0.0001f;
+    }
+
     public void PutInMachine(Transform transform)
     {
         this.pickedUp = false;
         this.state = State.BEING_PUT_IN_MACHINE;
         this.waypoint = transform;
+    }
+
+    public void MachineLeverPull(List<Transform> path)
+    {
+        this.pickedUp = false;
+        this.state = State.TRANSFORMING;
+        this.waypointPath = path;
+        this.pathIdx = 0;
     }
 }
