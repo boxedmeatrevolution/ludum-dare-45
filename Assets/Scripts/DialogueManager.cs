@@ -24,8 +24,8 @@ public class DialogueManager : MonoBehaviour
     {
         this.SetFile("goblin_encounter_1");
         this.SetScene("scene1");
-        this.nameTxt = GameObject.Find("DialogueName").GetComponent<Text>();
-        this.dialogueTxt = GameObject.Find("DialogueText").GetComponent<Text>();
+        this.nameTxt = GameObject.Find("DialogueName").GetComponentInChildren<Text>();
+        this.dialogueTxt = GameObject.Find("DialogueText").GetComponentInChildren<Text>();
         this.Display();
     }
 
