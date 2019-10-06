@@ -26,6 +26,7 @@ public class Monster : MonoBehaviour
     protected float threatenTimer;
     protected Vector2 fightVel;
     protected Item item;
+    protected bool isThreatened = false;
     public bool canPickUp = true;
     public float encounterTime = 1f;
     public float averageWaitTime = 4f;
@@ -88,7 +89,7 @@ public class Monster : MonoBehaviour
                 if (monster == this) {
                     continue;
                 }
-                if (monster.state == State.WANDER) {
+                if (monster.state == State.WANDER && !monster.isThreatened) {
                     Vector2 monster_displacement = monster.transform.position - this.transform.position;
                     if (monster_displacement.magnitude < this.aggressionRadius) {
                         this.state = this.ChooseThreatenOffensive(monster);
@@ -100,10 +101,12 @@ public class Monster : MonoBehaviour
                             monster.state = monster.ChooseThreatenDefensive(this);
                         }
                         if (this.state == State.THREATEN) {
+                            monster.isThreatened = true;
                             this.threatenTarget = monster;
                             this.threatenTimer = this.threatenTime;
                         }
                         if (monster.state == State.THREATEN) {
+                            this.isThreatened = true;
                             monster.threatenTarget = this;
                             monster.threatenTimer = monster.threatenTime;
                         }
@@ -117,6 +120,9 @@ public class Monster : MonoBehaviour
                         }
                     }
                 }
+                if (this.isThreatened || this.state != State.WANDER) {
+                    break;
+                }
             }
         }
         if (this.state == State.THREATEN) {
@@ -128,11 +134,14 @@ public class Monster : MonoBehaviour
                     this.fightTarget = monster;
                     this.state = State.PRE_FIGHT;
                     this.fightVel = new Vector2();
-                    monster.fightTarget = this;
-                    monster.state = State.PRE_FIGHT;
-                    monster.fightVel = new Vector2();
+                    if (monster.state == State.THREATEN) {
+                        monster.fightTarget = this;
+                        monster.state = State.PRE_FIGHT;
+                        monster.fightVel = new Vector2();
+                    }
                 } else if (distance > this.panicRadius && distance > monster.panicRadius) {
                     this.state = State.WANDER;
+                    this.threatenTarget.isThreatened = false;
                 }
             }
         }
@@ -181,6 +190,7 @@ public class Monster : MonoBehaviour
         if (this.state == State.POST_FIGHT) {
             Monster monster = this.fightTarget;
             if (monster == null) {
+                this.isThreatened = false;
                 this.state = State.WANDER;
             } else {
                 Vector2 displacement = monster.transform.position - this.transform.position;
@@ -188,6 +198,8 @@ public class Monster : MonoBehaviour
                     this.transform.position -= (Vector3)displacement / displacement.magnitude * this.speed * Time.deltaTime;
                 }
                 if (displacement.magnitude > this.panicRadius && displacement.magnitude > monster.panicRadius) {
+                    this.isThreatened = false;
+                    monster.isThreatened = false;
                     this.state = State.WANDER;
                     monster.state = State.WANDER;
                 }
@@ -199,6 +211,12 @@ public class Monster : MonoBehaviour
             Vector2 displacement = monster.transform.position - this.transform.position;
             if (displacement.magnitude > this.panicRadius && displacement.magnitude > monster.panicRadius) {
                 if (this.panicVel.magnitude < this.speed) {
+                    if (monster.state == State.THREATEN && monster.threatenTarget == this) {
+                        monster.threatenTarget = null;
+                        this.isThreatened = false;
+                        monster.isThreatened = false;
+                        monster.state = State.WANDER;
+                    }
                     this.state = State.WANDER;
                     this.avoidTimer = this.avoidTime;
                 }
