@@ -2,328 +2,325 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Monster : MonoBehaviour
-{
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Monster : MonoBehaviour {
+    private readonly static float FIGHT_TIME = 2f;
+    private readonly static float POST_FIGHT_TIME = 3f;
+    private readonly static float DYING_TIME = 1f;
+    private float stateTimer;
+    private Vector2 velocity;
+    private State state;
+    private bool enflamed;
+    private Item item;
+
+    private Pen pen;
+    private Vector2 waypoint;
+    private Monster avoid;
+
+    private Fire fire;
+    private new SpriteRenderer renderer;
+    private Emotion emotion;
+
+    private FightCloud fightCloud;
+
+    // No matter what, any pairwise interactions require one and only one partner.
+    private Monster target;
+
+    public float friction = 2f;
+    public float fireHeight = 0.5f;
+    public float accel = 3f;
+    public float wanderSpeed = 0.5f;
+    public float sprintSpeed = 2f;
+    public float fleeRadius = 2.5f;
+    public float threatenRadius = 1.5f;
+    public float averageWaitTime = 5f;
+    public float threatenTime = 2f;
+
     public enum State {
         WANDER,
         THREATEN,
+        FLEE,
+        IGNORE,
         PRE_FIGHT,
         FIGHT,
         POST_FIGHT,
-        PANIC,
+        ENFLAMED_PANIC,
+        LURE, // One monster lures, the other is mesmerized.
+        MESMERIZED,
+        GOOED, // Get gooed by slugs
+        DYING,
         DEAD
     }
-    private Emotion emotion;
-    private SpriteRenderer renderer;
-    private Pen pen;
-    private Vector2 waypoint;
-    private Fire fire;
-    private bool exploded;
-    private float explosionTimer;
-    protected State state;
-    protected float postFightTimer;
-    protected Monster fightTarget;
-    protected float fightTimer;
-    protected float avoidTimer;
-    protected Monster panicTarget;
-    protected Vector2 panicVel;
-    protected Monster threatenTarget;
-    protected float threatenTimer;
-    protected Vector2 fightVel;
-    protected Vector2 deadVel;
-    protected Item item;
-    protected bool isThreatened;
-    protected FightCloud fightCloud;
-    protected bool dead;
-    protected bool enflamed;
-    public float fireHeight = 0.2f;
-    public bool canPickUp = true;
-    public float averageWaitTime = 4f;
-    public float postFightTime = 1f;
-    public float speed = 0.35f;
-    public float avoidTime = 10f;
-    public float panicSpeed = 0.8f;
-    public float panicAccel = 2f;
-    public float fightSpeed = 2f;
-    public float fightAccel = 2f;
-    public float aggressionRadius = 2f;
-    public float panicRadius = 4f;
-    public float fightTime = 2f;
-    public float threatenTime = 2f;
 
     // Start is called before the first frame update
-    protected virtual void Start()
-    {
+    protected virtual void Start() {
+        this.stateTimer = 0f;
+        this.velocity = Vector2.zero;
+        this.enflamed = false;
+        this.pen = FindObjectOfType<Pen>();
+        this.item = GetComponent<Item>();
         this.renderer = GetComponentInChildren<SpriteRenderer>();
         this.emotion = GetComponentInChildren<Emotion>();
-        this.pen = FindObjectOfType<Pen>();
-        this.state = State.WANDER;
-        this.isThreatened = false;
-        this.item = GetComponent<Item>();
         this.fightCloud = null;
-        this.enflamed = false;
-        this.exploded = false;
-        this.explosionTimer = 1f;
-        this.ChooseWaypoint();
+        this.fire = null;
+        this.target = null;
+        this.avoid = null;
+
+        this.waypoint = this.ChooseWaypoint(this.pen);
     }
 
-    // Update is called once per frame
-    protected virtual void Update()
-    {
-        if (this.enflamed) {
-            if (this.fire == null) {
-                GameObject fireObj = Instantiate(PrefabManager.FIRE_PREFAB, this.renderer.transform);
-                this.fire = fireObj.GetComponentInChildren<Fire>();
-                this.fire.transform.localPosition = new Vector2(0, this.fireHeight - this.renderer.transform.localPosition.y);
-            }
-        } else {
-            if (this.fire != null) {
-                this.fire.FireOver();
-                this.fire = null;
-            }
-        }
-        this.emotion.UpdateFromState(this.state);
-        if (this.item.state != Item.State.ON_GROUND) {
-            if (this.isThreatened) {
-                foreach (Monster monster in FindObjectsOfType<Monster>()) {
-                    if (monster.threatenTarget == this) {
-                        monster.isThreatened = false;
-                        this.isThreatened = false;
-                        monster.state = State.WANDER;
-                        monster.threatenTarget = null;
+    protected virtual void Update() {
+        if (this.state == State.WANDER) {
+            // Actions.
+            Vector2 displacement = this.waypoint - (Vector2)this.transform.position;
+            if (displacement.magnitude > 0.1) {
+                // Move towards waypoint, avoiding the other monster.
+                this.velocity += this.accel * displacement.normalized * Time.deltaTime;
+                if (this.avoid != null) {
+                    Vector2 avoidDisplacement = this.avoid.transform.position - this.transform.position;
+                    if (avoidDisplacement.magnitude < this.fleeRadius) {
+                        this.velocity -= this.accel * avoidDisplacement.normalized * Time.deltaTime;
                     }
                 }
             }
-        } else {
-            if (this.state == State.WANDER) {
-                Vector2 displacement = this.waypoint - (Vector2)this.transform.position;
-                if (displacement.magnitude > 0.01) {
-                    Vector2 direction = displacement.normalized;
-                    Vector2 proposedMove = (Vector3)direction * speed * Time.deltaTime;
-                    if (this.panicTarget != null) {
-                        this.avoidTimer -= Time.deltaTime;
-                        Monster monster = this.panicTarget;
-                        Vector2 panic_displacement = this.transform.position - monster.transform.position;
-                        if (panic_displacement.magnitude != 0 && panic_displacement.magnitude < this.panicRadius) {
-                            float correction = -Vector2.Dot(proposedMove, panic_displacement) / panic_displacement.magnitude;
-                            if (correction > 0f) {
-                                proposedMove += correction * panic_displacement / panic_displacement.magnitude;
-                            }
-                            if (proposedMove.magnitude != 0) {
-                                proposedMove *= this.speed * Time.deltaTime / proposedMove.magnitude;
-                            }
+            else {
+                // Choose a new waypoint.
+                if (Random.value > (1 - Time.deltaTime / this.averageWaitTime)) {
+                    this.waypoint = this.ChooseWaypoint(this.pen);
+                }
+            }
+            // Transitions.
+            foreach (Monster monster in FindObjectsOfType<Monster>()) {
+                if (monster == this || this.state != State.WANDER) {
+                    continue;
+                }
+                // Can only interact with monsters in the wander state.
+                if (monster.state == State.WANDER) {
+                    Vector2 monsterDisplacement = monster.transform.position - this.transform.position;
+                    // Can only interact with monsters smaller than threaten radius.
+                    if (monsterDisplacement.magnitude < this.threatenRadius) {
+                        State choice = this.ChooseThreatenOffensive(monster);
+                        State monsterChoice = monster.ChooseThreatenOffensive(this);
+                        bool isThreaten = false;
+                        if (choice == State.FLEE) {
+                            this.state = State.FLEE;
+                            this.target = monster;
+                        }
+                        if (monsterChoice == State.FLEE) {
+                            monsterChoice = State.FLEE;
+                            monster.target = this;
+                        }
+                        if (choice == State.THREATEN) {
+                            isThreaten = true;
+                            this.state = State.THREATEN;
+                            this.stateTimer = this.threatenTime;
+                            this.target = monster;
+                            monster.avoid = this;
+                        }
+                        if (monsterChoice == State.THREATEN) {
+                            isThreaten = true;
+                            monster.state = State.THREATEN;
+                            monster.stateTimer = monster.threatenTime;
+                            monster.target = this;
+                            this.avoid = monster;
+                        }
+                        if (isThreaten && choice == State.IGNORE) {
+                            this.state = State.IGNORE;
+                            this.target = monster;
+                        }
+                        if (isThreaten && monsterChoice == State.IGNORE) {
+                            monster.state = State.IGNORE;
+                            monster.target = this;
                         }
                     }
-                    this.transform.position += (Vector3)proposedMove;
-                    if (this.avoidTimer < 0f) {
-                        this.panicTarget = null;
-                    }
                 }
-                else if (Random.value > (1 - (Time.deltaTime / this.averageWaitTime))) {
-                    this.ChooseWaypoint();
+            }
+
+        }
+        else if (this.state == State.IGNORE) {
+            Monster monster = this.target;
+            Vector2 displacement = this.waypoint - (Vector2)this.transform.position;
+            if (displacement.magnitude > 0.1) {
+                // Move towards waypoint.
+                this.velocity += this.accel * displacement.normalized * Time.deltaTime;
+            }
+            else {
+                // Choose a new waypoint.
+                if (Random.value > (1 - Time.deltaTime / this.averageWaitTime)) {
+                    this.waypoint = this.ChooseWaypoint(this.pen);
+                }
+            }
+        }
+        else if (this.state == State.THREATEN) {
+            this.stateTimer -= Time.deltaTime;
+            if (this.stateTimer < 0f) {
+                Monster monster = this.target;
+                float distance = (monster.transform.position - this.transform.position).magnitude;
+                if (monster.state != State.FLEE) {
+                    this.state = State.PRE_FIGHT;
+                }
+                if (distance > this.fleeRadius && distance > monster.fleeRadius) {
+                    this.state = State.WANDER;
+                }
+            }
+        }
+        else if (this.state == State.PRE_FIGHT) {
+            Monster monster = this.target;
+            Vector2 displacement = monster.transform.position - this.transform.position;
+            if (displacement.magnitude > 0.1) {
+                this.velocity += this.accel * displacement.normalized * Time.deltaTime;
+            }
+            else {
+                this.state = State.FIGHT;
+                this.stateTimer = Monster.FIGHT_TIME;
+                monster.state = State.FIGHT;
+                monster.stateTimer = Monster.FIGHT_TIME;
+                if (this.IsFirey() || this.enflamed) {
+                    monster.Enflame();
+                }
+                if (monster.IsFirey() || monster.enflamed) {
+                    this.Enflame();
                 }
 
-                foreach (Monster monster in FindObjectsOfType<Monster>()) {
-                    if (monster == this) {
-                        continue;
-                    }
-                    if (this.isThreatened || this.state != State.WANDER) {
-                        break;
-                    }
-                    if (monster.state == State.WANDER && !monster.isThreatened && monster.item.state == Item.State.ON_GROUND) {
-                        Vector2 monster_displacement = monster.transform.position - this.transform.position;
-                        if (monster_displacement.magnitude < this.aggressionRadius) {
-                            this.state = this.ChooseThreatenOffensive(monster);
-                            monster.state = monster.ChooseThreatenOffensive(this);
-                            if (monster.state == State.THREATEN && this.state == State.WANDER) {
-                                this.state = this.ChooseThreatenDefensive(monster);
-                            }
-                            if (this.state == State.THREATEN && monster.state == State.WANDER) {
-                                monster.state = monster.ChooseThreatenDefensive(this);
-                            }
-                            if (this.state == State.THREATEN) {
-                                monster.isThreatened = true;
-                                this.threatenTarget = monster;
-                                this.threatenTimer = this.threatenTime;
-                            }
-                            if (monster.state == State.THREATEN) {
-                                this.isThreatened = true;
-                                monster.threatenTarget = this;
-                                monster.threatenTimer = monster.threatenTime;
-                            }
-                            if (this.state == State.PANIC) {
-                                this.panicTarget = monster;
-                                this.panicVel = Vector2.zero;
-                            }
-                            if (monster.state == State.PANIC) {
-                                monster.panicTarget = this;
-                                monster.panicVel = Vector2.zero;
-                            }
-                        }
-                    }
-                }
+                // Make fight cloud.
+                GameObject fightCloudObj = Instantiate(PrefabManager.FIGHT_CLOUD_PREFAB, this.transform.position, Quaternion.identity);
+                this.fightCloud = fightCloudObj.GetComponent<FightCloud>();
+                monster.fightCloud = this.fightCloud;
+                this.fightCloud.fighter1 = this;
+                this.fightCloud.fighter2 = monster;
             }
-            if (this.state == State.THREATEN) {
-                this.threatenTimer -= Time.deltaTime;
-                if (this.threatenTimer < 0f) {
-                    Monster monster = this.threatenTarget;
-                    float distance = (monster.transform.position - this.transform.position).magnitude;
-                    if (this.threatenTarget.state != State.PANIC) {
-                        this.fightTarget = monster;
-                        this.state = State.PRE_FIGHT;
-                        this.fightVel = Vector2.zero;
-                        if (monster.state == State.THREATEN) {
-                            monster.fightTarget = this;
-                            monster.state = State.PRE_FIGHT;
-                            monster.fightVel = Vector2.zero;
-                        }
-                    }
-                    else if (distance > this.panicRadius && distance > monster.panicRadius) {
-                        this.state = State.WANDER;
-                        this.threatenTarget.isThreatened = false;
-                    }
-                }
-            }
-            if (this.state == State.PRE_FIGHT) {
-                // Charge at one another.
-                Monster monster = this.threatenTarget;
-                Vector2 displacement = monster.transform.position - this.transform.position;
-                if (displacement.magnitude > 0.1) {
-                    this.fightVel += displacement.normalized * this.fightAccel * Time.deltaTime;
-                    if (this.fightVel.magnitude > this.fightSpeed) {
-                        this.fightVel *= this.fightSpeed / this.fightVel.magnitude;
-                    }
-                    this.fightVel = this.fightVel.magnitude * displacement.normalized;
-                    this.transform.position += (Vector3)this.fightVel * Time.deltaTime;
+        }
+        else if (state == State.FIGHT) {
+            Monster monster = this.target;
+            this.velocity = Vector2.zero;
+            this.stateTimer -= Time.deltaTime;
+            if (this.stateTimer < 0f) {
+                // Destroy fight cloud.
+                Destroy(this.fightCloud.gameObject);
+                this.fightCloud = null;
+                if (this.KillOpponent(monster)) {
+                    monster.state = State.DYING;
+                    monster.stateTimer = Monster.DYING_TIME;
+                    monster.velocity = new Vector2(
+                        Random.Range(1f, 2f),
+                        Random.Range(-1f, 1f));
+                    monster.target = null;
                 }
                 else {
-                    this.state = State.FIGHT;
-                    this.fightTimer = this.fightTime;
-                    monster.state = State.FIGHT;
-                    monster.fightTimer = monster.fightTime;
-                    this.fightTarget = monster;
-                    monster.fightTarget = this;
-                    if (this.IsFirey() || this.enflamed) {
-                        if (monster.CanBurn()) {
-                            monster.Enflame();
-                        }
-                    }
-                    if (monster.IsFirey() || monster.enflamed) {
-                        if (this.CanBurn()) {
-                            this.Enflame();
-                        }
-                    }
+                    monster.state = State.POST_FIGHT;
+                    monster.stateTimer = Monster.POST_FIGHT_TIME;
                 }
-            }
-            if (this.state == State.FIGHT) {
-                Monster monster = this.fightTarget;
-                this.transform.position = monster.transform.position;
-                this.fightTimer -= Time.deltaTime;
-                if (this.fightCloud == null) {
-                    GameObject fightCloudObj = Instantiate(PrefabManager.FIGHT_CLOUD_PREFAB, this.transform.position, Quaternion.identity);
-                    this.fightCloud = fightCloudObj.GetComponent<FightCloud>();
-                    monster.fightCloud = this.fightCloud;
-                    this.fightCloud.fighter1 = this;
-                    this.fightCloud.fighter2 = monster;
-                }
-                if (this.fightTimer < 0f && monster.fightTimer < 0f) {
-                    this.fightCloud.FightOver();
-                    this.fightCloud = null;
-                    monster.fightCloud = null;
-                    if (!this.SurviveFight(monster)) {
-                        this.state = State.DEAD;
-                        this.deadVel = new Vector2(
-                            Random.Range(1f, 2f),
-                            Random.Range(-1f, 1f));
-                        monster.fightTarget = null;
-                    }
-                    else {
-                        this.state = State.POST_FIGHT;
-                        this.postFightTimer = this.postFightTime;
-                        this.transform.position += new Vector3(
-                            Random.Range(-0.1f, 0.1f),
-                            Random.Range(-0.1f, 0.1f));
-                    }
-                    if (!monster.SurviveFight(this)) {
-                        monster.state = State.DEAD;
-                        monster.deadVel = new Vector2(
-                            Random.Range(-2f, -1f),
-                            Random.Range(-1f, 1f));
-                        this.fightTarget = null;
-                    }
-                    else {
-                        monster.state = State.POST_FIGHT;
-                        monster.postFightTimer = monster.postFightTime;
-                        monster.transform.position += new Vector3(
-                            Random.Range(-0.1f, 0.1f),
-                            Random.Range(-0.1f, 0.1f));
-                    }
-                }
-            }
-            if (this.state == State.POST_FIGHT) {
-                Monster monster = this.fightTarget;
-                this.postFightTimer -= Time.deltaTime;
-                if (monster == null) {
-                    if (this.postFightTimer < 0f) {
-                        this.isThreatened = false;
-                        this.state = State.WANDER;
-                    }
+                if (monster.KillOpponent(this)) {
+                    this.state = State.DYING;
+                    this.stateTimer = Monster.DYING_TIME;
+                    this.velocity = new Vector2(
+                        Random.Range(1f, 2f),
+                        Random.Range(-1f, 1f));
+                    this.target = null;
                 }
                 else {
-                    Vector2 displacement = monster.transform.position - this.transform.position;
-                    if (displacement.magnitude != 0f) {
-                        this.transform.position -= (Vector3)displacement / displacement.magnitude * this.speed * Time.deltaTime;
-                    }
-                    if (displacement.magnitude > this.panicRadius && displacement.magnitude > monster.panicRadius) {
-                        this.isThreatened = false;
-                        monster.isThreatened = false;
-                        this.state = State.WANDER;
-                        monster.state = State.WANDER;
-                    }
-                }
-            }
-            if (this.state == State.PANIC) {
-                // Charge away from one another.
-                Monster monster = this.panicTarget;
-                Vector2 displacement = monster.transform.position - this.transform.position;
-                if (displacement.magnitude > this.panicRadius && displacement.magnitude > monster.panicRadius) {
-                    if (this.panicVel.magnitude < this.speed) {
-                        if (monster.state == State.THREATEN && monster.threatenTarget == this) {
-                            monster.threatenTarget = null;
-                            this.isThreatened = false;
-                            monster.isThreatened = false;
-                            monster.state = State.WANDER;
-                        }
-                        this.state = State.WANDER;
-                        this.avoidTimer = this.avoidTime;
-                    }
-                    else {
-                        this.panicVel -= this.panicAccel * this.panicVel.normalized * Time.deltaTime;
-                    }
-                }
-                else if (displacement.magnitude > 0.01) {
-                    this.panicVel -= displacement.normalized * this.panicAccel * Time.deltaTime;
-                    if (this.panicVel.magnitude > this.panicSpeed) {
-                        this.panicVel *= this.panicSpeed / this.panicVel.magnitude;
-                    }
-                }
-                this.transform.position += (Vector3)this.panicVel * Time.deltaTime;
-            }
-            if (this.state == State.DEAD) {
-                this.transform.position += (Vector3)this.deadVel * Time.deltaTime;
-                if (this.deadVel.magnitude > 1f) {
-                    this.deadVel -= this.deadVel.normalized * 3f * Time.deltaTime;
-                }
-                else {
-                    this.deadVel = Vector2.zero;
-                    this.explosionTimer -= Time.deltaTime;
-                    if (this.explosionTimer < 0f && this.IsExplosive() && !this.exploded) {
-                        this.exploded = true;
-                        Instantiate(PrefabManager.EXPLOSION_PREFAB, this.transform.position, Quaternion.identity);
-                    }
+                    this.state = State.POST_FIGHT;
+                    this.stateTimer = Monster.POST_FIGHT_TIME;
                 }
             }
         }
+        else if (this.state == State.POST_FIGHT) {
+            Monster monster = this.target;
+            this.stateTimer -= Time.deltaTime;
+            Vector2 displacement = monster.transform.position - this.transform.position;
+            if (this.stateTimer < 0f && displacement.magnitude > this.fleeRadius && displacement.magnitude > monster.fleeRadius) {
+                this.state = State.WANDER;
+                this.waypoint = this.ChooseWaypoint(this.pen);
+            }
+            else {
+                if (displacement.magnitude == 0f) {
+                    float angle = 2 * Mathf.PI * Random.value;
+                    displacement = 0.1f * new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+                }
+                this.velocity -= this.accel * displacement.normalized * Time.deltaTime;
+            }
+        }
+        else if (this.state == State.FLEE) {
+            Monster monster = this.target;
+            Vector2 displacement = monster.transform.position - this.transform.position;
+            if (displacement.magnitude == 0f) {
+                float angle = 2 * Mathf.PI * Random.value;
+                displacement = 0.1f * new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+            }
+            this.velocity -= this.accel * displacement.normalized * Time.deltaTime;
+            if (displacement.magnitude > this.fleeRadius && displacement.magnitude > monster.fleeRadius) {
+                this.state = State.WANDER;
+                if (monster.state == State.THREATEN || monster.state == State.FLEE) {
+                    monster.state = State.WANDER;
+                }
+            }
+        }
+        else if (this.state == State.DYING) {
+            this.stateTimer -= Time.deltaTime;
+            if (this.stateTimer < 0f) {
+                this.state = State.DEAD;
+                if (this.IsExplosive()) {
+                    Instantiate(PrefabManager.EXPLOSION_PREFAB, this.transform.position, Quaternion.identity);
+                }
+            }
+        }
+
+        // Physics
+        float speed = this.velocity.magnitude;
+        float maxSpeed = (this.state == State.WANDER || this.state == State.POST_FIGHT || this.state == State.IGNORE) ?
+            this.wanderSpeed : this.sprintSpeed;
+        if (speed != 0f) {
+            Vector2 frictionChange = this.velocity.normalized * this.friction * Time.deltaTime;
+            if (frictionChange.magnitude < speed) {
+                this.velocity -= frictionChange;
+            } else {
+                this.velocity = Vector2.zero;
+            }
+        }
+        if (speed > maxSpeed) {
+            this.velocity *= maxSpeed / speed;
+        }
+        this.transform.position += (Vector3)this.velocity * Time.deltaTime;
+        this.emotion.UpdateFromState(state);
+    }
+
+    // Choose whether to threaten, flee, or ignore when another monster wanders into range.
+    protected virtual State ChooseThreatenOffensive(Monster other) {
+        return State.WANDER;
+    }
+
+    // Choose whether to threaten, flee, or ignore when another monster threatens.
+    protected virtual State ChooseThreatenDefensive(Monster other) {
+        return State.FLEE;
+    }
+
+    public void Enflame() {
+        if (this.CanBurn()) {
+            this.enflamed = true;
+            GameObject fireObj = Instantiate(PrefabManager.FIRE_PREFAB, this.renderer.transform);
+            this.fire = fireObj.GetComponentInChildren<Fire>();
+            this.fire.transform.localPosition = new Vector2(0, this.fireHeight - this.renderer.transform.localPosition.y);
+        }
+    }
+
+    public virtual Vector2 ChooseWaypoint(Pen pen) {
+        float x1 = pen.transform.position.x;
+        float x2 = x1 + pen.width;
+        float y1 = pen.transform.position.y;
+        float y2 = y1 + pen.height;
+        Vector2 result = (Vector2)this.transform.position + 256f * Random.insideUnitCircle;
+        result.x = Mathf.Clamp(result.x, x1, x2);
+        result.y = Mathf.Clamp(result.y, y1, y2);
+        return result;
+    }
+
+    public void Extinguish() {
+        this.enflamed = false;
+        Destroy(this.fire.gameObject);
+        this.fire = null;
     }
 
     public virtual bool IsFirey() {
@@ -338,38 +335,19 @@ public class Monster : MonoBehaviour
         return false;
     }
 
-    public void Enflame() {
-        if (this.CanBurn()) {
-            this.enflamed = true;
-        }
-    }
-
-    public void Extinguish() {
-        this.enflamed = false;
+    public virtual bool KillOpponent(Monster other) {
+        return false;
     }
 
     public bool CanPickup() {
-        return this.canPickUp && (this.state == State.WANDER || this.state == State.DEAD);
-    }
-
-    // Choose whether to threaten, panic, or just keep wandering when another monster wanders into range.
-    protected virtual State ChooseThreatenOffensive(Monster other) {
-        return State.WANDER;
-    }
-
-    // Choose whether to threaten, panic, or just keep wandering when another monster threatens.
-    protected virtual State ChooseThreatenDefensive(Monster other) {
-        return State.PANIC;
-    }
-    
-    // Choose whether you survive the fight with the other monster.
-    protected virtual bool SurviveFight(Monster other) {
-        return true;
-    }
-
-    private void ChooseWaypoint() {
-        this.waypoint = (Vector2)this.pen.transform.position + new Vector2(
-            Random.Range(0, pen.width),
-            Random.Range(0, pen.height));
+        if (this.state == State.IGNORE) {
+            Monster monster = this.target;
+            if (monster.state == State.THREATEN || monster.state == State.FLEE) {
+                monster.state = State.WANDER;
+                monster.target = null;
+            }
+            return true;
+        }
+        return this.state == State.WANDER || this.state == State.DYING;
     }
 }

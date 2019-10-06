@@ -36,7 +36,13 @@ public class FireSalamander : Monster {
     }
 
     // Choose whether you survive the fight with the other monster.
-    protected override bool SurviveFight(Monster other) {
+    /*protected override bool SurviveFight(Monster other) {
+        return false;
+    }*/
+    public override bool KillOpponent(Monster other) {
+        if (other is GhostSlug || other is FireSalamander) {
+            return true;
+        }
         return false;
     }
 }

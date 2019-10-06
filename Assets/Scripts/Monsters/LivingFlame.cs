@@ -26,7 +26,7 @@ public class LivingFlame : Monster {
         if (other is PlantOgre) {
             return State.THREATEN;
         } else if (false) {
-            return State.PANIC;
+            return State.FLEE;
         } else {
             return State.WANDER;
         }
@@ -38,11 +38,17 @@ public class LivingFlame : Monster {
     }
 
     // Choose whether you survive the fight with the other monster.
-    protected override bool SurviveFight(Monster other) {
+    /*protected override bool SurviveFight(Monster other) {
         if (other is PlantOgre) {
             return false;
         } else {
             return true;
         }
+    }*/
+    public override bool KillOpponent(Monster other) {
+        if (other is FireSalamander || other is GhostSlug || other is Goblin || other is LivingFlame) {
+            return true;
+        }
+        return false;
     }
 }

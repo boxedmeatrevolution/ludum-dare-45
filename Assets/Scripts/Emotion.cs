@@ -6,12 +6,12 @@ public class Emotion : MonoBehaviour
 {
     public Sprite wanderSprite;
     public Sprite threatenSprite;
-    public Sprite panicSprite;
+    public Sprite fleeSprite;
     public Sprite fightSprite;
     public Sprite postFightSprite;
     public Sprite deadSprite;
 
-    private SpriteRenderer renderer;
+    private new SpriteRenderer renderer;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,13 +24,13 @@ public class Emotion : MonoBehaviour
             sprite = this.wanderSprite;
         } else if (state == Monster.State.THREATEN) {
             sprite = this.threatenSprite;
-        } else if (state == Monster.State.PANIC) {
-            sprite = this.panicSprite;
+        } else if (state == Monster.State.FLEE) {
+            sprite = this.fleeSprite;
         } else if (state == Monster.State.PRE_FIGHT) {
             sprite = this.fightSprite;
         } else if (state == Monster.State.POST_FIGHT) {
             sprite = this.postFightSprite;
-        } else if (state == Monster.State.DEAD) {
+        } else if (state == Monster.State.DYING) {
             sprite = this.deadSprite;
         }
         this.renderer.sprite = sprite;
