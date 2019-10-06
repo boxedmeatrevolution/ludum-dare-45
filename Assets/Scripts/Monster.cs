@@ -25,8 +25,9 @@ public class Monster : MonoBehaviour
     protected Monster threatenTarget;
     protected float threatenTimer;
     protected Vector2 fightVel;
+    protected Vector2 deadVel;
     protected Item item;
-    protected bool isThreatened = false;
+    protected bool isThreatened;
     public bool canPickUp = true;
     public float encounterTime = 1f;
     public float averageWaitTime = 4f;
@@ -46,6 +47,7 @@ public class Monster : MonoBehaviour
     {
         this.pen = FindObjectOfType<Pen>();
         this.state = State.WANDER;
+        this.isThreatened = false;
         this.item = GetComponent<Item>();
         this.ChooseWaypoint();
     }
@@ -112,11 +114,11 @@ public class Monster : MonoBehaviour
                         }
                         if (this.state == State.PANIC) {
                             this.panicTarget = monster;
-                            this.panicVel = new Vector2();
+                            this.panicVel = Vector2.zero;
                         }
                         if (monster.state == State.PANIC) {
                             monster.panicTarget = this;
-                            monster.panicVel = new Vector2();
+                            monster.panicVel = Vector2.zero;
                         }
                     }
                 }
@@ -133,11 +135,11 @@ public class Monster : MonoBehaviour
                 if (this.threatenTarget.state == State.THREATEN && this.threatenTarget.threatenTarget == this) {
                     this.fightTarget = monster;
                     this.state = State.PRE_FIGHT;
-                    this.fightVel = new Vector2();
+                    this.fightVel = Vector2.zero;
                     if (monster.state == State.THREATEN) {
                         monster.fightTarget = this;
                         monster.state = State.PRE_FIGHT;
-                        monster.fightVel = new Vector2();
+                        monster.fightVel = Vector2.zero;
                     }
                 } else if (distance > this.panicRadius && distance > monster.panicRadius) {
                     this.state = State.WANDER;
@@ -169,6 +171,9 @@ public class Monster : MonoBehaviour
             if (this.fightTimer < 0f && monster.fightTimer < 0f) {
                 if (!this.SurviveFight(monster)) {
                     this.state = State.DEAD;
+                    this.deadVel = new Vector2(
+                        Random.Range(1f, 2f),
+                        Random.Range(-1f, 1f));
                     monster.fightTarget = null;
                 } else {
                     this.state = State.POST_FIGHT;
@@ -178,6 +183,9 @@ public class Monster : MonoBehaviour
                 }
                 if (!monster.SurviveFight(this)) {
                     monster.state = State.DEAD;
+                    monster.deadVel = new Vector2(
+                        Random.Range(-2f, -1f),
+                        Random.Range(-1f, 1f));
                     this.fightTarget = null;
                 } else {
                     monster.state = State.POST_FIGHT;
@@ -230,6 +238,14 @@ public class Monster : MonoBehaviour
                 }
             }
             this.transform.position += (Vector3)this.panicVel * Time.deltaTime;
+        }
+        if (this.state == State.DEAD) {
+            this.transform.position += (Vector3)this.deadVel * Time.deltaTime;
+            if (this.deadVel.magnitude > 1f) {
+                this.deadVel -= this.deadVel.normalized * 4f * Time.deltaTime;
+            } else {
+                this.deadVel = Vector2.zero;
+            }
         }
     }
 
