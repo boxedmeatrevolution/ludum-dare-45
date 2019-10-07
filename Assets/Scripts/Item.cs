@@ -15,7 +15,7 @@ public class Item : MonoBehaviour
     public State state;
 
     private float initialZ;
-    private Vector3 initialPosition;
+    public Vector3 initialPosition;
 
     private Vector3 waypoint; // a single location to go to...
     private List<Vector3> waypointPath; //many locations to go to...

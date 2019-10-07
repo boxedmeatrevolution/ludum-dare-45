@@ -11,11 +11,21 @@ public class OrbManager : MonoBehaviour
     private List<Orb> orbsInMachine;
     private List<Orb> orbsInMonster;
 
+    private Stack<Orb> inactiveGhostOrbs = new Stack<Orb>();
+
     // Start is called before the first frame update
     void Start()
     {
         this.orbIsPickedUp = false;
         this.orbs = GetComponentsInChildren<Orb>();
+
+        for (int i = 0; i < this.orbs.Length; i++)
+        {
+            if (this.orbs[i].orbColor == Orb.OrbColor.WHITE)
+            {
+                this.inactiveGhostOrbs.Push(this.orbs[i]);
+            }
+        }
     }
 
     // Update is called once per frame
@@ -48,5 +58,26 @@ public class OrbManager : MonoBehaviour
     public void MakeGhostOrb(Orb primaryOrb, Orb[] otherOrbs)
     {
         Debug.Log("Making ghost orb");
+        if (this.inactiveGhostOrbs.Count < 0) {
+            Debug.Log("No more ghost orbs");
+            return;
+        }
+
+        Orb ghostOrb = this.inactiveGhostOrbs.Pop();
+        ghostOrb.AddChildOrb(primaryOrb);
+        for (int i = 0; i < otherOrbs.Length; i++)
+        {
+            ghostOrb.AddChildOrb(otherOrbs[i]);
+        }
+
+        primaryOrb.item.state = Item.State.TRANSFORMED;
+        for (int i = 0; i < otherOrbs.Length; i++)
+        {
+            otherOrbs[i].item.state = Item.State.TRANSFORMED;
+        }
+
+        ghostOrb.item.transform.position = primaryOrb.transform.position;
+        ghostOrb.item.initialPosition = ghostOrb.item.transform.position;
+
     }
 }

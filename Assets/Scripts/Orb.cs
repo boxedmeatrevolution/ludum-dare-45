@@ -13,11 +13,14 @@ public class Orb : MonoBehaviour
     public bool enflamed = false;
     private Transform fireAnchor;
 
+    public List<Orb> childOrbs = new List<Orb>();
+
     public enum OrbColor
     {
         BLUE,
         RED,
-        BROWN
+        BROWN,
+        WHITE
     }
 
     // Start is called before the first frame update
@@ -44,6 +47,9 @@ public class Orb : MonoBehaviour
                 break;
             case OrbColor.BROWN:
                 this.spriteRenderer.sprite = Resources.Load<Sprite>("BrownOrb");
+                break;
+            case OrbColor.WHITE:
+                this.spriteRenderer.sprite = Resources.Load<Sprite>("PurpleOrb");
                 break;
         }
     }
@@ -80,5 +86,10 @@ public class Orb : MonoBehaviour
         {
             Destroy(this.fire.gameObject);
         }
+    }
+
+    public void AddChildOrb(Orb orb)
+    {
+        this.childOrbs.Add(orb);
     }
 }
