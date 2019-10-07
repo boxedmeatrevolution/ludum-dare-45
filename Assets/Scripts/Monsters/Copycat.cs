@@ -30,16 +30,18 @@ public class Copycat : Monster {
                     }
                 }
             }
-            Type monsterType = minMonster.GetType();
-            if (!this.copycatProcess.ContainsKey(monsterType)) {
-                this.copycatProcess.Add(monsterType, 0f);
-            }
-            this.copycatProcess[monsterType] += Time.deltaTime;
-            if (this.copycatProcess[monsterType] > Copycat.COPYCAT_TIME) {
-                GameObject prefab = PrefabManager.GetMonsterPrefab(monsterType);
-                Monster monster = Instantiate(prefab, this.transform.position, Quaternion.identity).GetComponent<Monster>();
-                monster.SetCopycat(true);
-                Destroy(this.gameObject);
+            if (minMonster != null) {
+                Type monsterType = minMonster.GetType();
+                if (!this.copycatProcess.ContainsKey(monsterType)) {
+                    this.copycatProcess.Add(monsterType, 0f);
+                }
+                this.copycatProcess[monsterType] += Time.deltaTime;
+                if (this.copycatProcess[monsterType] > Copycat.COPYCAT_TIME) {
+                    GameObject prefab = PrefabManager.GetMonsterPrefab(monsterType);
+                    Monster monster = Instantiate(prefab, this.transform.position, Quaternion.identity).GetComponent<Monster>();
+                    monster.SetCopycat(true);
+                    Destroy(this.gameObject);
+                }
             }
         }
     }
