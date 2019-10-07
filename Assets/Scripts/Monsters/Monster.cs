@@ -42,6 +42,8 @@ public class Monster : MonoBehaviour {
     public float averageWaitTime = 5f;
     public float threatenTime = 2f;
 
+    public Orb[] orbs = new Orb[0];
+
     public enum State {
         WANDER,
         THREATEN,
@@ -359,6 +361,14 @@ public class Monster : MonoBehaviour {
                 }
             }
         }
+        else if (this.state == State.DEAD)
+        {
+            for (int i = 0; i < this.orbs.Length; i++)
+            {
+                this.orbs[i].item.ReturnToLab();
+            }
+            this.orbs = new Orb[0];
+        }
 
         this.stateTimer -= Time.deltaTime;
         // Physics
@@ -452,5 +462,10 @@ public class Monster : MonoBehaviour {
             return true;
         }
         return this.state == State.WANDER || this.state == State.DYING || this.state == State.DEAD || this.state == State.GOOED;
+    }
+
+    public void GiveOrbs(Orb[] orbs)
+    {
+        this.orbs = orbs;
     }
 }

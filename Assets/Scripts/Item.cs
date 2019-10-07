@@ -15,9 +15,10 @@ public class Item : MonoBehaviour
     public State state;
 
     private float initialZ;
+    private Vector3 initialPosition;
 
-    private Transform waypoint; // a single location to go to...
-    private List<Transform> waypointPath; //many locations to go to...
+    private Vector3 waypoint; // a single location to go to...
+    private List<Vector3> waypointPath; //many locations to go to...
     private int pathIdx;
     private float waypointAccel = 0.0005f;
     private float waypointVel = 0.0f;
@@ -32,7 +33,8 @@ public class Item : MonoBehaviour
         BEING_PUT_IN_MACHINE,
         IN_MACHINE,
         TRANSFORMING, 
-        TRANSFORMED
+        TRANSFORMED, 
+        RETURNING_TO_LAB
     }
 
     // Start is called before the first frame update
@@ -46,6 +48,7 @@ public class Item : MonoBehaviour
         this.pickupZ = 0f;
         this.waypointVel = 0f;
         this.initialZ = this.transform.position.z;
+        this.initialPosition = this.transform.position;
     }
 
     // Update is called once per frame
@@ -91,9 +94,7 @@ public class Item : MonoBehaviour
         }
         if (this.state == State.BEING_PUT_IN_MACHINE)
         {
-            Vector3 setZ = this.transform.position;
-            setZ.z = 6; // this puts it between the drawer of the machine and the machine
-            this.transform.position = setZ;
+            this.SetZIndex(6); // this puts it between the drawer of the machine and the machine
             if (this.pickupZ > 0.00001f)
             {
                 // undo the pickupz but keep the ball in place
@@ -109,13 +110,21 @@ public class Item : MonoBehaviour
         }
         if (this.state == State.TRANSFORMING)
         {
-            Vector3 setZ = this.transform.position;
-            setZ.z = 10; // this puts it behind the machine
-            this.transform.position = setZ;
+            this.SetZIndex(10); // behind the machine
             this.MoveAlongPath();
             if (this.IsAtEndOfPath())
             {
                 this.state = State.TRANSFORMED;
+                this.SetZIndex(this.initialZ);
+            }
+        }
+        if (this.state == State.RETURNING_TO_LAB)
+        {
+            this.waypoint = this.initialPosition;
+            this.MoveToWaypoint();
+            if (this.IsAtWaypoint())
+            {
+                this.state = State.ON_GROUND;
             }
         }
 
@@ -147,7 +156,7 @@ public class Item : MonoBehaviour
             Debug.Log("Cannot move to waypoint: waypoint is null");
             return;
         }
-        Vector2 displacement = this.waypoint.position - this.transform.position;
+        Vector2 displacement = this.waypoint - this.transform.position;
         Vector2 direction = displacement.normalized;
         this.waypointVel += this.waypointAccel;
         Vector2 delta = direction * waypointVel;
@@ -191,7 +200,7 @@ public class Item : MonoBehaviour
             Debug.Log("Cannot move to waypoint: waypoint is null");
             return true;
         }
-        return ((Vector2)this.waypoint.position - (Vector2)this.transform.position).magnitude < 0.0001f;
+        return ((Vector2)this.waypoint - (Vector2)this.transform.position).magnitude < 0.0001f;
     }
 
     private bool IsAtEndOfPath()
@@ -203,21 +212,34 @@ public class Item : MonoBehaviour
         }
 
         return this.pathIdx == this.waypointPath.Count - 1 
-            && ((Vector2)this.waypointPath[this.waypointPath.Count - 1].position - (Vector2)this.transform.position).magnitude < 0.0001f;
+            && ((Vector2)this.waypointPath[this.waypointPath.Count - 1] - (Vector2)this.transform.position).magnitude < 0.0001f;
     }
 
-    public void PutInMachine(Transform transform)
+    public void PutInMachine(Vector3 transform)
     {
         this.pickedUp = false;
         this.state = State.BEING_PUT_IN_MACHINE;
         this.waypoint = transform;
     }
 
-    public void MachineLeverPull(List<Transform> path)
+    public void MachineLeverPull(List<Vector3> path)
     {
         this.pickedUp = false;
         this.state = State.TRANSFORMING;
         this.waypointPath = path;
         this.pathIdx = 0;
+    }
+
+    void SetZIndex(float z)
+    {
+        Vector3 setZ = this.transform.position;
+        setZ.z = z; 
+        this.transform.position = setZ;
+    }
+
+    //For ORBS ONLY
+    public void ReturnToLab()
+    {
+        this.state = State.RETURNING_TO_LAB;
     }
 }
