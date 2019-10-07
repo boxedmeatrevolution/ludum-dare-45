@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   state: 0
   fireAnchor: {fileID: 8746937949554709386}
-  friction: 2
+  friction: 0.4
   accel: 3
   wanderSpeed: 0.4
   sprintSpeed: 0.8
@@ -22,6 +22,8 @@ MonoBehaviour:
   threatenRadius: 1.5
   averageWaitTime: 6
   threatenTime: 2
+  burningOrb: {fileID: 0}
+  createdFromVoid: 0
   orbs: []
 --- !u!212 &4309050479738114211
 SpriteRenderer:
