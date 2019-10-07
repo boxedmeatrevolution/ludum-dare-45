@@ -41,7 +41,7 @@ public class PrefabManager : MonoBehaviour
     }
 
     public static GameObject GetMonsterPrefab(Type type) {
-        if (type.Equals(typeof(Copycat)) {
+        if (type.Equals(typeof(Copycat))) {
             return PrefabManager.COPYCAT_PREFAB;
         }
         else if (type.Equals(typeof(FireSalamander))) {
