@@ -349,7 +349,7 @@ public class Monster : MonoBehaviour {
                     float angle = 2 * Mathf.PI * Random.value;
                     displacement = 0.1f * new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
                 }
-                this.Accel(this.accel * displacement.normalized);
+                this.Accel(-this.accel * displacement.normalized);
             }
         }
         else if (this.state == State.LURE) {
@@ -425,7 +425,7 @@ public class Monster : MonoBehaviour {
                 float angle = 2 * Mathf.PI * Random.value;
                 displacement = 0.1f * new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
             }
-            this.Accel(this.accel * displacement.normalized);
+            this.Accel(-this.accel * displacement.normalized);
             if (displacement.magnitude > this.fleeRadius && displacement.magnitude > monster.fleeRadius) {
                 this.state = State.WANDER;
                 if (monster.state == State.THREATEN || monster.state == State.FLEE) {
@@ -461,7 +461,7 @@ public class Monster : MonoBehaviour {
             else
             {
                 Vector2 displacement = this.transformOrb.transform.position - this.transform.position;
-                if (displacement.magnitude > 0.001f) {
+                if (displacement.magnitude > 0.5f) {
                     this.Accel(this.accel * displacement.normalized);
                 }
                 else
@@ -498,7 +498,7 @@ public class Monster : MonoBehaviour {
         // Physics
         float gateX = this.gate.transform.position.x + this.gate.width;
         float speed = this.velocity.magnitude;
-        float maxSpeed = (this.state == State.WANDER || this.state == State.POST_FIGHT || this.state == State.IGNORE || this.state == State.MESMERIZED) ?
+        float maxSpeed = (this.state == State.WANDER || this.state == State.POST_FIGHT || this.state == State.IGNORE || this.state == State.MESMERIZED || this.state == State.TRAVEL_TO_TRANSFORM_ORB) ?
             this.wanderSpeed : this.sprintSpeed;
         if (speed != 0f) {
             Vector2 frictionChange = this.velocity.normalized * this.friction * Time.deltaTime;
@@ -632,7 +632,7 @@ public class Monster : MonoBehaviour {
             }
             return true;
         }
-        return this.state == State.WANDER || this.state == State.DYING || this.state == State.DEAD || this.state == State.GOOED;
+        return this.state == State.WANDER;
     }
 
     public void GiveOrbs(Orb[] orbs)
