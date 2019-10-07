@@ -42,7 +42,7 @@ public class Emotion : MonoBehaviour
             sprite = this.mesmerizeSprite;
         } else if (state == Monster.State.DIGESTING) {
             sprite = this.digestingSprite;
-        } else if (state == Monster.State.DYING || state == Monster.State.DEAD) {
+        } else if (state == Monster.State.DYING) {
             sprite = this.deadSprite;
         }
         this.renderer.sprite = sprite;
