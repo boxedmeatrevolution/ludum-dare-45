@@ -44,4 +44,9 @@ public class OrbManager : MonoBehaviour
     {
         return this.pickedUpOrb;
     }
+
+    public void MakeGhostOrb(Orb primaryOrb, Orb[] otherOrbs)
+    {
+        Debug.Log("Making ghost orb");
+    }
 }

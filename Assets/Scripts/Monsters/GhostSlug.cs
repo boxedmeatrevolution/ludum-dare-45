@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GhostSlug : Monster {
+
     // Start is called before the first frame update
     protected override void Start() {
         base.Start();
@@ -10,6 +11,23 @@ public class GhostSlug : Monster {
 
     // Update is called once per frame
     protected override void Update() {
+        if (this.state == State.TRAVEL_TO_BURNING_ORB && (!this.burningOrb.enflamed || this.burningOrb.item.state != Item.State.ON_GROUND))
+        {
+            this.state = State.WANDER;
+        }
+        
+        if (this.state == State.WANDER) {
+            foreach (Orb orb in FindObjectsOfType<Orb>())
+            {
+                if (orb.enflamed && orb.item.state == Item.State.ON_GROUND)
+                {
+                    this.state = State.TRAVEL_TO_BURNING_ORB;
+                    this.burningOrb = orb;
+                    break;
+                }
+            }
+        }
+
         base.Update();
     }
 

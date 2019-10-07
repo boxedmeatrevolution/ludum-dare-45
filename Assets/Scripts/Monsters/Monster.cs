@@ -55,9 +55,14 @@ public class Monster : MonoBehaviour {
     private float deadWaitTime = 1f;
     private Void voido;
 
+    public Orb burningOrb;
+    private float transformOrbStartTime = 0f;
+    private float transformOrbTotalTime = 1f;
+
     public bool createdFromVoid = false;
 
     public Orb[] orbs = new Orb[0];
+    private OrbManager orbManager;
 
     public enum State {
         WANDER,
@@ -78,7 +83,10 @@ public class Monster : MonoBehaviour {
         DEAD,
         SENDING_TO_VOID,
         IN_VOID,
-        SPAWNING_FROM_VOID
+        SPAWNING_FROM_VOID,
+        TRAVEL_TO_BURNING_ORB,
+        TRANSFORM_ORB,
+        ORBED
     }
 
     // Start is called before the first frame update
@@ -99,6 +107,8 @@ public class Monster : MonoBehaviour {
         this.avoid = null;
         this.state = State.WANDER;
         this.waypoint = this.ChooseWaypoint(this.pen);
+        this.orbManager = GameObject.Find("OrbManager").GetComponent<OrbManager>();
+
 
         if (this.createdFromVoid)
         {
@@ -427,6 +437,48 @@ public class Monster : MonoBehaviour {
                     this.voido.SendToVoid(this);
                 }
             }
+        }
+        else if (this.state == State.TRAVEL_TO_BURNING_ORB)
+        {
+            if (this.burningOrb == null)
+            {
+                this.state = State.WANDER;
+            }
+            else
+            {
+                Vector2 disp = this.burningOrb.transform.position - this.transform.position;
+                if (disp.magnitude > 0.001f)
+                {
+                    this.velocity += this.accel * disp.normalized * Time.deltaTime;
+                }
+                else
+                {
+                    this.state = State.TRANSFORM_ORB;
+                    this.transformOrbStartTime = Time.realtimeSinceStartup;
+                }
+
+            }
+        }
+        else if (this.state == State.TRANSFORM_ORB)
+        {
+            float delta = Time.realtimeSinceStartup - this.transformOrbStartTime;
+            if (delta < this.transformOrbTotalTime)
+            {
+                float scale = Mathf.Abs((delta / this.transformOrbTotalTime) - 1);
+                this.transform.localScale = new Vector3(scale, scale, 1f);
+            }
+            else
+            {
+                // time to transform orb
+                this.burningOrb.Extinguish();
+                this.orbManager.MakeGhostOrb(this.burningOrb, this.orbs);
+                this.orbs = new Orb[2];
+                this.state = State.ORBED;
+            }
+        }
+        else if (this.state == State.ORBED)
+        {
+            Destroy(this.gameObject);
         }
 
         this.stateTimer -= Time.deltaTime;
