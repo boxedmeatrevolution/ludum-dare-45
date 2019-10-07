@@ -19,7 +19,7 @@ public class GhostSlug : Monster {
         if (this.state == State.WANDER) {
             foreach (Orb orb in FindObjectsOfType<Orb>())
             {
-                if (orb.enflamed && orb.item.state == Item.State.ON_GROUND)
+                if (orb.enflamed && orb.item.state == Item.State.ON_GROUND && this.IsPositionInPen(orb.transform.position))
                 {
                     this.state = State.TRAVEL_TO_BURNING_ORB;
                     this.burningOrb = orb;

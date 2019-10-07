@@ -552,6 +552,16 @@ public class Monster : MonoBehaviour {
         return result;
     }
 
+    public bool IsPositionInPen(Vector2 pos)
+    {
+        float x1 = pen.transform.position.x;
+        float x2 = x1 + pen.width;
+        float y1 = pen.transform.position.y;
+        float y2 = y1 + pen.height;
+
+        return (pos.x > x1 && pos.x < x2 & pos.y > y1 && pos.y < y2);
+    }
+
     public void Extinguish() {
         if (this.enflamed) {
             this.enflamed = false;
