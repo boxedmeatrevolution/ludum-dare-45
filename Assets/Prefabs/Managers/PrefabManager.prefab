@@ -69,3 +69,7 @@ MonoBehaviour:
     type: 3}
   ghostPrefab: {fileID: 2668826303800293046, guid: e26ecf96daaa7c4429d7be39b5ab6d8c,
     type: 3}
+  ghostighostPrefab: {fileID: 5872571351154574360, guid: 6ffba636eb8911e47ab722144c07628d,
+    type: 3}
+  pabsPrefab: {fileID: 7714858504858752304, guid: 4993b44d6709ec144aa17493442c49c7,
+    type: 3}

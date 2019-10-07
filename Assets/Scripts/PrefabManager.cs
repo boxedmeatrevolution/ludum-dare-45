@@ -20,6 +20,9 @@ public class PrefabManager : MonoBehaviour
     public static GameObject PLANT_OGRE_PREFAB;
     public static GameObject GHOST_PREFAB;
 
+    public static GameObject GHOSTIGHOST_PREFAB;
+    public static GameObject PABS_PREFAB;
+
     public GameObject fightCloudPrefab;
     public GameObject firePrefab;
     public GameObject explosionPrefab;
@@ -34,6 +37,9 @@ public class PrefabManager : MonoBehaviour
     public GameObject livingFlamePrefab;
     public GameObject plantOgrePrefab;
     public GameObject ghostPrefab;
+
+    public GameObject ghostighostPrefab;
+    public GameObject pabsPrefab;
     // Start is called before the first frame update
     void Start()
     {
@@ -51,6 +57,9 @@ public class PrefabManager : MonoBehaviour
         PrefabManager.LIVING_FLAME_PREFAB = this.livingFlamePrefab;
         PrefabManager.PLANT_OGRE_PREFAB = this.plantOgrePrefab;
         PrefabManager.GHOST_PREFAB = this.ghostPrefab;
+
+        PrefabManager.GHOSTIGHOST_PREFAB = this.ghostighostPrefab;
+        PrefabManager.PABS_PREFAB = this.pabsPrefab;
     }
 
     public static GameObject GetMonsterPrefab(Type type) {
