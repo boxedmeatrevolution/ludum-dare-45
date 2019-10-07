@@ -10,6 +10,24 @@ public class Ghost : Monster {
 
     // Update is called once per frame
     protected override void Update() {
+        if (this.state == State.TRAVEL_TO_TRANSFORM_ORB && this.transformOrb.item.state != Item.State.ON_GROUND)
+        {
+            this.state = State.WANDER;
+        }
+
+        if (this.state == State.WANDER)
+        {
+            foreach (Orb orb in FindObjectsOfType<Orb>())
+            {
+                if (orb.item.state == Item.State.ON_GROUND && this.IsPositionInPen(orb.transform.position))
+                {
+                    this.state = State.TRAVEL_TO_TRANSFORM_ORB;
+                    this.transformOrb = orb;
+                    break;
+                }
+            }
+        }
+
         base.Update();
     }
 

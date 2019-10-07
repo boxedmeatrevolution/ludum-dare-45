@@ -11,7 +11,7 @@ public class GhostSlug : Monster {
 
     // Update is called once per frame
     protected override void Update() {
-        if (this.state == State.TRAVEL_TO_BURNING_ORB && (!this.burningOrb.enflamed || this.burningOrb.item.state != Item.State.ON_GROUND))
+        if (this.state == State.TRAVEL_TO_TRANSFORM_ORB && (!this.transformOrb.enflamed || this.transformOrb.item.state != Item.State.ON_GROUND))
         {
             this.state = State.WANDER;
         }
@@ -21,8 +21,8 @@ public class GhostSlug : Monster {
             {
                 if (orb.enflamed && orb.item.state == Item.State.ON_GROUND && this.IsPositionInPen(orb.transform.position))
                 {
-                    this.state = State.TRAVEL_TO_BURNING_ORB;
-                    this.burningOrb = orb;
+                    this.state = State.TRAVEL_TO_TRANSFORM_ORB;
+                    this.transformOrb = orb;
                     break;
                 }
             }

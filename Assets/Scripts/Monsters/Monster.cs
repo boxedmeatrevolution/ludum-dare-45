@@ -55,7 +55,7 @@ public class Monster : MonoBehaviour {
     private float deadWaitTime = 1f;
     private Void voido;
 
-    public Orb burningOrb;
+    public Orb transformOrb;
     private float transformOrbStartTime = 0f;
     private float transformOrbTotalTime = 1f;
 
@@ -84,7 +84,7 @@ public class Monster : MonoBehaviour {
         SENDING_TO_VOID,
         IN_VOID,
         SPAWNING_FROM_VOID,
-        TRAVEL_TO_BURNING_ORB,
+        TRAVEL_TO_TRANSFORM_ORB,
         TRANSFORM_ORB,
         ORBED
     }
@@ -446,15 +446,15 @@ public class Monster : MonoBehaviour {
                 }
             }
         }
-        else if (this.state == State.TRAVEL_TO_BURNING_ORB)
+        else if (this.state == State.TRAVEL_TO_TRANSFORM_ORB)
         {
-            if (this.burningOrb == null)
+            if (this.transformOrb == null)
             {
                 this.state = State.WANDER;
             }
             else
             {
-                Vector2 disp = this.burningOrb.transform.position - this.transform.position;
+                Vector2 disp = this.transformOrb.transform.position - this.transform.position;
                 if (disp.magnitude > 0.001f)
                 {
                     this.velocity += this.accel * disp.normalized * Time.deltaTime;
@@ -478,8 +478,8 @@ public class Monster : MonoBehaviour {
             else
             {
                 // time to transform orb
-                this.burningOrb.Extinguish();
-                this.orbManager.MakeGhostOrb(this.burningOrb, this.orbs);
+                this.transformOrb.Extinguish();
+                this.orbManager.MakeGhostOrb(this.transformOrb, this.orbs);
                 this.orbs = new Orb[2];
                 this.state = State.ORBED;
             }

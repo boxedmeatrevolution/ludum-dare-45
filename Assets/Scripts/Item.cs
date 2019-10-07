@@ -10,7 +10,7 @@ public class Item : MonoBehaviour
     private SpriteRenderer sprite;
     private float pickupAccel = 5.0f;
     private float pickupVelZ;
-    private float pickupZ;
+    public float pickupZ;
     private Vector2 initialOffset;
     public State state;
 
@@ -254,6 +254,13 @@ public class Item : MonoBehaviour
     public void ReturnToLab()
     {
         this.state = State.RETURNING_TO_LAB;
+        if (this.pickupZ > 0.00001f)
+        {
+            // undo the pickupz but keep the ball in place
+            Vector3 removePickupZ = new Vector3(0, this.pickupZ, 0);
+            this.transform.position += removePickupZ;
+            this.pickupZ = 0f;
+        }
         this.pickedUp = false;
     }    
     
