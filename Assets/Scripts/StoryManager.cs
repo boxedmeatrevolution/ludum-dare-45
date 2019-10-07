@@ -17,15 +17,14 @@ public class StoryManager : MonoBehaviour
     {
         BEAT_FIRST_UPDATE,
         BEAT_ACTIVE,
-        PROMPT,
-        BEAT_COMPLETE,
+        PROMPT
     }
     public enum Beat
     {
-        START, A, B, C1, C2, C3, C4, C5, D1, D2, E, F, G
+        START, A, B, C1, C2, C3, C4, C5, D1, D2, E1, E2, F, G
     }
 
-    private Beat[] order = { Beat.A, Beat.B, Beat.C1, Beat.C2, Beat.C3, Beat.C4, Beat.C5, Beat.D1, Beat.D2, Beat.E, Beat.F, Beat.G };
+    private Beat[] order = { Beat.A, Beat.B, Beat.C1, Beat.C2, Beat.C3, Beat.C4, Beat.C5, Beat.D1, Beat.D2, Beat.E1, Beat.E2, Beat.F, Beat.G };
 
     // Start is called before the first frame update
     void Start()
@@ -161,6 +160,25 @@ public class StoryManager : MonoBehaviour
             if (this.state == State.PROMPT)
             {
                 dm.StartScene("monsterToVoid");
+            }
+            this.state = State.BEAT_ACTIVE;
+        }
+
+        if (this.storyBeat == Beat.E1)
+        {
+            if (this.state == State.BEAT_FIRST_UPDATE)
+            {
+                dm.SetFile("intro");
+                dm.StartScene("good");
+            }
+            this.state = State.BEAT_ACTIVE;
+        }
+        if (this.storyBeat == Beat.E2)
+        {
+            if (this.state == State.BEAT_FIRST_UPDATE)
+            {
+                dm.SetFile("intro");
+                dm.StartScene("bad");
             }
             this.state = State.BEAT_ACTIVE;
         }
