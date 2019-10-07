@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Particle : MonoBehaviour
 {
-    public GameObject target;
+    public Vector2 target;
     private float rotationSpeed;
     private Vector2 velocity;
     private float lifetime = 1.5f;
@@ -13,8 +13,8 @@ public class Particle : MonoBehaviour
     void Start()
     {
         this.rotationSpeed = Random.Range(-180f, 180f);
-        Vector2 displacement = this.target.transform.position - this.transform.position;
-        this.velocity = displacement * 0.5f + 2f * Random.insideUnitCircle;
+        Vector2 displacement = target - (Vector2)this.transform.position;
+        this.velocity = displacement * 0.5f + 1.5f * Random.insideUnitCircle;
         this.renderer = GetComponentInChildren<SpriteRenderer>();
     }
 
@@ -23,7 +23,7 @@ public class Particle : MonoBehaviour
     {
         this.lifetime -= Time.deltaTime;
         this.transform.rotation *= Quaternion.Euler(0f, 0f, this.rotationSpeed * Time.deltaTime);
-        Vector2 displacement = this.target.transform.position - this.transform.position;
+        Vector2 displacement = target - (Vector2)this.transform.position;
         if (displacement.magnitude < 0.5 || this.lifetime < 0f) {
             Destroy(this.gameObject);
         } else {

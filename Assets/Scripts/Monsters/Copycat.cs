@@ -43,7 +43,7 @@ public class Copycat : Monster {
                 if (UnityEngine.Random.value > 1 - Time.deltaTime / 0.5f) {
                     GameObject particleObj = Instantiate(PrefabManager.COPYCAT_PARTICLE_PREFAB, minMonster.transform.position, Quaternion.identity);
                     Particle particle = particleObj.GetComponent<Particle>();
-                    particle.target = this.gameObject;
+                    particle.target = this.transform.position;
                 }
             }
         }

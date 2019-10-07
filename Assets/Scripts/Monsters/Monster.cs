@@ -445,6 +445,10 @@ public class Monster : MonoBehaviour {
         }
         this.transform.position += (Vector3)this.velocity * Time.deltaTime;
         this.emotion.UpdateFromState(state);
+
+        // Maintain z ordering.
+        Vector2 pos = this.transform.position;
+        this.transform.position = new Vector3(pos.x, pos.y, pos.y / 300f);
     }
 
     // Choose whether to threaten, hypnotize, flee, or ignore when another monster wanders into range.

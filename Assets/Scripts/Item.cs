@@ -130,10 +130,14 @@ public class Item : MonoBehaviour
                 this.state = State.ON_GROUND;
             }
         }
-
-        Vector3 newSpritePos = this.initialOffset;
+        
+        Vector2 newSpritePos = this.initialOffset;
         newSpritePos.y += this.pickupZ;
         this.sprite.transform.localPosition = newSpritePos;
+
+        // Maintain z ordering.
+        Vector2 pos = this.transform.position;
+        this.transform.position = new Vector3(pos.x, pos.y, pos.y / 300f);
     }
 
     public bool Pickup() {

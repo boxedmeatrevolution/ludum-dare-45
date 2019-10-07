@@ -8,6 +8,7 @@ public class Main : MonoBehaviour
     private new Camera camera;
     private Vector2 waypoint;
     private Item targetItem = null;
+    private Gate gate;
 
     private Machine machine;
     private Void voido;
@@ -30,6 +31,7 @@ public class Main : MonoBehaviour
         this.machine = GameObject.Find("Machine").GetComponent<Machine>();
         this.voido = GameObject.Find("Void").GetComponent<Void>();
         this.orbManager = GameObject.Find("OrbManager").GetComponent<OrbManager>();
+        this.gate = FindObjectOfType<Gate>();
     }
 
     // Update is called once per frame
@@ -104,18 +106,32 @@ public class Main : MonoBehaviour
         }
             
         if (displacement.magnitude > this.walkRange) {
-            Vector2 direction = displacement.normalized;
-            direction *= Time.deltaTime * this.speed;
-            this.transform.position += (Vector3)direction;
+            float x1 = this.gate.transform.position.x;
+            float x2 = x1 + this.gate.width;
+            float y1 = this.gate.transform.position.y;
+            float y2 = y1 + this.gate.height;
+            float cx = 0.5f * (x1 + x2);
+            Vector2 position = this.transform.position;
+            Vector2 deltaPos = displacement.normalized * this.speed * Time.deltaTime;
+            bool inGateY = (position.y > y1 && position.y < y2);
+            if (!inGateY) {
+                if (position.x + deltaPos.x > x1 && position.x < cx && deltaPos.x > 0f) {
+                    deltaPos.x = x1 - position.x;
+                }
+                if (position.x + deltaPos.x < x2 && position.x > cx && deltaPos.x < 0f) {
+                    deltaPos.x = x2 - position.x;
+                }
+            }
+            this.transform.position += (Vector3)deltaPos;
 
-            if (Mathf.Abs(direction.x) < Mathf.Abs(direction.y)) {
-                if (direction.y < 0) {
+            if (Mathf.Abs(deltaPos.x) < Mathf.Abs(deltaPos.y)) {
+                if (deltaPos.y < 0) {
                     this.animator.Play("Main_Down");
                 } else {
                     this.animator.Play("Main_Up");
                 }
             } else {
-                if (direction.x < 0) {
+                if (deltaPos.x < 0) {
                     this.animator.Play("Main_Left");
                 } else {
                     this.animator.Play("Main_Right");
@@ -151,7 +167,7 @@ public class Main : MonoBehaviour
 
         // Maintain z ordering.
         Vector2 pos = this.transform.position;
-        this.transform.position = new Vector3(pos.x, pos.y, -pos.y / 300f);
+        this.transform.position = new Vector3(pos.x, pos.y, pos.y / 300f);
     }
 
     public void DropItem()
