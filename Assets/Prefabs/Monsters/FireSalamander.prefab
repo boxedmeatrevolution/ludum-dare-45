@@ -32,6 +32,7 @@ MonoBehaviour:
   ambient1Sound: {fileID: 8300000, guid: 867786a598c31af4b965e8907c199683, type: 3}
   ambient2Sound: {fileID: 8300000, guid: c5a351886c268fb44b196c149ba8655b, type: 3}
   ambient3Sound: {fileID: 8300000, guid: cbd18a921bdff7a43a9b9668ec46be9c, type: 3}
+  lureSound: {fileID: 0}
   deathSound: {fileID: 8300000, guid: 27c12d59e4dab3e4db2ff306b786150b, type: 3}
 --- !u!212 &3190779841108439946
 SpriteRenderer:
@@ -172,7 +173,12 @@ PrefabInstance:
     - target: {fileID: 2350926259135567699, guid: d9f950da24d5aac4d85f8f7989c3878c,
         type: 3}
       propertyPath: m_Radius
-      value: 0.3
+      value: 0.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 2350926259135567699, guid: d9f950da24d5aac4d85f8f7989c3878c,
+        type: 3}
+      propertyPath: m_Offset.y
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 2350926258969330477, guid: d9f950da24d5aac4d85f8f7989c3878c,
         type: 3}
