@@ -146,7 +146,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   state: 0
   fireAnchor: {fileID: 5121846608229286115}
-  friction: 2
+  friction: 1
   accel: 3
   wanderSpeed: 0.5
   sprintSpeed: 2
@@ -154,6 +154,8 @@ MonoBehaviour:
   threatenRadius: 1.5
   averageWaitTime: 4
   threatenTime: 2
+  burningOrb: {fileID: 0}
+  createdFromVoid: 0
   orbs: []
 --- !u!114 &2350926259135567696
 MonoBehaviour:

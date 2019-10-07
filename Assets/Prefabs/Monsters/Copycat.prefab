@@ -1,28 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &4911787474821638050
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6502865246611780335}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a3ef71fa5fb10fe47af83488560c8f20, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  state: 0
-  fireAnchor: {fileID: 4434514960636519768}
-  friction: 2
-  accel: 3
-  wanderSpeed: 0.4
-  sprintSpeed: 0.6
-  fleeRadius: 2
-  threatenRadius: 1
-  averageWaitTime: 8
-  threatenTime: 2
-  orbs: []
 --- !u!212 &8844099386069447005
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -92,6 +69,31 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &4911787474821638050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6502865246611780335}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3ef71fa5fb10fe47af83488560c8f20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: 0
+  fireAnchor: {fileID: 4434514960636519768}
+  friction: 0.4
+  accel: 3
+  wanderSpeed: 0.4
+  sprintSpeed: 0.6
+  fleeRadius: 2
+  threatenRadius: 1
+  averageWaitTime: 8
+  threatenTime: 2
+  burningOrb: {fileID: 0}
+  createdFromVoid: 0
+  orbs: []
 --- !u!1001 &8835776075891926459
 PrefabInstance:
   m_ObjectHideFlags: 0

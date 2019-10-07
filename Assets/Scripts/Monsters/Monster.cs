@@ -37,7 +37,7 @@ public class Monster : MonoBehaviour {
     private Monster target;
 
     public GameObject fireAnchor;
-    public float friction = 2f;
+    public float friction = 1f;
     public float accel = 3f;
     public float wanderSpeed = 0.5f;
     public float sprintSpeed = 2f;
@@ -291,16 +291,25 @@ public class Monster : MonoBehaviour {
         else if (state == State.FIGHT) {
             Monster monster = this.target;
             this.velocity = Vector2.zero;
+            if (Random.value > 1 - Time.deltaTime / 0.2f) {
+                this.transform.rotation *= Quaternion.Euler(0f, 0f, Random.Range(0, 360f));
+            }
             if (this.stateTimer < 0f) {
+                this.transform.rotation = Quaternion.identity;
+                monster.transform.rotation = Quaternion.identity;
                 // Destroy fight cloud.
                 Destroy(this.fightCloud.gameObject);
+                // Give velocities.
+                monster.velocity = new Vector2(
+                    Random.Range(1f, 2f),
+                    Random.Range(-1f, 1f));
+                this.velocity = new Vector2(
+                    Random.Range(-2f, -1f),
+                    Random.Range(-1f, 1f));
                 this.fightCloud = null;
                 if (this.KillOpponent(monster)) {
                     monster.state = State.DYING;
                     monster.stateTimer = Monster.DYING_TIME;
-                    monster.velocity = new Vector2(
-                        Random.Range(1f, 2f),
-                        Random.Range(-1f, 1f));
                     monster.target = null;
                 }
                 else {
@@ -310,9 +319,6 @@ public class Monster : MonoBehaviour {
                 if (monster.KillOpponent(this)) {
                     this.state = State.DYING;
                     this.stateTimer = Monster.DYING_TIME;
-                    this.velocity = new Vector2(
-                        Random.Range(1f, 2f),
-                        Random.Range(-1f, 1f));
                     this.target = null;
                 }
                 else {
@@ -497,6 +503,7 @@ public class Monster : MonoBehaviour {
                 this.velocity = Vector2.zero;
             }
         }
+        speed = this.velocity.magnitude;
         if (speed > maxSpeed) {
             this.velocity *= maxSpeed / speed;
         }
