@@ -22,15 +22,28 @@ public class StoryManager : MonoBehaviour
     }
     public enum Beat
     {
-        A, B, C, D, E, F, G
+        START, A, B, C, D, E, F, G
     }
 
-    public Beat[] order = { Beat.A, Beat.B, Beat.C, Beat.D, Beat.F, Beat.G };
+    private Beat[] order = { Beat.A, Beat.B, Beat.C, Beat.D, Beat.F, Beat.G };
 
     // Start is called before the first frame update
     void Start()
     {
-        this.storyBeat = this.order[this.beatIdx];
+        if (this.storyBeat == Beat.START)
+        {
+            this.storyBeat = this.order[this.beatIdx];
+        } else
+        {
+            for (uint i = 0; i < order.Length; i++)
+            {
+                if (order[i] == this.storyBeat)
+                {
+                    this.beatIdx = i;
+                    break;
+                }
+            }
+        }
         this.beatTimer = 5f;
         this.isBeatTimed = false;
         this.state = State.BEAT_FIRST_UPDATE;
