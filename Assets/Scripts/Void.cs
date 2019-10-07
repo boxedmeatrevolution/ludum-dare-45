@@ -17,7 +17,7 @@ public class Void : MonoBehaviour
     void Start()
     {
         this.audioSource = GetComponent<AudioSource>();
-        this.spawnWaypoint = GameObject.Find("SpawnWaypoint").GetComponentInChildren<Transform>();
+        this.spawnWaypoint = GameObject.Find("VSpawnWaypoint").GetComponentInChildren<Transform>();
         this.frontalWaypoint = GameObject.Find("FrontalWaypoint").GetComponentInChildren<Transform>();
         this.spawnEndPoint1 = GameObject.Find("SpawnEndPoint1").GetComponentInChildren<Transform>();
         this.spawnEndPoint2 = GameObject.Find("SpawnEndPoint2").GetComponentInChildren<Transform>();

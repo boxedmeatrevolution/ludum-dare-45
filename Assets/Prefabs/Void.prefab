@@ -247,7 +247,7 @@ GameObject:
   m_Component:
   - component: {fileID: 831623409631379329}
   m_Layer: 0
-  m_Name: SpawnWaypoint
+  m_Name: VSpawnWaypoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
