@@ -32,6 +32,9 @@ public class GhostSlug : Monster {
                     break;
                 }
             }
+            if (!this.fireTarget.IsFiery()) {
+                this.fireTarget = null;
+            }
             GameObject chasingTarget = null;
             if (this.transformOrb != null) {
                 chasingTarget = this.transformOrb.gameObject;

@@ -406,16 +406,24 @@ public class Monster : MonoBehaviour {
                     monster.state = State.GOOED;
                     monster.stateTimer = Monster.GOO_TIME;
                     monster.Extinguish();
+                    if (monster.IsFireElemental()) {
+                        monster.OnDying();
+                    }
                     GameObject ectoplasmObj = Instantiate(PrefabManager.ECTOPLASM_PREFAB, monster.transform);
                     ectoplasmObj.transform.localPosition = new Vector3(0f, -0.01f, 0f);
                     float angle = 2f * Mathf.PI * Random.value;
-                    monster.Shove(Random.Range(0.4f, 0.7f) * new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)));
+                    monster.Shove(Random.Range(0.2f, 0.3f) * new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)));
                 }
             }
         }
         else if (this.state == State.GOOED) {
             if (this.stateTimer < 0f) {
-                this.state = State.WANDER;
+                if (this.IsFireElemental()) {
+                    this.state = State.DEAD;
+                }
+                else {
+                    this.state = State.WANDER;
+                }
             }
         }
         else if (this.state == State.FLEE) {
@@ -600,7 +608,7 @@ public class Monster : MonoBehaviour {
     }
 
     public bool IsFiery() {
-        return this.IsFireElemental() || this.enflamed;
+        return this.state != State.GOOED && this.state != State.DEAD && this.state != State.DYING && (this.IsFireElemental() || this.enflamed);
     }
 
     public virtual bool IsFireElemental() {
