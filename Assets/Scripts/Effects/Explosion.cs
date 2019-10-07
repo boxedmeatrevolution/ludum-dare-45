@@ -6,7 +6,7 @@ public class Explosion : MonoBehaviour
 {
     private float lifetime = 0.6f;
     private float tickTimer;
-    private float explosionRadius = 100f;
+    private float explosionRadius = 2.5f;
     // Start is called before the first frame update
     void Start()
     {
