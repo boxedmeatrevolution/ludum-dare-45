@@ -21,7 +21,7 @@
                 "Amuse me.",
                 "Pick up a Blue Orb."
             ]
-        },
+        }
         ]
     },
     "tutorial-pickup-orb-instructions" : {
@@ -53,7 +53,7 @@
                 "It pleases me.",
                 "Put the orb down."
             ]
-        },
+        }
         ]
     },
     "tutorial-drop-orb-instructions" : {
@@ -63,10 +63,10 @@
             "lines": [
                 "RIGHT CLICK to drop the orb."
             ]
-        },
+        }
         ]
     },
-    "scene1.5": {
+    "tutorial-summon-monster": {
         "dialogue": [
         {
             "speaker": 1,
@@ -76,8 +76,29 @@
                 "We must create life.",
                 "The MACHINE beckons. Feed it EARTH and FIRE",
             ]
-        },
+        }
         ]
+    },
+    "tutorial-summon-monster-instructions": {
+      "dialogue": [
+      {
+        "speaker": 2,
+        "lines": [
+          "Put a Brown Orb and a Red Orb into the machine and pull the lever."
+        ]
+      }
+      ]
+    },
+    "tutorial-summon-monster-prompt": {
+      "dialogue": [
+      {
+        "speaker": 1,
+        "lines": [
+          "Your foolishness amuses me.",
+          "But I demand a creature of EARTH and FIRE."
+        ]
+      }
+      ]
     },
     "pickupBrown": {
         "dialogue": [

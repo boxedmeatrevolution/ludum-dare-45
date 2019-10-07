@@ -28,7 +28,9 @@ public class StoryManager : MonoBehaviour
         TUTORIAL_DROP_ORB,
         TUTORIAL_DROP_ORB_INSTRUCTIONS,
         TUTORIAL_SUMMON_MONSTER,
-        TUTORIAL_RELEASE_MONSTER
+        TUTORIAL_SUMMON_MONSTER_INSTRUCTIONS,
+        TUTORIAL_RELEASE_MONSTER,
+        TUTORIAL_RELEASE_MONSTER_INSTRUCTIONS
     }
 
     // Start is called before the first frame update
@@ -49,6 +51,7 @@ public class StoryManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(this.storyBeat);
         // Do updates based on story beat.
         if (this.storyBeat == Beat.TUTORIAL_PICKUP_ORB) {
             if (this.state == State.BEAT_FIRST_UPDATE)
@@ -93,6 +96,41 @@ public class StoryManager : MonoBehaviour
             if (this.state == State.BEAT_FIRST_UPDATE) {
                 dm.SetFile("intro");
                 dm.StartScene("tutorial-drop-orb-instructions", false);
+                this.state = State.BEAT_ACTIVE;
+            } else if (this.state == State.BEAT_ACTIVE) {
+                foreach (Orb orb in FindObjectsOfType<Orb>()) {
+                    Item item = orb.GetComponent<Item>();
+                    if (item.state == Item.State.ON_GROUND) {
+                        this.GotoBeat(Beat.TUTORIAL_RELEASE_MONSTER);
+                    }
+                }
+            }
+        } else if (this.storyBeat == Beat.TUTORIAL_SUMMON_MONSTER) {
+            if (this.state == State.BEAT_FIRST_UPDATE) {
+                dm.SetFile("intro");
+                dm.StartScene("tutorial-summon-monster");
+                this.state = State.BEAT_ACTIVE;
+            } else if (this.state == State.BEAT_ACTIVE) {
+                if (dm.endOfScene) {
+                    this.GotoBeat(Beat.TUTORIAL_SUMMON_MONSTER_INSTRUCTIONS);
+                }
+            }
+        } else if (this.storyBeat == Beat.TUTORIAL_SUMMON_MONSTER_INSTRUCTIONS) {
+            if (this.state == State.BEAT_FIRST_UPDATE) {
+                dm.SetFile("intro");
+                dm.StartScene("tutorial-summon-monster-instructions", false);
+                this.state = State.BEAT_ACTIVE;
+            }
+            else if (this.state == State.BEAT_ACTIVE) {
+                FireSalamander salamander = FindObjectOfType<FireSalamander>();
+                if (salamander != null) {
+                    if (salamander.state == Monster.State.WANDER) {
+                        this.GotoBeat(Beat.TUTORIAL_RELEASE_MONSTER);
+                    }
+                }
+            }
+            else if (this.state == State.PROMPT) {
+                dm.StartScene("tutorial-summon-monster-prompt");
                 this.state = State.BEAT_ACTIVE;
             }
         }

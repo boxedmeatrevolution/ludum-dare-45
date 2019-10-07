@@ -154,6 +154,17 @@ public class Machine : MonoBehaviour
     {
         if (this.orbs.Count == 2)
         {
+            StoryManager storyManager = FindObjectOfType<StoryManager>();
+            if (storyManager.storyBeat == StoryManager.Beat.TUTORIAL_SUMMON_MONSTER) {
+                Orb.OrbColor a = this.orbs[0].orbColor;
+                Orb.OrbColor b = this.orbs[1].orbColor;
+                if (!(a == Orb.OrbColor.BROWN && b == Orb.OrbColor.RED || a == Orb.OrbColor.RED && b == Orb.OrbColor.BROWN)) {
+                    this.orbs[0].item.ReturnToLab();
+                    this.orbs[1].item.ReturnToLab();
+                    storyManager.state = StoryManager.State.PROMPT;
+                    return;
+                }
+            }
             this.voidSoundTime = 1f;
             this.leverCount = !this.leverCount;
             this.audioSource.PlayOneShot(leverCount ? this.lever1Sound : this.lever2Sound, 0.5f);

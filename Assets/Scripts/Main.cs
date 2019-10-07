@@ -168,11 +168,12 @@ public class Main : MonoBehaviour
             this.animator.Play("Main_Idle");
 
             // If character has made it to the machine, then interact with the machine
-            if (this.isTargettingMachine)
-            {
-                this.machine.Interact();
-                this.item = null;
-                this.isTargettingMachine = false;
+            if (this.storyManager.storyBeat != StoryManager.Beat.TUTORIAL_DROP_ORB_INSTRUCTIONS) {
+                if (this.isTargettingMachine) {
+                    this.machine.Interact();
+                    this.item = null;
+                    this.isTargettingMachine = false;
+                }
             }
 
             // If character made it to void
