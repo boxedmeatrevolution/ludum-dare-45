@@ -71,12 +71,8 @@ public class Monster : MonoBehaviour {
     private float ambientSoundTimer = 3f;
 
     private AudioSource audioSource;
-    public AudioClip threaten1Sound;
-    public AudioClip threaten2Sound;
-    public AudioClip threaten3Sound;
-    public AudioClip flee1Sound;
-    public AudioClip flee2Sound;
-    public AudioClip flee3Sound;
+    public AudioClip threatenSound;
+    public AudioClip fleeSound;
     public AudioClip fightSound;
     public AudioClip footstepSound;
     public AudioClip ambient1Sound;
@@ -177,15 +173,7 @@ public class Monster : MonoBehaviour {
             this.ambientSoundTimer -= Time.deltaTime;
             if (this.ambientSoundTimer < 0f) {
                 this.ambientSoundTimer = Random.Range(8f, 14f);
-                AudioClip ambientSound = null;
-                if (Random.value < 0.333) {
-                    ambientSound = this.ambient1Sound;
-                } else if (Random.value < 0.5) {
-                    ambientSound = this.ambient2Sound;
-                } else {
-                    ambientSound = this.ambient3Sound;
-                }
-                this.audioSource.PlayOneShot(ambientSound, 0.65f);
+                this.PlayAmbientSound();
             }
             // Actions.
             Vector2 displacement = this.waypoint - (Vector2)this.transform.position;
@@ -227,10 +215,12 @@ public class Monster : MonoBehaviour {
                         if (choice == State.FLEE) {
                             this.state = State.FLEE;
                             this.target = monster;
+                            this.audioSource.PlayOneShot(this.fleeSound, 0.75f);
                         }
                         if (monsterChoice == State.FLEE) {
                             monster.state = State.FLEE;
                             monster.target = this;
+                            monster.audioSource.PlayOneShot(monster.fleeSound, 0.75f);
                         }
                         if (choice == State.THREATEN) {
                             this.state = State.THREATEN;
@@ -238,6 +228,7 @@ public class Monster : MonoBehaviour {
                             this.target = monster;
                             monster.Avoid(this);
                             this.Avoid(monster);
+                            this.audioSource.PlayOneShot(this.threatenSound, 0.75f);
                         }
                         if (monsterChoice == State.THREATEN) {
                             monster.state = State.THREATEN;
@@ -245,6 +236,7 @@ public class Monster : MonoBehaviour {
                             monster.target = this;
                             this.Avoid(monster);
                             monster.Avoid(this);
+                            monster.audioSource.PlayOneShot(monster.threatenSound, 0.75f);
                         }
                         if (isThreaten) {
                             if (choice == State.IGNORE) {
@@ -572,6 +564,20 @@ public class Monster : MonoBehaviour {
         // Maintain z ordering.
         Vector2 pos = this.transform.position;
         this.transform.position = new Vector3(pos.x, pos.y, pos.y / 300f);
+    }
+
+    private void PlayAmbientSound() {
+        AudioClip ambientSound = null;
+        if (Random.value < 0.333) {
+            ambientSound = this.ambient1Sound;
+        }
+        else if (Random.value < 0.5) {
+            ambientSound = this.ambient2Sound;
+        }
+        else {
+            ambientSound = this.ambient3Sound;
+        }
+        this.audioSource.PlayOneShot(ambientSound, 0.65f);
     }
 
     public void Avoid(Monster monster) {

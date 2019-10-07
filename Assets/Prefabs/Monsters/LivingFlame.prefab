@@ -1,5 +1,38 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &3805615181251565332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4484125969662896625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7be6091ed11d40149a26820470846855, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: 0
+  fireAnchor: {fileID: 6453251927097376326}
+  friction: 0.75
+  accel: 3
+  wanderSpeed: 0.6
+  sprintSpeed: 1.2
+  fleeRadius: 2.5
+  threatenRadius: 1.5
+  averageWaitTime: 0.5
+  threatenTime: 2
+  transformOrb: {fileID: 0}
+  createdFromVoid: 0
+  orbs: []
+  threatenSound: {fileID: 8300000, guid: 414bebed2f2273e43b12479408672405, type: 3}
+  fleeSound: {fileID: 8300000, guid: c2fa6f65519076e4eb1807bd3994a4bf, type: 3}
+  fightSound: {fileID: 8300000, guid: f48a1e1324988954f90ca8cbe3e48912, type: 3}
+  footstepSound: {fileID: 0}
+  ambient1Sound: {fileID: 0}
+  ambient2Sound: {fileID: 0}
+  ambient3Sound: {fileID: 0}
+  deathSound: {fileID: 8300000, guid: e39839616973b4f44866a1ffb0db33ad, type: 3}
 --- !u!212 &6869211056701342348
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -69,31 +102,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &3805615181251565332
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4484125969662896625}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7be6091ed11d40149a26820470846855, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  state: 0
-  fireAnchor: {fileID: 6453251927097376326}
-  friction: 0.75
-  accel: 3
-  wanderSpeed: 0.75
-  sprintSpeed: 2
-  fleeRadius: 2.5
-  threatenRadius: 1.5
-  averageWaitTime: 0.5
-  threatenTime: 2
-  burningOrb: {fileID: 0}
-  createdFromVoid: 0
-  orbs: []
 --- !u!1001 &2205350075863252645
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -161,12 +169,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2350926258969330476, guid: d9f950da24d5aac4d85f8f7989c3878c,
-        type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: b810f678f38322a4ca5670168fd68518,
-        type: 3}
     - target: {fileID: 2350926259135567699, guid: d9f950da24d5aac4d85f8f7989c3878c,
         type: 3}
       propertyPath: m_Radius
@@ -197,6 +199,12 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 0.091
       objectReference: {fileID: 0}
+    - target: {fileID: 2350926258969330476, guid: d9f950da24d5aac4d85f8f7989c3878c,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: b810f678f38322a4ca5670168fd68518,
+        type: 3}
     m_RemovedComponents:
     - {fileID: 2350926259135567697, guid: d9f950da24d5aac4d85f8f7989c3878c, type: 3}
     - {fileID: 2350926258969330476, guid: d9f950da24d5aac4d85f8f7989c3878c, type: 3}
