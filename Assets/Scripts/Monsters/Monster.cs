@@ -23,6 +23,7 @@ public class Monster : MonoBehaviour {
     private Item item;
 
     private Pen pen;
+    private Gate gate;
     private Vector2 waypoint;
     private Monster avoid;
 
@@ -88,6 +89,7 @@ public class Monster : MonoBehaviour {
         this.velocity = Vector2.zero;
         this.enflamed = false;
         this.pen = FindObjectOfType<Pen>();
+        this.gate = FindObjectOfType<Gate>();
         this.item = GetComponent<Item>();
         this.renderer = GetComponentInChildren<SpriteRenderer>();
         this.emotion = GetComponentInChildren<Emotion>();
@@ -366,7 +368,7 @@ public class Monster : MonoBehaviour {
             }
             this.velocity = Vector2.zero;
             this.transform.position = mouthPosition - displacement * scale;
-            this.transform.localScale = new Vector3(scale, scale, 1f);
+            this.transform.localScale = new Vector3((scale + 0.2f) / 1.2f, (scale + 0.2f) / 1.2f, 1f);
         }
         else if (this.state == State.DIGESTING) {
             Monster monster = this.target;
@@ -429,6 +431,7 @@ public class Monster : MonoBehaviour {
 
         this.stateTimer -= Time.deltaTime;
         // Physics
+        float gateX = this.gate.transform.position.x + this.gate.width;
         float speed = this.velocity.magnitude;
         float maxSpeed = (this.state == State.WANDER || this.state == State.POST_FIGHT || this.state == State.IGNORE || this.state == State.MESMERIZED) ?
             this.wanderSpeed : this.sprintSpeed;
@@ -442,6 +445,9 @@ public class Monster : MonoBehaviour {
         }
         if (speed > maxSpeed) {
             this.velocity *= maxSpeed / speed;
+        }
+        if (this.transform.position.x < gateX && this.velocity.x < 0) {
+            this.velocity = new Vector2(-0.5f * this.velocity.x, this.velocity.y);
         }
         this.transform.position += (Vector3)this.velocity * Time.deltaTime;
         this.emotion.UpdateFromState(state);
