@@ -86,10 +86,9 @@ public class DialogueManager : MonoBehaviour
         if (filename != this.currentFile)
         {
             this.currentFile = filename;
-            string path = "Assets/Text/" + filename + ".json";
-            StreamReader reader = new StreamReader(path);
-            this.json = JSON.Parse(reader.ReadToEnd());
-            reader.Close();
+            string path = "Text/" + filename;
+            TextAsset asset = Resources.Load<TextAsset>(path);
+            this.json = JSON.Parse(asset.text);
         }
     }
 

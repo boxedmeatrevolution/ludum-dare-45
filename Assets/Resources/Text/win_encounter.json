@@ -12,8 +12,21 @@
                 "Hmmm...",
                 "One Ghost orb summons a single ghost...",
                 "You might need more to summon Lord Ghostighost",
-                "There's an old saying: Earth Earth copies the Ghost and makes 2 orbs",
+                "There's an old saying: Earth Earth copies the Ghost and makes am orb",
                 "Now I must go!"
+            ]
+        },
+        ]
+    },
+    "ghost_orb_created" : {
+        "dialogue": [
+        {
+            "speaker": 1,
+            "lines": [
+                "Oh ho! You did it",
+                "Careful. If you DROP IT it will change back into a regular orb!",
+                "Put it in the machine with another orb!",
+                "We'll show Lord Ghostighost who's boss >:-)"
             ]
         },
         ]
