@@ -136,12 +136,18 @@ public class Item : MonoBehaviour
     public bool Pickup() {
         Monster monster = this.GetComponent<Monster>();
         if (monster == null || monster.CanPickup()) {
-            this.pickedUp = true;
-            this.state = State.BEING_LIFTED;
-            return true;
-        } else {
-            return false;
+            if (this.state != State.BEING_PUT_IN_MACHINE 
+                && this.state != State.IN_MACHINE
+                && this.state != State.RETURNING_TO_LAB
+                && this.state != State.TRANSFORMED
+                && this.state != State.TRANSFORMING
+            ) {
+                this.pickedUp = true;
+                this.state = State.BEING_LIFTED;
+                return true;
+            }
         }
+        return false;
     }
 
     public void Drop() {
