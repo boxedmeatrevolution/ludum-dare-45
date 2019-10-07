@@ -48,6 +48,10 @@ public class DialogueManager : MonoBehaviour
             }
             this.Display();
         }
+        else
+        {
+            this.EndScene();
+        }
     }
 
     public void SetFile(string filename) {
