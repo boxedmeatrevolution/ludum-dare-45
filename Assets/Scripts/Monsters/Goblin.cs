@@ -3,9 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Goblin : Monster {
+    private static uint goblinIndex = 0;
+    private Animator animator;
     // Start is called before the first frame update
     protected override void Start() {
         base.Start();
+        this.animator = GetComponentInChildren<Animator>();
+        Goblin.goblinIndex += 1;
+        Goblin.goblinIndex = Goblin.goblinIndex % 3;
+        this.animator.Play("Goblin_" + Goblin.goblinIndex.ToString());
     }
 
     // Update is called once per frame
