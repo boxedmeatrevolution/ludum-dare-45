@@ -15,6 +15,7 @@ public class Monster : MonoBehaviour {
     private readonly static float GOO_TIME = 5f;
 
     private bool initialized = false;
+    private bool copycat;
     private float stateTimer;
     private Vector2 velocity;
     private State state;
@@ -68,6 +69,7 @@ public class Monster : MonoBehaviour {
     // Start is called before the first frame update
     protected virtual void Start() {
         this.initialized = true;
+        this.copycat = false;
         this.stateTimer = 0f;
         this.velocity = Vector2.zero;
         this.enflamed = false;
@@ -108,7 +110,7 @@ public class Monster : MonoBehaviour {
             }
             // Transitions.
             foreach (Monster monster in FindObjectsOfType<Monster>()) {
-                if (monster == this || this.state != State.WANDER || !monster.initialized || monster.state != State.WANDER || monster.item.state != Item.State.ON_GROUND) {
+                if (monster == this || this.state != State.WANDER || !monster.Initialized() || monster.state != State.WANDER || monster.item.state != Item.State.ON_GROUND) {
                     continue;
                 }
                 Vector2 monsterDisplacement = monster.transform.position - this.transform.position;
@@ -401,6 +403,18 @@ public class Monster : MonoBehaviour {
     // Choose whether to threaten, hypnotize, flee, or ignore when another monster threatens.
     protected virtual State ChooseThreatenDefensive(Monster other) {
         return State.FLEE;
+    }
+
+    public void SetCopycat(bool copycat) {
+        this.copycat = copycat;
+    }
+
+    public bool IsCopycat() {
+        return this.copycat;
+    }
+
+    public bool Initialized() {
+        return this.initialized;
     }
 
     public void Enflame() {

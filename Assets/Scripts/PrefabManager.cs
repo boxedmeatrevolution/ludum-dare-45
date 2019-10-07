@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ public class PrefabManager : MonoBehaviour
     public static GameObject FIRE_PREFAB;
     public static GameObject EXPLOSION_PREFAB;
 
+    public static GameObject COPYCAT_PREFAB;
     public static GameObject FIRE_SALAMANDER_PREFAB;
     public static GameObject GHOST_SLUG_PREFAB;
     public static GameObject GOBLIN_PREFAB;
@@ -18,6 +20,7 @@ public class PrefabManager : MonoBehaviour
     public GameObject firePrefab;
     public GameObject explosionPrefab;
 
+    public GameObject copycatPrefab;
     public GameObject fireSalamanderPrefab;
     public GameObject ghostSlugPrefab;
     public GameObject goblinPrefab;
@@ -35,6 +38,30 @@ public class PrefabManager : MonoBehaviour
         PrefabManager.GOBLIN_PREFAB = this.goblinPrefab;
         PrefabManager.LIVING_FLAME_PREFAB = this.livingFlamePrefab;
         PrefabManager.PLANT_OGRE_PREFAB = this.plantOgrePrefab;
+    }
+
+    public static GameObject GetMonsterPrefab(Type type) {
+        if (type.Equals(typeof(Copycat)) {
+            return PrefabManager.COPYCAT_PREFAB;
+        }
+        else if (type.Equals(typeof(FireSalamander))) {
+            return PrefabManager.FIRE_SALAMANDER_PREFAB;
+        }
+        else if (type.Equals(typeof(GhostSlug))) {
+            return PrefabManager.GHOST_SLUG_PREFAB;
+        }
+        else if (type.Equals(typeof(Goblin))) {
+            return PrefabManager.GOBLIN_PREFAB;
+        }
+        else if (type.Equals(typeof(LivingFlame))) {
+            return PrefabManager.LIVING_FLAME_PREFAB;
+        }
+        else if (type.Equals(typeof(PlantOgre))) {
+            return PrefabManager.PLANT_OGRE_PREFAB;
+        }
+        else {
+            return null;
+        }
     }
 
     // Update is called once per frame
