@@ -15,7 +15,7 @@ public class Machine : MonoBehaviour
     private Transform orbPathWaypoint1;
     private Transform orbPathWaypoint2;
     private Transform spawnWaypoint;
-    private List<Transform> orbPath;
+    private List<Vector3> orbPath;
 
     private SpriteRenderer drawerSprite;
     private SpriteRenderer openSprite;
@@ -45,9 +45,9 @@ public class Machine : MonoBehaviour
         this.orbPathWaypoint2 = GameObject.Find("OrbPathWaypoint2").GetComponentInChildren<Transform>();
         this.spawnWaypoint = GameObject.Find("SpawnWaypoint").GetComponentInChildren<Transform>();
 
-        this.orbPath = new List<Transform>();
-        orbPath.Add(this.orbPathWaypoint1);
-        orbPath.Add(this.orbPathWaypoint2);
+        this.orbPath = new List<Vector3>();
+        orbPath.Add(this.orbPathWaypoint1.position);
+        orbPath.Add(this.orbPathWaypoint2.position);
 
         this.drawerSprite = GameObject.Find("SlotMachineDrawer").GetComponentInChildren<SpriteRenderer>();
         this.openSprite = GameObject.Find("SlotMachineOpen").GetComponentInChildren<SpriteRenderer>();
@@ -123,12 +123,12 @@ public class Machine : MonoBehaviour
         if (this.orbs.Count == 0)
         {
             this.orbs.Add(orb);
-            orb.item.PutInMachine(this.slot1OrbWaypoint);
+            orb.item.PutInMachine(this.slot1OrbWaypoint.position);
         }
         else if (this.orbs.Count == 1)
         {
             this.orbs.Add(orb);
-            orb.item.PutInMachine(this.slot2OrbWaypoint);
+            orb.item.PutInMachine(this.slot2OrbWaypoint.position);
         }
     }
 
@@ -146,24 +146,35 @@ public class Machine : MonoBehaviour
     {
         if (this.orbs.Count == 2)
         {
+            GameObject spawnedObj = null;
             if (orbs[0].orbColor == Orb.OrbColor.BLUE && orbs[1].orbColor == Orb.OrbColor.BLUE)
             {
-                Instantiate(PrefabManager.GHOST_SLUG_PREFAB, this.spawnWaypoint.transform.position, Quaternion.identity);
+                spawnedObj = Instantiate(PrefabManager.GHOST_SLUG_PREFAB, this.spawnWaypoint.transform.position, Quaternion.identity);
             }
             else if (orbs[0].orbColor == Orb.OrbColor.RED && orbs[1].orbColor == Orb.OrbColor.RED) {
-                Instantiate(PrefabManager.LIVING_FLAME_PREFAB, this.spawnWaypoint.transform.position, Quaternion.identity);
+                spawnedObj = Instantiate(PrefabManager.LIVING_FLAME_PREFAB, this.spawnWaypoint.transform.position, Quaternion.identity);
             }
             else if (orbs[0].orbColor == Orb.OrbColor.BROWN && orbs[1].orbColor == Orb.OrbColor.BROWN) {
-                Instantiate(PrefabManager.GHOST_SLUG_PREFAB, this.spawnWaypoint.transform.position, Quaternion.identity);
+                spawnedObj = Instantiate(PrefabManager.GHOST_SLUG_PREFAB, this.spawnWaypoint.transform.position, Quaternion.identity);
             }
             else if ((orbs[0].orbColor == Orb.OrbColor.BLUE && orbs[1].orbColor == Orb.OrbColor.RED) || (orbs[0].orbColor == Orb.OrbColor.RED && orbs[1].orbColor == Orb.OrbColor.BLUE)) {
-                Instantiate(PrefabManager.GOBLIN_PREFAB, this.spawnWaypoint.transform.position, Quaternion.identity);
+                spawnedObj = Instantiate(PrefabManager.GOBLIN_PREFAB, this.spawnWaypoint.transform.position, Quaternion.identity);
             }
             else if ((orbs[0].orbColor == Orb.OrbColor.BLUE && orbs[1].orbColor == Orb.OrbColor.BROWN) || (orbs[0].orbColor == Orb.OrbColor.BROWN && orbs[1].orbColor == Orb.OrbColor.BLUE)) {
-                Instantiate(PrefabManager.PLANT_OGRE_PREFAB, this.spawnWaypoint.transform.position, Quaternion.identity);
+                spawnedObj = Instantiate(PrefabManager.PLANT_OGRE_PREFAB, this.spawnWaypoint.transform.position, Quaternion.identity);
             }
             else if ((orbs[0].orbColor == Orb.OrbColor.RED && orbs[1].orbColor == Orb.OrbColor.BROWN) || (orbs[0].orbColor == Orb.OrbColor.BROWN && orbs[1].orbColor == Orb.OrbColor.RED)) {
-                Instantiate(PrefabManager.FIRE_SALAMANDER_PREFAB, this.spawnWaypoint.transform.position, Quaternion.identity);
+                spawnedObj = Instantiate(PrefabManager.FIRE_SALAMANDER_PREFAB, this.spawnWaypoint.transform.position, Quaternion.identity);
+            }
+
+            if (spawnedObj != null)
+            {
+                Monster spawnedMonster = spawnedObj.GetComponent<Monster>();
+                if (spawnedMonster != null)
+                {
+                    Orb[] monsterOrbs = { this.orbs[0], this.orbs[1] };
+                    spawnedMonster.GiveOrbs(monsterOrbs);
+                }
             }
 
             // orbs are no longer in machine
