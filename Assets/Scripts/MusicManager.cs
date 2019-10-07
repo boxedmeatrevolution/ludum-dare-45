@@ -33,9 +33,10 @@ public class MusicManager : MonoBehaviour
 
     // Update is called once per frame
     void Update() {
+        float deltaTime = 1f / 60f;
         this.audioSource.volume = 0.5f * this.transitionFactor;
         if (this.nextPlaying != this.currentlyPlaying) {
-            this.transitionFactor -= 0.5f * Time.deltaTime;
+            this.transitionFactor -= 0.5f * deltaTime;
             if (this.transitionFactor < 0f) {
                 this.audioSource.Stop();
                 if (this.nextPlaying == Music.Ghostighost) {
@@ -55,7 +56,7 @@ public class MusicManager : MonoBehaviour
         }
         else {
             if (this.transitionFactor < 1f) {
-                this.transitionFactor += 0.5f * Time.deltaTime;
+                this.transitionFactor += 0.5f * deltaTime;
             }
             if (this.transitionFactor > 1f) {
                 this.transitionFactor = 1f;
