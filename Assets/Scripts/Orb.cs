@@ -9,6 +9,10 @@ public class Orb : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     public Item item;
 
+    private Fire fire;
+    public bool enflamed = false;
+    private Transform fireAnchor;
+
     public enum OrbColor
     {
         BLUE,
@@ -20,6 +24,15 @@ public class Orb : MonoBehaviour
     void Start()
     {
         this.item = GetComponent<Item>();
+        Transform[] transforms = GetComponentsInChildren<Transform>();
+        for (int i = 0; i < transforms.Length; i++)
+        {
+            if (transforms[i].name == "FireAnchor")
+            {
+                this.fireAnchor = transforms[i];
+            }
+        }
+
         this.spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         switch (this.orbColor)
         {
@@ -42,9 +55,30 @@ public class Orb : MonoBehaviour
         {
             this.spriteRenderer.enabled = false;
         }
-        else 
+        else
         {
             this.spriteRenderer.enabled = true;
+        }
+
+        if (this.item.state == Item.State.BEING_PUT_IN_MACHINE)
+        {
+            this.Extinguish();
+        }
+    }
+
+    public void Enflame()
+    {
+        this.enflamed = true;
+        GameObject fireObj = Instantiate(PrefabManager.FIRE_PREFAB, this.fireAnchor.transform);
+        this.fire = fireObj.GetComponentInChildren<Fire>();
+    }
+
+    public void Extinguish()
+    {
+        this.enflamed = false;
+        if (this.fire != null)
+        {
+            Destroy(this.fire.gameObject);
         }
     }
 }
