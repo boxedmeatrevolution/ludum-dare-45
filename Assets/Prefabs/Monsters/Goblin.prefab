@@ -31,7 +31,8 @@ MonoBehaviour:
   footstepSound: {fileID: 0}
   ambient1Sound: {fileID: 8300000, guid: f165d8a1139a74c46905da576878ce8f, type: 3}
   ambient2Sound: {fileID: 8300000, guid: 03bca45aba285e444961ce1f2a3dd7dc, type: 3}
-  ambient3Sound: {fileID: 8300000, guid: 747310cd10b247f40b0c4fa6528528cf, type: 3}
+  ambient3Sound: {fileID: 8300000, guid: 03bca45aba285e444961ce1f2a3dd7dc, type: 3}
+  lureSound: {fileID: 0}
   deathSound: {fileID: 8300000, guid: e39839616973b4f44866a1ffb0db33ad, type: 3}
 --- !u!212 &4558313416269007756
 SpriteRenderer:

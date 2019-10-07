@@ -78,6 +78,7 @@ public class Monster : MonoBehaviour {
     public AudioClip ambient1Sound;
     public AudioClip ambient2Sound;
     public AudioClip ambient3Sound;
+    public AudioClip lureSound;
     public AudioClip deathSound;
 
     public enum State {
@@ -254,12 +255,14 @@ public class Monster : MonoBehaviour {
                             monster.state = State.MESMERIZED;
                             this.target = monster;
                             monster.target = this;
+                            this.audioSource.PlayOneShot(this.lureSound);
                         }
                         if (monsterChoice == State.LURE) {
                             this.state = State.MESMERIZED;
                             monster.state = State.LURE;
                             this.target = monster;
                             monster.target = this;
+                            monster.audioSource.PlayOneShot(monster.lureSound);
                         }
                     }
                 }
@@ -343,6 +346,7 @@ public class Monster : MonoBehaviour {
                     monster.stateTimer = Monster.DYING_TIME;
                     monster.OnDying();
                     monster.target = null;
+                    monster.audioSource.PlayOneShot(monster.deathSound);
                 }
                 else {
                     monster.state = State.POST_FIGHT;
@@ -353,6 +357,7 @@ public class Monster : MonoBehaviour {
                     this.stateTimer = Monster.DYING_TIME;
                     this.OnDying();
                     this.target = null;
+                    this.audioSource.PlayOneShot(this.deathSound);
                 }
                 else {
                     this.state = State.POST_FIGHT;
