@@ -1,0 +1,44 @@
+{
+    "speakers": {
+        1: "Pabs",
+        2: "You",
+        3: "Exposition"
+    },
+    "one_orb_to_summon" : {
+        "dialogue": [
+        {
+            "speaker": 1,
+            "lines": [
+                "Hmmm...",
+                "One Ghost orb summons a single ghost...",
+                "You might need more to summon Lord Ghostighost",
+                "There's an old saying: Earth Earth copies the Ghost and makes 2 orbs",
+                "Now I must go!"
+            ]
+        },
+        ]
+    },
+    "win_scene" : {
+        "dialogue": [
+        {
+            "speaker": 1,
+            "lines": [
+                "Wow!",
+                "Lord Ghostighost INSTANTLY exploded",
+                "Now we're free.",
+                "We are forever grateful."
+            ]
+        },{
+            "speaker": 2,
+            "lines": [
+                ">:-)"
+            ]
+        },{
+            "speaker": 3,
+            "lines": [
+                "You Win!"
+            ]
+        },
+        ]
+    },
+}	
