@@ -1,5 +1,40 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &4911787474821638050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6502865246611780335}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3ef71fa5fb10fe47af83488560c8f20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: 0
+  fireAnchor: {fileID: 4434514960636519768}
+  friction: 0.4
+  accel: 3
+  wanderSpeed: 0.4
+  sprintSpeed: 0.6
+  fleeRadius: 2
+  threatenRadius: 1
+  averageWaitTime: 8
+  threatenTime: 2
+  transformOrb: {fileID: 0}
+  createdFromVoid: 0
+  orbs: []
+  threatenSound: {fileID: 8300000, guid: 046bf199d96553d48a44880453ae1909, type: 3}
+  fleeSound: {fileID: 8300000, guid: 4e8dbf8bfb71c204ea923bdc8f2ceda2, type: 3}
+  fightSound: {fileID: 8300000, guid: f48a1e1324988954f90ca8cbe3e48912, type: 3}
+  footstepSound: {fileID: 0}
+  ambient1Sound: {fileID: 8300000, guid: ce637e14def95b14a9b1e2234d64a2c3, type: 3}
+  ambient2Sound: {fileID: 8300000, guid: 24bd28a6088d73440bc9cc655e69792c, type: 3}
+  ambient3Sound: {fileID: 8300000, guid: 199cb23aed1059649bb0a7cd15c7a833, type: 3}
+  lureSound: {fileID: 0}
+  deathSound: {fileID: 8300000, guid: e39839616973b4f44866a1ffb0db33ad, type: 3}
+  spawnSound: {fileID: 8300000, guid: 22705b28314377f44900aa3644ae2e05, type: 3}
 --- !u!212 &8844099386069447005
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -69,31 +104,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &4911787474821638050
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6502865246611780335}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a3ef71fa5fb10fe47af83488560c8f20, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  state: 0
-  fireAnchor: {fileID: 4434514960636519768}
-  friction: 0.4
-  accel: 3
-  wanderSpeed: 0.4
-  sprintSpeed: 0.6
-  fleeRadius: 2
-  threatenRadius: 1
-  averageWaitTime: 8
-  threatenTime: 2
-  burningOrb: {fileID: 0}
-  createdFromVoid: 0
-  orbs: []
 --- !u!1001 &8835776075891926459
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -164,7 +174,12 @@ PrefabInstance:
     - target: {fileID: 2350926259135567699, guid: d9f950da24d5aac4d85f8f7989c3878c,
         type: 3}
       propertyPath: m_Radius
-      value: 0.3
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2350926259135567699, guid: d9f950da24d5aac4d85f8f7989c3878c,
+        type: 3}
+      propertyPath: m_Offset.y
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 2350926258969330477, guid: d9f950da24d5aac4d85f8f7989c3878c,
         type: 3}
