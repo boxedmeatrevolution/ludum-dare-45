@@ -13,6 +13,8 @@ public class Monster : MonoBehaviour {
     private readonly static float DEVOUR_TIME = 1f;
     private readonly static float DIGEST_TIME = 4f;
     private readonly static float GOO_TIME = 5f;
+
+    private bool initialized = false;
     private float stateTimer;
     private Vector2 velocity;
     private State state;
@@ -65,6 +67,7 @@ public class Monster : MonoBehaviour {
 
     // Start is called before the first frame update
     protected virtual void Start() {
+        this.initialized = true;
         this.stateTimer = 0f;
         this.velocity = Vector2.zero;
         this.enflamed = false;
@@ -76,7 +79,7 @@ public class Monster : MonoBehaviour {
         this.fire = null;
         this.target = null;
         this.avoid = null;
-
+        this.state = State.WANDER;
         this.waypoint = this.ChooseWaypoint(this.pen);
     }
 
@@ -105,7 +108,7 @@ public class Monster : MonoBehaviour {
             }
             // Transitions.
             foreach (Monster monster in FindObjectsOfType<Monster>()) {
-                if (monster == this || this.state != State.WANDER || monster.state != State.WANDER || monster.item.state != Item.State.ON_GROUND) {
+                if (monster == this || this.state != State.WANDER || !monster.initialized || monster.state != State.WANDER || monster.item.state != Item.State.ON_GROUND) {
                     continue;
                 }
                 Vector2 monsterDisplacement = monster.transform.position - this.transform.position;
@@ -187,7 +190,7 @@ public class Monster : MonoBehaviour {
         else if (this.state == State.THREATEN) {
             if (this.stateTimer < 0f) {
                 Monster monster = this.target;
-                float distance = (monster.transform.position - this.transform.position).magnitude;
+                float distance = ((Vector2)monster.transform.position - (Vector2)this.transform.position).magnitude;
                 if (monster.state != State.FLEE) {
                     this.state = State.PRE_FIGHT;
                 }
@@ -276,7 +279,7 @@ public class Monster : MonoBehaviour {
         }
         else if (this.state == State.LURE) {
             Monster monster = this.target;
-            float distance = (monster.transform.position - this.transform.position).magnitude;
+            float distance = ((Vector2)monster.transform.position - (Vector2)this.transform.position).magnitude;
             if (distance < 0.5f) {
                 this.state = State.DEVOURING;
                 monster.state = State.BEING_DEVOURED;

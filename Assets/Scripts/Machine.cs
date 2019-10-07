@@ -149,22 +149,22 @@ public class Machine : MonoBehaviour
             GameObject spawnedObj = null;
             if (orbs[0].orbColor == Orb.OrbColor.BLUE && orbs[1].orbColor == Orb.OrbColor.BLUE)
             {
-                spawnedObj = Instantiate(PrefabManager.GHOST_SLUG_PREFAB, this.spawnWaypoint.transform.position, Quaternion.identity);
+                spawnedObj = Instantiate(PrefabManager.GHOST_SLUG_PREFAB, (Vector2)this.spawnWaypoint.transform.position, Quaternion.identity);
             }
             else if (orbs[0].orbColor == Orb.OrbColor.RED && orbs[1].orbColor == Orb.OrbColor.RED) {
-                spawnedObj = Instantiate(PrefabManager.LIVING_FLAME_PREFAB, this.spawnWaypoint.transform.position, Quaternion.identity);
+                spawnedObj = Instantiate(PrefabManager.LIVING_FLAME_PREFAB, (Vector2)this.spawnWaypoint.transform.position, Quaternion.identity);
             }
             else if (orbs[0].orbColor == Orb.OrbColor.BROWN && orbs[1].orbColor == Orb.OrbColor.BROWN) {
-                spawnedObj = Instantiate(PrefabManager.GHOST_SLUG_PREFAB, this.spawnWaypoint.transform.position, Quaternion.identity);
+                spawnedObj = Instantiate(PrefabManager.GHOST_SLUG_PREFAB, (Vector2)this.spawnWaypoint.transform.position, Quaternion.identity);
             }
             else if ((orbs[0].orbColor == Orb.OrbColor.BLUE && orbs[1].orbColor == Orb.OrbColor.RED) || (orbs[0].orbColor == Orb.OrbColor.RED && orbs[1].orbColor == Orb.OrbColor.BLUE)) {
-                spawnedObj = Instantiate(PrefabManager.GOBLIN_PREFAB, this.spawnWaypoint.transform.position, Quaternion.identity);
+                spawnedObj = Instantiate(PrefabManager.GOBLIN_PREFAB, (Vector2)this.spawnWaypoint.transform.position, Quaternion.identity);
             }
             else if ((orbs[0].orbColor == Orb.OrbColor.BLUE && orbs[1].orbColor == Orb.OrbColor.BROWN) || (orbs[0].orbColor == Orb.OrbColor.BROWN && orbs[1].orbColor == Orb.OrbColor.BLUE)) {
-                spawnedObj = Instantiate(PrefabManager.PLANT_OGRE_PREFAB, this.spawnWaypoint.transform.position, Quaternion.identity);
+                spawnedObj = Instantiate(PrefabManager.PLANT_OGRE_PREFAB, (Vector2)this.spawnWaypoint.transform.position, Quaternion.identity);
             }
             else if ((orbs[0].orbColor == Orb.OrbColor.RED && orbs[1].orbColor == Orb.OrbColor.BROWN) || (orbs[0].orbColor == Orb.OrbColor.BROWN && orbs[1].orbColor == Orb.OrbColor.RED)) {
-                spawnedObj = Instantiate(PrefabManager.FIRE_SALAMANDER_PREFAB, this.spawnWaypoint.transform.position, Quaternion.identity);
+                spawnedObj = Instantiate(PrefabManager.FIRE_SALAMANDER_PREFAB, (Vector2)this.spawnWaypoint.transform.position, Quaternion.identity);
             }
 
             if (spawnedObj != null)
