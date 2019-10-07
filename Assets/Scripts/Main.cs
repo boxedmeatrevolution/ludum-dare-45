@@ -24,10 +24,14 @@ public class Main : MonoBehaviour
     public Item item = null;
 
     private StoryManager storyManager;
+    private AudioSource audioSource;
+    public AudioClip footstepSound;
+    private float footstepDistance = 0.3f;
 
     // Start is called before the first frame update
     void Start()
     {
+        this.audioSource = GetComponent<AudioSource>();
         this.animator = GetComponentInChildren<Animator>();
         this.camera = FindObjectOfType<Camera>();
         this.waypoint = this.transform.position;
@@ -40,6 +44,11 @@ public class Main : MonoBehaviour
 
     // Update is called once per frame
     void Update() {
+        if (Time.timeScale < 0.0001f)
+        {
+            return;
+        }
+
         // Drop items if commanded.
         if (Input.GetAxis("Fire2") > 0f) {
             this.DropItem();
@@ -64,7 +73,7 @@ public class Main : MonoBehaviour
 
         if (storyManager.storyBeat == StoryManager.Beat.A && storyManager.state == StoryManager.State.BEAT_ACTIVE)
         {
-            if ((this.targetOrb == null && Input.GetMouseButtonDown(0)) || this.targetOrb.orbColor != Orb.OrbColor.BLUE)
+            if ((this.targetOrb == null || this.targetOrb.orbColor != Orb.OrbColor.BLUE) && Input.GetMouseButtonDown(0))
             {
                 this.targetItem = null;
                 storyManager.Prompt();
@@ -145,6 +154,11 @@ public class Main : MonoBehaviour
                 }
             }
             this.transform.position += (Vector3)deltaPos;
+            this.footstepDistance -= deltaPos.magnitude;
+            if (this.footstepDistance < 0f) {
+                this.footstepDistance = 0.65f;
+                this.audioSource.PlayOneShot(this.footstepSound, 0.01f);
+            }
 
             if (Mathf.Abs(deltaPos.x) < Mathf.Abs(deltaPos.y)) {
                 if (deltaPos.y < 0) {
@@ -182,6 +196,7 @@ public class Main : MonoBehaviour
         if (this.item == null && this.targetItem != null && displacement.magnitude < this.pickupRange) {
             if (this.targetItem.Pickup()) {
                 this.item = this.targetItem;
+                this.item.audioSource.PlayOneShot(this.item.pickupSound, 0.5f);
             }
             this.waypoint = this.targetItem.transform.position;
             this.targetItem = null;

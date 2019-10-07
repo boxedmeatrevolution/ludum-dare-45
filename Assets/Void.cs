@@ -11,9 +11,12 @@ public class Void : MonoBehaviour
     private Transform spawnEndPoint2;
     private Transform[] endpoints = new Transform[2];
     private int endpointCounter = 0;
+    public AudioSource audioSource;
+    public AudioClip voidSummonClip;
     // Start is called before the first frame update
     void Start()
     {
+        this.audioSource = GetComponent<AudioSource>();
         this.spawnWaypoint = GameObject.Find("SpawnWaypoint").GetComponentInChildren<Transform>();
         this.frontalWaypoint = GameObject.Find("FrontalWaypoint").GetComponentInChildren<Transform>();
         this.spawnEndPoint1 = GameObject.Find("SpawnEndPoint1").GetComponentInChildren<Transform>();

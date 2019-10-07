@@ -23,6 +23,11 @@ public class Item : MonoBehaviour
     private float waypointAccel = 0.0005f;
     private float waypointVel = 0.0f;
 
+    public AudioSource audioSource;
+    public AudioClip pickupSound;
+    public AudioClip dropSound;
+    public AudioClip machineSound;
+
     public enum State {
         ON_GROUND,
         BEING_LIFTED,
@@ -43,6 +48,7 @@ public class Item : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        this.audioSource = GetComponent<AudioSource>();
         this.main = FindObjectOfType<Main>();
         this.sprite = GetComponentInChildren<SpriteRenderer>();
         this.initialOffset = this.sprite.transform.localPosition;
@@ -85,10 +91,15 @@ public class Item : MonoBehaviour
                 this.pickupVelZ -= this.pickupAccel * Time.deltaTime;
             }
             else if (this.pickupZ < 0f && this.pickupVelZ < 0f) {
-                this.pickupVelZ *= -0.5f;
+                //this.pickupVelZ *= -0.5f;
+                this.pickupVelZ = 0f;
+                this.pickupZ = 0f;
             }
             this.pickupZ += this.pickupVelZ * Time.deltaTime;
-            if (Mathf.Abs(this.pickupZ) < 0.01f && Mathf.Abs(this.pickupVelZ) < 1f) {
+            if (Mathf.Abs(this.pickupZ) < 0.02f && Mathf.Abs(this.pickupVelZ) < 1f) {
+                if (this.dropSound != null) {
+                    this.audioSource.PlayOneShot(this.dropSound, 0.5f);
+                }
                 this.state = State.ON_GROUND;
             }
         }
@@ -108,6 +119,9 @@ public class Item : MonoBehaviour
             this.MoveToWaypoint();
             if (this.IsAtWaypoint())
             {
+                if (this.machineSound != null) {
+                    this.audioSource.PlayOneShot(this.machineSound);
+                }
                 this.state = State.IN_MACHINE;
             }
         }

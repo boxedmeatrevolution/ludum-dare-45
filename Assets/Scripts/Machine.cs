@@ -26,6 +26,14 @@ public class Machine : MonoBehaviour
     public State state;
     private float closedStartTime = 0f;
 
+    public AudioClip lever1Sound;
+    public AudioClip lever2Sound;
+    public AudioClip loadOrb1Sound;
+    public AudioClip loadOrb2Sound;
+    private AudioSource audioSource;
+
+    private float voidSoundTime = 0f;
+
     public enum State
     {
         OPEN,
@@ -36,6 +44,7 @@ public class Machine : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        this.audioSource = GetComponent<AudioSource>();
         this.orbManager = GameObject.Find("OrbManager").GetComponent<OrbManager>();
         this.emptyWaypoint = GameObject.Find("EmptyWaypoint").GetComponentInChildren<Transform>();
         this.leverWaypoint = GameObject.Find("LeverWaypoint").GetComponentInChildren<Transform>();
@@ -78,6 +87,11 @@ public class Machine : MonoBehaviour
                 this.SpawnMonster();
                 this.state = State.OPEN;
             }
+            this.voidSoundTime -= Time.deltaTime;
+            if (this.voidSoundTime < 0f) {
+                this.voido.audioSource.PlayOneShot(this.voido.voidSummonClip, 0.75f);
+                this.voidSoundTime = float.PositiveInfinity;
+            }
         }
         else if (this.state == State.OPEN)
         {
@@ -112,12 +126,10 @@ public class Machine : MonoBehaviour
 
         if (this.orbManager.IsOrbPickedUp() && this.orbs.Count < 2)
         {
-            Debug.Log("Loading orb");
             this.PutOrb(this.orbManager.GetPickedUpOrb());
         }
         else if (this.orbs.Count == 2)
         {
-            Debug.Log("Pulling lever");
             this.PullLever();
         }
     }
@@ -125,20 +137,26 @@ public class Machine : MonoBehaviour
     {
         if (this.orbs.Count == 0)
         {
+            this.audioSource.PlayOneShot(this.loadOrb1Sound, 0.5f);
             this.orbs.Add(orb);
             orb.item.PutInMachine(this.slot1OrbWaypoint.position);
         }
         else if (this.orbs.Count == 1)
         {
+            this.audioSource.PlayOneShot(this.loadOrb2Sound, 0.5f);
             this.orbs.Add(orb);
             orb.item.PutInMachine(this.slot2OrbWaypoint.position);
         }
     }
 
+    bool leverCount = false;
     private void PullLever()
     {
         if (this.orbs.Count == 2)
         {
+            this.voidSoundTime = 1f;
+            this.leverCount = !this.leverCount;
+            this.audioSource.PlayOneShot(leverCount ? this.lever1Sound : this.lever2Sound, 0.5f);
             this.state = State.CLOSING;
             this.orbs[0].item.MachineLeverPull(orbPath);
             this.orbs[1].item.MachineLeverPull(orbPath);
@@ -147,8 +165,7 @@ public class Machine : MonoBehaviour
 
     private void SpawnMonster()
     {
-        if (this.orbs.Count == 2)
-        {
+        if (this.orbs.Count == 2) {
             GameObject spawnedObj = null;
             if (orbs[0].orbColor == Orb.OrbColor.BLUE && orbs[1].orbColor == Orb.OrbColor.BLUE)
             {
