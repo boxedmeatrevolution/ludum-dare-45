@@ -93,7 +93,7 @@ public class Machine : MonoBehaviour
         {
             return this.slot2Waypoint;
         } 
-        else if (this.orbs.Count == 2)
+        else if (this.orbs.Count == 2 && this.state == State.OPEN)
         {
             return this.leverWaypoint;
         }
