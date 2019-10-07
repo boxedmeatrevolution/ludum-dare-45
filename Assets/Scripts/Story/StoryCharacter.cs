@@ -67,7 +67,7 @@ public class StoryCharacter : MonoBehaviour
             displacement *= percent;
             this.transform.position = this.despawn.transform.position + displacement;
 
-            if (percent > 0.99f)
+            if (percent < 0.01f)
             {
                 Destroy(this.gameObject);
             }
