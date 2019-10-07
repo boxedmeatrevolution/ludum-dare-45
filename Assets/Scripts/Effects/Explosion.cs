@@ -10,6 +10,9 @@ public class Explosion : MonoBehaviour
     void Start()
     {
         this.tickTimer = 0.1f;
+        // Choose z position.
+        Vector2 pos = this.transform.position;
+        this.transform.position = new Vector3(pos.x, pos.y, -10f);
     }
 
     // Update is called once per frame

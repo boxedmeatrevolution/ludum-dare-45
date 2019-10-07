@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GhostSlug : Monster {
+public class Ghost : Monster {
     // Start is called before the first frame update
     protected override void Start() {
         base.Start();
@@ -19,10 +19,7 @@ public class GhostSlug : Monster {
 
     // Choose whether to threaten, panic, or just keep wandering when another monster wanders into range.
     protected override State ChooseThreatenOffensive(Monster other) {
-        if (other.IsFiery()) {
-            return State.LURE;
-        }
-        return State.WANDER;
+        return State.LURE;
     }
 
     // Choose whether to threaten, panic, or just keep wandering when another monster threatens.
@@ -32,6 +29,6 @@ public class GhostSlug : Monster {
 
     // Choose whether you survive the fight with the other monster.
     public override bool KillOpponent(Monster other) {
-        return false;
+        return true;
     }
 }

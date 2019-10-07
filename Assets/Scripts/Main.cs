@@ -148,6 +148,10 @@ public class Main : MonoBehaviour
             this.waypoint = this.targetItem.transform.position;
             this.targetItem = null;
         }
+
+        // Maintain z ordering.
+        Vector2 pos = this.transform.position;
+        this.transform.position = new Vector3(pos.x, pos.y, -pos.y / 300f);
     }
 
     public void DropItem()
