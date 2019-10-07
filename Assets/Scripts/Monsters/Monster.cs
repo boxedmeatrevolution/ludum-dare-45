@@ -409,7 +409,7 @@ public class Monster : MonoBehaviour {
                     GameObject ectoplasmObj = Instantiate(PrefabManager.ECTOPLASM_PREFAB, monster.transform);
                     ectoplasmObj.transform.localPosition = new Vector3(0f, -0.01f, 0f);
                     float angle = 2f * Mathf.PI * Random.value;
-                    this.Shove(Random.Range(1f, 2f) * new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)));
+                    monster.Shove(Random.Range(0.4f, 0.7f) * new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)));
                 }
             }
         }

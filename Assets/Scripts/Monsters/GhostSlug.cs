@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GhostSlug : Monster {
 
+    private Monster fireTarget;
+
     // Start is called before the first frame update
     protected override void Start() {
         base.Start();
@@ -30,9 +32,42 @@ public class GhostSlug : Monster {
                     break;
                 }
             }
+            GameObject chasingTarget = null;
+            if (this.transformOrb != null) {
+                chasingTarget = this.transformOrb.gameObject;
+            }
+            if (chasingTarget == null && this.fireTarget != null) {
+                chasingTarget = this.fireTarget.gameObject;
+            }
+            if (chasingTarget != null) {
+                if (Random.value > 1f - Time.deltaTime / 1f) {
+                    GameObject particleObj = Instantiate(PrefabManager.FIRE_PARTICLE_PREFAB, chasingTarget.transform.position, Quaternion.identity);
+                    Particle particle = particleObj.GetComponent<Particle>();
+                    particle.target = this.transform.position;
+                }
+            }
         }
 
         base.Update();
+    }
+
+    public override Vector2 ChooseWaypoint(Pen pen) {
+        this.fireTarget = null;
+        foreach (Monster monster in FindObjectsOfType<Monster>()) {
+            if (!monster.Initialized()) {
+                continue;
+            }
+            if (monster.IsFiery()) {
+                this.fireTarget = monster;
+                break;
+            }
+        }
+        if (this.fireTarget != null) {
+            return this.fireTarget.transform.position;
+        }
+        else {
+            return base.ChooseWaypoint(pen);
+        }
     }
 
     public override bool CanBurn() {
