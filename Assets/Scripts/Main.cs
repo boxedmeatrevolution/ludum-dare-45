@@ -52,8 +52,7 @@ public class Main : MonoBehaviour
         }
 
         // Otherwise, just set the target to the position clicked... Or, go to the machine.
-        if (this.targetItem == null && Input.GetMouseButton(0)) {
-            
+        if (Input.GetMouseButton(0)) {
             // Check if player should go to machine
             Ray ray = this.camera.ScreenPointToRay(Input.mousePosition);
             RaycastHit2D[] hits = Physics2D.GetRayIntersectionAll(ray);
@@ -63,6 +62,7 @@ public class Main : MonoBehaviour
                 if (machine != null)
                 {
                     this.isTargettingMachine = true;
+                    this.targetItem = null;
                     break;
                 }
             }
@@ -71,7 +71,7 @@ public class Main : MonoBehaviour
                 // Go to machine
                 this.waypoint = this.machine.GetWaypoint().position;
             }
-            else
+            else if (this.targetItem == null)
             {
                 // Go to mouse
                 this.waypoint = this.camera.ScreenToWorldPoint(Input.mousePosition);
