@@ -146,6 +146,9 @@ public class Monster : MonoBehaviour {
     }
 
     protected virtual void Update() {
+        if (this.state == State.IN_VOID) {
+            Destroy(this.gameObject);
+        }
         if (this.state == State.SENDING_TO_VOID)
         {
             this.MoveToVoidWaypoint(true);

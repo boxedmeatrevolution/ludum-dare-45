@@ -123,108 +123,42 @@
         },
         ]
     },
-    "monsterToVoid": {
-        "dialogue": [
-        {
-            "speaker": 2,
-            "lines": [
-                "LEFT CLICK the void when holding a monster to return it to the void."
-            ]
-        },
-        ]
-    },
-    "good": {
+    "tutorial-salamander": {
         "dialogue": [
         {
             "speaker": 1,
             "lines": [
                 "Good Good.",
-                "Make more salamanders",
+                "Make more salamanders.",
                 "...",
-                "Make them forever",
-                "I'll wait"
+                "Make them forever.",
+                "I'll wait."
             ]
         },
         ]
     },
-    "bad": {
+    "tutorial-salamander-escape": {
+        "dialogue": [
+        {
+            "speaker": 1,
+            "lines": [
+                "Make me more salamanders."
+            ]
+        },
+        ]
+    },
+    "tutorial-ending": {
         "dialogue": [
         {
             "speaker": 1,
             "lines": [
                 "YOU DARE DEFY ME!",
-                "I REQUESTED SALAMANDERS",
+                "I REQUESTED SALAMANDERS.",
                 "You will be punished.",
                 "I will return in 1000 years.",
                 "Think on the errors in your ways."
             ]
         },
         ]
-    },
-    "scene2": {
-        "dialogue": [
-        {
-            "speaker": 1,
-            "lines": [
-                "Earth and Water to summon the Ogre"
-            ]
-        },
-        ]
-    },
-    "scene3": {
-        "dialogue": [
-        {
-            "speaker": 1,
-            "lines": [
-                "Haha.",
-                "See how they fight."
-            ]
-        },
-        ]
-    },
-    "scene4": {
-        "dialogue": [
-        {
-            "speaker": 1,
-            "lines": [
-                "From nothing they come,",
-                "To nothing they return."
-            ]
-        },
-        ]
-    },
-    "scene5": {
-        "dialogue": [
-        {
-            "speaker": 1,
-            "lines": [
-                "Again.",
-                "Amuse Me.",
-                "Earth and Fire a salamander make."
-            ]
-        },
-        ],
-    },
-    "scene6": {
-        "dialogue": [
-        {
-            "speaker": 1,
-            "lines": [
-                "You Dare Defy Me?"
-            ]
-        },
-        ],
-    },
-    "scene6": {
-        "dialogue": [
-        {
-            "speaker": 1,
-            "lines": [
-                "INSOLENCE WILL NOT BE TOLERATED.",
-                "I will return in 1000 years.",
-                "Think on the errors in your ways."
-            ]
-        },
-        ],
-    }, 
+    }
 }	

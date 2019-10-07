@@ -31,7 +31,10 @@ public class StoryManager : MonoBehaviour
         TUTORIAL_SUMMON_MONSTER_INSTRUCTIONS,
         TUTORIAL_RELEASE_MONSTER,
         TUTORIAL_RELEASE_MONSTER_INSTRUCTIONS,
-        TUTORIAL_ENDING
+        TUTORIAL_SALAMANDER,
+        TUTORIAL_SALAMANDER_ESCAPE,
+        TUTORIAL_ENDING,
+        FREE_PLAY_1
     }
 
     // Start is called before the first frame update
@@ -159,129 +162,55 @@ public class StoryManager : MonoBehaviour
             else if (this.state == State.BEAT_ACTIVE) {
                 FireSalamander salamander = FindObjectOfType<FireSalamander>();
                 if (salamander == null) {
+                    this.GotoBeat(Beat.TUTORIAL_SALAMANDER);
+                }
+            }
+        } else if (this.storyBeat == Beat.TUTORIAL_SALAMANDER) {
+            if (this.state == State.BEAT_FIRST_UPDATE) {
+                dm.SetFile("intro");
+                dm.StartScene("tutorial-salamander");
+                this.state = State.BEAT_ACTIVE;
+            }
+            else if (this.state == State.BEAT_ACTIVE) {
+                if (dm.endOfScene) {
+                    this.GotoBeat(Beat.TUTORIAL_SALAMANDER_ESCAPE);
+                }
+            }
+        } else if (this.storyBeat == Beat.TUTORIAL_SALAMANDER_ESCAPE) {
+            if (this.state == State.BEAT_FIRST_UPDATE) {
+                dm.SetFile("intro");
+                dm.StartScene("tutorial-salamander-escape", false);
+                this.state = State.BEAT_ACTIVE;
+            }
+            else if (this.state == State.BEAT_ACTIVE) {
+                bool allSalamanders = true;
+                Monster[] monsters = FindObjectsOfType<Monster>();
+                foreach (Monster monster in monsters) {
+                    if (!(monster is FireSalamander)) {
+                        allSalamanders = false;
+                        break;
+                    }
+                }
+                if (!allSalamanders) {
                     this.GotoBeat(Beat.TUTORIAL_ENDING);
                 }
             }
-        }
-        /*
-        if (this.storyBeat == Beat.TUTORIAL_DROP_ORB)
-        {
-            if (this.state == State.BEAT_FIRST_UPDATE)
-            {
+        } else if (this.storyBeat == Beat.TUTORIAL_ENDING) {
+            if (this.state == State.BEAT_FIRST_UPDATE) {
                 dm.SetFile("intro");
-                dm.StartScene("s2");
+                dm.StartScene("tutorial-ending");
+                this.state = State.BEAT_ACTIVE;
             }
-            if (this.state == State.PROMPT)
-            {
-                dm.StartScene("putdownPrompt");
+            else if (this.state == State.BEAT_ACTIVE) {
+                if (dm.endOfScene) {
+                    this.GotoBeat(Beat.FREE_PLAY_1);
+                }
             }
-            this.state = State.BEAT_ACTIVE;
+        } else if (this.storyBeat == Beat.FREE_PLAY_1) {
+            if (this.state == State.BEAT_FIRST_UPDATE) {
+                this.state = State.BEAT_ACTIVE;
+            }
         }
-
-        if (this.storyBeat == Beat.C1)
-        {
-            if (this.state == State.BEAT_FIRST_UPDATE)
-            {
-                dm.SetFile("intro");
-                dm.StartScene("scene1.5");
-            }
-            if (this.state == State.PROMPT)
-            {
-                dm.StartScene("pickupBrown");
-            }
-            this.state = State.BEAT_ACTIVE;
-        }
-
-        if (this.storyBeat == Beat.C2)
-        {
-            if (this.state == State.PROMPT)
-            {
-                dm.StartScene("brownInMachine");
-            }
-            this.state = State.BEAT_ACTIVE;
-        }
-
-        if (this.storyBeat == Beat.C3)
-        {
-            if (this.state == State.PROMPT)
-            {
-                dm.StartScene("pickupRed");
-            }
-            this.state = State.BEAT_ACTIVE;
-        }
-
-        if (this.storyBeat == Beat.C4)
-        {
-            if (this.state == State.PROMPT)
-            {
-                dm.StartScene("redInMachine");
-            }
-            this.state = State.BEAT_ACTIVE;
-        }
-
-        if (this.storyBeat == Beat.C5)
-        {
-            if (this.state == State.PROMPT)
-            {
-                dm.StartScene("clickMachine");
-            }
-            this.state = State.BEAT_ACTIVE;
-        }
-
-        if (this.storyBeat == Beat.D1)
-        {
-            if (this.state == State.BEAT_FIRST_UPDATE)
-            {
-                dm.SetFile("intro");
-                dm.StartScene("toss");
-            }
-            if (this.state == State.PROMPT)
-            {
-                dm.StartScene("pickupMonster");
-            }
-            this.state = State.BEAT_ACTIVE;
-        }
-        if (this.storyBeat == Beat.D2)
-        {
-            if (this.state == State.PROMPT)
-            {
-                dm.StartScene("monsterToVoid");
-            }
-            this.state = State.BEAT_ACTIVE;
-        }        
-        
-        if (this.storyBeat == Beat.D2)
-        {
-            if (this.state == State.PROMPT)
-            {
-                dm.StartScene("monsterToVoid");
-            }
-            this.state = State.BEAT_ACTIVE;
-        }
-
-        if (this.storyBeat == Beat.E1)
-        {
-            if (this.state == State.BEAT_FIRST_UPDATE)
-            {
-                dm.SetFile("intro");
-                dm.StartScene("good");
-            }
-            this.state = State.BEAT_ACTIVE;
-        }
-        if (this.storyBeat == Beat.E2)
-        {
-            if (this.state == State.BEAT_FIRST_UPDATE)
-            {
-                dm.SetFile("intro");
-                dm.StartScene("bad");
-            }
-            this.state = State.BEAT_ACTIVE;
-        }
-        */
-        /*        this.beatTimer -= Time.deltaTime;
-                if (this.isBeatTimed && this.beatTimer < 0f) {
-                    this.NextBeat();
-                }*/
     }
 
     // Trigger the story beat (can be called from outside when actions done).
