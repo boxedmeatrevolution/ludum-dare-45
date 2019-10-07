@@ -51,34 +51,29 @@ public class Main : MonoBehaviour
         }
 
 
-        if (this.storyManager.storyBeat != StoryManager.Beat.C2 
-            && this.storyManager.storyBeat != StoryManager.Beat.C4    
-            && this.storyManager.storyBeat != StoryManager.Beat.D2    
-        ){
-            // Drop items if commanded.
-            if (Input.GetAxis("Fire2") > 0f)
-            {
-                this.DropItem();
-            }
+        // Drop items if commanded.
+        if (Input.GetAxis("Fire2") > 0f)
+        {
+            this.DropItem();
+        }
 
-            // Look for any items being targeted by the left click.
-            if (Input.GetMouseButtonDown(0))
+        // Look for any items being targeted by the left click.
+        if (Input.GetMouseButtonDown(0))
+        {
+            this.targetItem = null;
+            this.isTargettingMachine = false;
+            this.isTargettingVoid = false;
+            Ray ray = this.camera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit2D[] hits = Physics2D.GetRayIntersectionAll(ray);
+            foreach (RaycastHit2D hit in hits)
             {
-                this.targetItem = null;
-                this.isTargettingMachine = false;
-                this.isTargettingVoid = false;
-                Ray ray = this.camera.ScreenPointToRay(Input.mousePosition);
-                RaycastHit2D[] hits = Physics2D.GetRayIntersectionAll(ray);
-                foreach (RaycastHit2D hit in hits)
+                Item hitItem = hit.transform.gameObject.GetComponent<Item>();
+                if (hitItem != null)
                 {
-                    Item hitItem = hit.transform.gameObject.GetComponent<Item>();
-                    if (hitItem != null)
-                    {
-                        this.targetItem = hitItem;
-                        this.targetOrb = hit.transform.gameObject.GetComponent<Orb>();
-                        this.targetMonster = hit.transform.gameObject.GetComponent<Monster>();
-                        break;
-                    }
+                    this.targetItem = hitItem;
+                    this.targetOrb = hit.transform.gameObject.GetComponent<Orb>();
+                    this.targetMonster = hit.transform.gameObject.GetComponent<Monster>();
+                    break;
                 }
             }
         }
@@ -124,66 +119,6 @@ public class Main : MonoBehaviour
                 // Go to mouse
                 this.waypoint = this.camera.ScreenToWorldPoint(Input.mousePosition);
             }
-        }
-
-        if (storyManager.storyBeat == StoryManager.Beat.A && storyManager.state == StoryManager.State.BEAT_ACTIVE)
-        {
-            bool cont = this.ForcePickupOrb(Orb.OrbColor.BLUE);
-            if (!cont)
-            {
-                return;
-            }
-        }
-
-        if (storyManager.storyBeat == StoryManager.Beat.B && storyManager.state == StoryManager.State.BEAT_ACTIVE)
-        {
-            if (Input.GetMouseButtonDown(0))
-            {
-                this.targetItem = null;
-                storyManager.Prompt();
-                return;
-            }
-            if (this.targetOrb == null || this.targetOrb.item.state == Item.State.ON_GROUND)
-            {
-                this.storyManager.NextBeat();
-            }
-        }
-
-        if (storyManager.storyBeat == StoryManager.Beat.C1)
-        {
-            bool cont = this.ForcePickupOrb(Orb.OrbColor.BROWN);
-            if (!cont)
-            {
-                return;
-            }
-        }
-        if (storyManager.storyBeat == StoryManager.Beat.C2)
-        {
-            this.ForcePutOrbInMachine(Orb.OrbColor.BROWN);
-        }
-        if (storyManager.storyBeat == StoryManager.Beat.C3)
-        {
-            bool cont = this.ForcePickupOrb(Orb.OrbColor.RED);
-            if (!cont)
-            {
-                return;
-            }
-        }
-        if (storyManager.storyBeat == StoryManager.Beat.C4)
-        {
-            this.ForcePutOrbInMachine(Orb.OrbColor.RED);
-        }
-        if (storyManager.storyBeat == StoryManager.Beat.C5)
-        {
-            this.ForceRunMachine();
-        }
-        if (storyManager.storyBeat == StoryManager.Beat.D1)
-        {
-            this.ForcePickupMonster();
-        }
-        if (storyManager.storyBeat == StoryManager.Beat.D2)
-        {
-            this.ForceThrowIntoVoid();
         }
 
         // Walk towards the target item (or point).
@@ -270,105 +205,5 @@ public class Main : MonoBehaviour
             this.item.Drop();
             this.item = null;
         }
-    }
-
-    private bool ForcePickupOrb(Orb.OrbColor color)
-    {
-        if ((this.targetOrb == null || this.targetOrb.orbColor != color) && Input.GetMouseButtonDown(0))
-        {
-            this.targetItem = null;
-            storyManager.Prompt();
-            return false;
-        }
-        if (this.orbManager.IsOrbPickedUp())
-        {
-            Orb orb = this.orbManager.GetPickedUpOrb();
-            if (orb.orbColor == color && orb.item.state == Item.State.PICKED_UP)
-            {
-                this.storyManager.NextBeat();
-            }
-        }
-        return true;
-    }
-    private bool ForcePutOrbInMachine(Orb.OrbColor color)
-    {
-        if (this.targetOrb != null && this.targetOrb.orbColor == color && this.targetOrb.item.state == Item.State.PICKED_UP && Input.GetMouseButtonDown(0) && !this.isTargettingMachine)
-        {
-            this.targetItem = null;
-            storyManager.Prompt();
-            return false;
-        }
-        if (this.targetOrb.item.state == Item.State.IN_MACHINE)
-        {
-            this.storyManager.NextBeat();
-        }
-        return true;
-    }
-
-    private bool ForceRunMachine()
-    {
-        if (!this.isTargettingMachine && Input.GetMouseButtonDown(0))
-        {
-            this.targetItem = null;
-            storyManager.Prompt();
-            return false;
-        }
-        if (FindObjectsOfType<Monster>().Length > 0)
-        {
-            this.storyManager.NextBeat();
-        }
-        return true;
-    }
-
-    private bool ForcePickupMonster()
-    {
-        if (this.targetMonster == null && Input.GetMouseButtonDown(0))
-        {
-            this.targetItem = null;
-            storyManager.Prompt();
-            return false;
-        }
-
-        Monster pickedUp = null;
-        foreach (Monster monster in FindObjectsOfType<Monster>())
-        {
-            if (monster != null && monster.GetItem() != null && monster.GetItem().state == Item.State.PICKED_UP)
-            {
-                pickedUp = monster;
-                break;
-            }
-        }
-
-        if (pickedUp != null)
-        {
-            this.storyManager.NextBeat();
-        }
-        return true;
-    }
-
-    private bool ForceThrowIntoVoid()
-    {
-        if (!this.isTargettingVoid && Input.GetMouseButtonDown(0))
-        {
-            this.targetItem = null;
-            storyManager.Prompt();
-            return false;
-        }
-
-        int count = 0;
-        Orb[] orbs = this.orbManager.orbs;
-        for (int i = 0; i < orbs.Length; i++)
-        {
-            Orb orb = orbs[i];
-            if (orb.orbColor != Orb.OrbColor.WHITE && orb.item.state == Item.State.ON_GROUND)
-            {
-                count++;
-            }
-        }
-        if (count == 9)
-        {
-            this.storyManager.NextBeat();
-        }
-        return true;
     }
 }
