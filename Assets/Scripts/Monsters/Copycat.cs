@@ -20,7 +20,7 @@ public class Copycat : Monster {
     // Update is called once per frame
     protected override void Update() {
         base.Update();
-        if (this.GetItem().state == Item.State.ON_GROUND) {
+        if (this.GetItem().state == Item.State.ON_GROUND && this.state != State.DEAD && this.state != State.DYING) {
             Monster minMonster = null;
             float minDistance = float.PositiveInfinity;
             foreach (Monster monster in FindObjectsOfType<Monster>()) {

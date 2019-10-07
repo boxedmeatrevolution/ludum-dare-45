@@ -72,7 +72,6 @@ public class StoryManager : MonoBehaviour
 
     // Update is called once per frame
     void Update() {
-        Debug.Log(this.storyBeat);
         this.beatTimer -= Time.deltaTime;
         // Do updates based on story beat.
         if (this.storyBeat == Beat.TUTORIAL_GHOSTIGHOST_EMERGE) {
