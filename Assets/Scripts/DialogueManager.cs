@@ -24,6 +24,8 @@ public class DialogueManager : MonoBehaviour
     private bool isRenderingText = false;
     private float textSpeed = 1f;
 
+    public string currentFile = "";
+
 
     // Start is called before the first frame update
     void Start()
@@ -40,11 +42,15 @@ public class DialogueManager : MonoBehaviour
     {
         if (this.currScene != null)
         {
-            if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
             {
                 this.Step();
             }
             this.Display();
+        }
+        else
+        {
+            this.EndScene();
         }
     }
 
@@ -54,10 +60,14 @@ public class DialogueManager : MonoBehaviour
         this.isRenderingText = false;
         
         // load json from file
-        string path = "Assets/Text/" + filename + ".json";
-        StreamReader reader = new StreamReader(path);
-        this.json = JSON.Parse(reader.ReadToEnd());
-        reader.Close();
+        if (filename != this.currentFile)
+        {
+            this.currentFile = filename;
+            string path = "Assets/Text/" + filename + ".json";
+            StreamReader reader = new StreamReader(path);
+            this.json = JSON.Parse(reader.ReadToEnd());
+            reader.Close();
+        }
     }
 
     public void StartScene(string scene) {

@@ -8,6 +8,7 @@ public class Main : MonoBehaviour
     private new Camera camera;
     private Vector2 waypoint;
     private Item targetItem = null;
+    private Orb targetOrb = null;
     private Gate gate;
 
     private Machine machine;
@@ -22,6 +23,7 @@ public class Main : MonoBehaviour
     public float height = 1.2f;
     public Item item = null;
 
+    private StoryManager storyManager;
     private AudioSource audioSource;
     public AudioClip footstepSound;
     private float footstepDistance = 0.3f;
@@ -36,11 +38,17 @@ public class Main : MonoBehaviour
         this.machine = GameObject.Find("Machine").GetComponent<Machine>();
         this.voido = GameObject.Find("Void").GetComponent<Void>();
         this.orbManager = GameObject.Find("OrbManager").GetComponent<OrbManager>();
+        this.storyManager = GameObject.Find("StoryManager").GetComponent<StoryManager>();
         this.gate = FindObjectOfType<Gate>();
     }
 
     // Update is called once per frame
     void Update() {
+        if (Time.timeScale < 0.0001f)
+        {
+            return;
+        }
+
         // Drop items if commanded.
         if (Input.GetAxis("Fire2") > 0f) {
             this.DropItem();
@@ -57,8 +65,41 @@ public class Main : MonoBehaviour
                 Item hitItem = hit.transform.gameObject.GetComponent<Item>();
                 if (hitItem != null) {
                     this.targetItem = hitItem;
+                    this.targetOrb = hit.transform.gameObject.GetComponent<Orb>();
                     break;
                 }
+            }
+        }
+
+        if (storyManager.storyBeat == StoryManager.Beat.A && storyManager.state == StoryManager.State.BEAT_ACTIVE)
+        {
+            if ((this.targetOrb == null || this.targetOrb.orbColor != Orb.OrbColor.BLUE) && Input.GetMouseButtonDown(0))
+            {
+                this.targetItem = null;
+                storyManager.Prompt();
+                return;
+            }
+            if (this.orbManager.IsOrbPickedUp())
+            {
+                Orb orb = this.orbManager.GetPickedUpOrb();
+                if (orb.orbColor == Orb.OrbColor.BLUE && orb.item.state == Item.State.PICKED_UP)
+                {
+                    this.storyManager.NextBeat();
+                }
+            }
+        }
+
+        if (storyManager.storyBeat == StoryManager.Beat.B && storyManager.state == StoryManager.State.BEAT_ACTIVE)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                this.targetItem = null;
+                storyManager.Prompt();
+                return;
+            }
+            if (this.targetOrb == null || this.targetOrb.item.state == Item.State.ON_GROUND)
+            {
+                this.storyManager.NextBeat();
             }
         }
 

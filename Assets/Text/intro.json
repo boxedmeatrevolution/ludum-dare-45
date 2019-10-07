@@ -1,15 +1,70 @@
 {
     "speakers": {
-        1: "Master Ghostighost"
+        1: "Lord Ghostighost",
+        2: "Exposition"
     },
     "scene1" : {
         "dialogue": [
+        {
+            "speaker": 2,
+            "lines": [
+                "Welcome to our game!",
+                "Controls are LEFT CLICK to interact. RIGHT CLICK to drop.",
+                "You are a slave to Lord Ghostighost.",
+                "Look out! He Comes!"
+            ]
+        },
         {
             "speaker": 1,
             "lines": [
                 "Slave.",
                 "Amuse me.",
-                "Earth and Fire a Salamander make."
+                "Pick up a Blue Orb"
+            ]
+        },
+        ]
+    },
+    "s2" : {
+        "dialogue": [
+        {
+            "speaker": 1,
+            "lines": [
+                "You toil.",
+                "It pleases me.",
+                "Put the orb down"
+            ]
+        },
+        ]
+    },
+    "pickupPrompt" : {
+        "dialogue": [
+        {
+            "speaker": 2,
+            "lines": [
+                "LEFT CLICK a Blue Orb."
+            ]
+        },
+        ]
+    },
+    "putdownPrompt" : {
+        "dialogue": [
+        {
+            "speaker": 2,
+            "lines": [
+                "RIGHT CLICK to drop an item."
+            ]
+        },
+        ]
+    },
+    "scene1.5": {
+        "dialogue": [
+        {
+            "speaker": 1,
+            "lines": [
+                "Haha.",
+                "I feel great mirth.",
+                "We must create life.",
+                "The MACHINE beckons. Feed it EARTH and FIRE",
             ]
         },
         ]
