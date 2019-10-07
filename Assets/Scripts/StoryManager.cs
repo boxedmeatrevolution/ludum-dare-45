@@ -98,11 +98,16 @@ public class StoryManager : MonoBehaviour
                 dm.StartScene("tutorial-drop-orb-instructions", false);
                 this.state = State.BEAT_ACTIVE;
             } else if (this.state == State.BEAT_ACTIVE) {
+                bool allOnGround = true;
                 foreach (Orb orb in FindObjectsOfType<Orb>()) {
                     Item item = orb.GetComponent<Item>();
-                    if (item.state == Item.State.ON_GROUND) {
-                        this.GotoBeat(Beat.TUTORIAL_RELEASE_MONSTER);
+                    if (item.state != Item.State.ON_GROUND) {
+                        allOnGround = false;
+                        break;
                     }
+                }
+                if (allOnGround) {
+                    this.GotoBeat(Beat.TUTORIAL_SUMMON_MONSTER);
                 }
             }
         } else if (this.storyBeat == Beat.TUTORIAL_SUMMON_MONSTER) {
@@ -257,6 +262,7 @@ public class StoryManager : MonoBehaviour
 
     // Trigger the story beat (can be called from outside when actions done).
     public void GotoBeat(Beat beat) {
+        this.dm.EndScene();
         this.storyBeat = beat;
         this.state = State.BEAT_FIRST_UPDATE;
     }

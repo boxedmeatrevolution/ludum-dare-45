@@ -155,12 +155,14 @@ public class Machine : MonoBehaviour
         if (this.orbs.Count == 2)
         {
             StoryManager storyManager = FindObjectOfType<StoryManager>();
-            if (storyManager.storyBeat == StoryManager.Beat.TUTORIAL_SUMMON_MONSTER) {
+            if (storyManager.storyBeat == StoryManager.Beat.TUTORIAL_SUMMON_MONSTER_INSTRUCTIONS) {
                 Orb.OrbColor a = this.orbs[0].orbColor;
                 Orb.OrbColor b = this.orbs[1].orbColor;
                 if (!(a == Orb.OrbColor.BROWN && b == Orb.OrbColor.RED || a == Orb.OrbColor.RED && b == Orb.OrbColor.BROWN)) {
                     this.orbs[0].item.ReturnToLab();
                     this.orbs[1].item.ReturnToLab();
+                    this.orbs.Clear();
+                    this.state = State.OPEN;
                     storyManager.state = StoryManager.State.PROMPT;
                     return;
                 }
