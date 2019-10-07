@@ -45,7 +45,6 @@ public class StoryManager : MonoBehaviour
         INTERLUDE_2_PABS_EMERGE,
         INTERLUDE_2_PABS_TALK,
         FREE_PLAY_3,
-        INTERLUDE_3_PABS_EMERGE,
         INTERLUDE_3_PABS_TALK,
         FREE_PLAY_4,
         ENDING_PABS_EMERGE,
@@ -282,95 +281,100 @@ public class StoryManager : MonoBehaviour
                 if (this.state == State.BEAT_FIRST_UPDATE) {
                     this.state = State.BEAT_ACTIVE;
                 }
-            }
-            else if (this.storyBeat == Beat.INTERLUDE_2_PABS_EMERGE) {
-                if (this.state == State.BEAT_FIRST_UPDATE) {
-                    this.state = State.BEAT_ACTIVE;
-                    this.pabs = Instantiate(PrefabManager.PABS_PREFAB).GetComponent<StoryCharacter>();
-                }
-                else if (this.state == State.BEAT_ACTIVE) {
-                    if (this.beatTimer < 0f) {
-                        this.GotoBeat(Beat.INTERLUDE_2_PABS_TALK);
+                if (this.state == State.BEAT_ACTIVE) {
+                    bool hasGhostOrb = false;
+                    foreach (Orb orb in FindObjectsOfType<Orb>()) {
+                        if (orb.orbColor == Orb.OrbColor.WHITE) {
+                            hasGhostOrb = true;
+                            break;
+                        }
+                    }
+                    if (hasGhostOrb) {
+                        this.GotoBeat(Beat.INTERLUDE_2_PABS_EMERGE, 2f);
                     }
                 }
-            }
-            else if (this.storyBeat == Beat.INTERLUDE_2_PABS_TALK) {
-                if (this.state == State.BEAT_FIRST_UPDATE) {
-                    dm.SetFile("goblin_encounter_1");
-                    dm.StartScene("interlude1-pabs-talk");
-                    this.state = State.BEAT_ACTIVE;
-                }
-                else if (this.state == State.BEAT_ACTIVE) {
-                    if (dm.endOfScene) {
-                        this.pabs.ReturnToVoid();
-                        this.pabs = null;
-                        this.GotoBeat(Beat.FREE_PLAY_3);
+                else if (this.storyBeat == Beat.INTERLUDE_2_PABS_EMERGE) {
+                    if (this.state == State.BEAT_FIRST_UPDATE) {
+                        this.state = State.BEAT_ACTIVE;
+                        this.pabs = Instantiate(PrefabManager.PABS_PREFAB).GetComponent<StoryCharacter>();
+                    }
+                    else if (this.state == State.BEAT_ACTIVE) {
+                        if (this.beatTimer < 0f) {
+                            this.GotoBeat(Beat.INTERLUDE_2_PABS_TALK);
+                        }
                     }
                 }
-            }
-            else if (this.storyBeat == Beat.FREE_PLAY_3) {
-                if (this.state == State.BEAT_FIRST_UPDATE) {
-                    this.state = State.BEAT_ACTIVE;
-                }
-            }
-            else if (this.storyBeat == Beat.INTERLUDE_3_PABS_EMERGE) {
-                if (this.state == State.BEAT_FIRST_UPDATE) {
-                    this.state = State.BEAT_ACTIVE;
-                    this.pabs = Instantiate(PrefabManager.PABS_PREFAB).GetComponent<StoryCharacter>();
-                }
-                else if (this.state == State.BEAT_ACTIVE) {
-                    if (this.beatTimer < 0f) {
-                        this.GotoBeat(Beat.INTERLUDE_3_PABS_TALK);
+                else if (this.storyBeat == Beat.INTERLUDE_2_PABS_TALK) {
+                    if (this.state == State.BEAT_FIRST_UPDATE) {
+                        dm.SetFile("win_encounter");
+                        dm.StartScene("ghost_orb_created");
+                        this.state = State.BEAT_ACTIVE;
+                    }
+                    else if (this.state == State.BEAT_ACTIVE) {
+                        if (dm.endOfScene) {
+                            this.GotoBeat(Beat.FREE_PLAY_3);
+                        }
                     }
                 }
-            }
-            else if (this.storyBeat == Beat.INTERLUDE_3_PABS_TALK) {
-                if (this.state == State.BEAT_FIRST_UPDATE) {
-                    dm.SetFile("goblin_encounter_1");
-                    dm.StartScene("interlude1-pabs-talk");
-                    this.state = State.BEAT_ACTIVE;
-                }
-                else if (this.state == State.BEAT_ACTIVE) {
-                    if (dm.endOfScene) {
-                        this.pabs.ReturnToVoid();
-                        this.pabs = null;
-                        this.GotoBeat(Beat.FREE_PLAY_4);
+                else if (this.storyBeat == Beat.FREE_PLAY_3) {
+                    if (this.state == State.BEAT_FIRST_UPDATE) {
+                        this.state = State.BEAT_ACTIVE;
+                    }
+                    if (this.state == State.BEAT_ACTIVE) {
+                        Ghost ghost = FindObjectOfType<Ghost>();
+                        if (ghost != null) {
+                            this.GotoBeat(Beat.INTERLUDE_3_PABS_TALK);
+                        }
                     }
                 }
-            }
-            else if (this.storyBeat == Beat.FREE_PLAY_4) {
-                if (this.state == State.BEAT_FIRST_UPDATE) {
-                    this.state = State.BEAT_ACTIVE;
-                }
-            }
-            else if (this.storyBeat == Beat.ENDING_PABS_EMERGE) {
-                if (this.state == State.BEAT_FIRST_UPDATE) {
-                    this.state = State.BEAT_ACTIVE;
-                    this.pabs = Instantiate(PrefabManager.PABS_PREFAB).GetComponent<StoryCharacter>();
-                }
-                else if (this.state == State.BEAT_ACTIVE) {
-                    if (this.beatTimer < 0f) {
-                        this.GotoBeat(Beat.ENDING_PABS_TALK);
+                else if (this.storyBeat == Beat.INTERLUDE_3_PABS_TALK) {
+                    if (this.state == State.BEAT_FIRST_UPDATE) {
+                        dm.SetFile("goblin_encounter_1");
+                        dm.StartScene("one_orb_to_summon");
+                        this.state = State.BEAT_ACTIVE;
+                    }
+                    else if (this.state == State.BEAT_ACTIVE) {
+                        if (dm.endOfScene) {
+                            this.pabs.ReturnToVoid();
+                            this.pabs = null;
+                            this.GotoBeat(Beat.FREE_PLAY_4);
+                        }
                     }
                 }
-            }
-            else if (this.storyBeat == Beat.ENDING_PABS_TALK) {
-                if (this.state == State.BEAT_FIRST_UPDATE) {
-                    dm.SetFile("goblin_encounter_1");
-                    dm.StartScene("interlude1-pabs-talk");
-                    this.state = State.BEAT_ACTIVE;
-                }
-                else if (this.state == State.BEAT_ACTIVE) {
-                    if (dm.endOfScene) {
-                        this.pabs.ReturnToVoid();
-                        this.pabs = null;
-                        this.GotoBeat(Beat.FREE_PLAY_5);
+                else if (this.storyBeat == Beat.FREE_PLAY_4) {
+                    if (this.state == State.BEAT_FIRST_UPDATE) {
+                        this.state = State.BEAT_ACTIVE;
                     }
                 }
-            }
-            else if (this.storyBeat == Beat.FREE_PLAY_5) {
-                if (this.state == State.BEAT_FIRST_UPDATE) {
-                    this.state = State.BEAT_ACTIVE;
+                else if (this.storyBeat == Beat.ENDING_PABS_EMERGE) {
+                    if (this.state == State.BEAT_FIRST_UPDATE) {
+                        this.state = State.BEAT_ACTIVE;
+                        this.pabs = Instantiate(PrefabManager.PABS_PREFAB).GetComponent<StoryCharacter>();
+                    }
+                    else if (this.state == State.BEAT_ACTIVE) {
+                        if (this.beatTimer < 0f) {
+                            this.GotoBeat(Beat.ENDING_PABS_TALK);
+                        }
+                    }
+                }
+                else if (this.storyBeat == Beat.ENDING_PABS_TALK) {
+                    if (this.state == State.BEAT_FIRST_UPDATE) {
+                        dm.SetFile("goblin_encounter_1");
+                        dm.StartScene("win_scene");
+                        this.state = State.BEAT_ACTIVE;
+                    }
+                    else if (this.state == State.BEAT_ACTIVE) {
+                        if (dm.endOfScene) {
+                            this.pabs.ReturnToVoid();
+                            this.pabs = null;
+                            this.GotoBeat(Beat.FREE_PLAY_5);
+                        }
+                    }
+                }
+                else if (this.storyBeat == Beat.FREE_PLAY_5) {
+                    if (this.state == State.BEAT_FIRST_UPDATE) {
+                        this.state = State.BEAT_ACTIVE;
+                    }
                 }
             }
         }

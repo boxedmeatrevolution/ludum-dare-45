@@ -210,6 +210,17 @@ public class Machine : MonoBehaviour
             else if ((orbs[0].orbColor == Orb.OrbColor.WHITE && orbs[1].orbColor != Orb.OrbColor.WHITE) || (orbs[0].orbColor != Orb.OrbColor.WHITE && orbs[1].orbColor == Orb.OrbColor.WHITE)) {
                 spawnedObj = Instantiate(PrefabManager.GHOST_PREFAB, (Vector2)this.spawnWaypoint.transform.position, Quaternion.identity);
             }
+            else if (orbs[0].orbColor == Orb.OrbColor.WHITE && orbs[1].orbColor == Orb.OrbColor.WHITE) {
+                StoryManager storyManager = FindObjectOfType<StoryManager>();
+                if (storyManager.storyBeat == StoryManager.Beat.FREE_PLAY_4) {
+                    storyManager.GotoBeat(StoryManager.Beat.ENDING_PABS_EMERGE, 2f);
+                    orbs[0].item.ReturnToLab();
+                    orbs[1].item.ReturnToLab();
+                } else {
+                    orbs[0].item.ReturnToLab();
+                    orbs[1].item.ReturnToLab();
+                }
+            }
 
             if (spawnedObj != null)
             {
