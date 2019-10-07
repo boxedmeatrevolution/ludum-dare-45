@@ -10,6 +10,7 @@ public class StoryManager : MonoBehaviour
     public bool isBeatTimed;
 
     public State state;
+    private Main main;
     private DialogueManager dm;
 
 
@@ -21,55 +22,82 @@ public class StoryManager : MonoBehaviour
     }
     public enum Beat
     {
-        START, A, B, C1, C2, C3, C4, C5, D1, D2, E1, E2, F, G
+        START,
+        TUTORIAL_PICKUP_ORB,
+        TUTORIAL_PICKUP_ORB_INSTRUCTIONS,
+        TUTORIAL_DROP_ORB,
+        TUTORIAL_DROP_ORB_INSTRUCTIONS,
+        TUTORIAL_SUMMON_MONSTER,
+        TUTORIAL_RELEASE_MONSTER
     }
-
-    private Beat[] order = { Beat.A, Beat.B, Beat.C1, Beat.C2, Beat.C3, Beat.C4, Beat.C5, Beat.D1, Beat.D2, Beat.E1, Beat.E2, Beat.F, Beat.G };
 
     // Start is called before the first frame update
     void Start()
     {
         if (this.storyBeat == Beat.START)
         {
-            this.storyBeat = this.order[this.beatIdx];
-        } else
-        {
-            for (uint i = 0; i < order.Length; i++)
-            {
-                if (order[i] == this.storyBeat)
-                {
-                    this.beatIdx = i;
-                    break;
-                }
-            }
+            this.storyBeat = Beat.TUTORIAL_PICKUP_ORB;
         }
         this.beatTimer = 5f;
         this.isBeatTimed = false;
         this.state = State.BEAT_FIRST_UPDATE;
 
-        this.dm = GameObject.Find("DialogueManager").GetComponent<DialogueManager>();
+        this.dm = FindObjectOfType<DialogueManager>();
+        this.main = FindObjectOfType<Main>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        this.storyBeat = this.order[this.beatIdx];
-
         // Do updates based on story beat.
-        if (this.storyBeat == Beat.A) {
+        if (this.storyBeat == Beat.TUTORIAL_PICKUP_ORB) {
             if (this.state == State.BEAT_FIRST_UPDATE)
             {
                 dm.SetFile("intro");
-                dm.StartScene("scene1");
+                dm.StartScene("tutorial-pickup-orb");
+                this.state = State.BEAT_ACTIVE;
+            } else if (this.state == State.BEAT_ACTIVE) {
+                if (dm.endOfScene) {
+                    this.GotoBeat(Beat.TUTORIAL_PICKUP_ORB_INSTRUCTIONS);
+                }
             }
-            if (this.state == State.PROMPT)
-            {
-                dm.StartScene("pickupPrompt");
+        } else if (this.storyBeat == Beat.TUTORIAL_PICKUP_ORB_INSTRUCTIONS) {
+            if (this.state == State.BEAT_FIRST_UPDATE) {
+                dm.SetFile("intro");
+                dm.StartScene("tutorial-pickup-orb-instructions", false);
+                this.state = State.BEAT_ACTIVE;
+            } else if (this.state == State.BEAT_ACTIVE) {
+                if (this.main.item != null) {
+                    Orb orb = this.main.item.GetComponent<Orb>();
+                    if (orb != null) {
+                        if (orb.orbColor == Orb.OrbColor.BLUE && this.main.item.state == Item.State.PICKED_UP) {
+                            this.GotoBeat(Beat.TUTORIAL_DROP_ORB);
+                        }
+                    }
+                }
+            } else if (this.state == State.PROMPT) {
+                dm.StartScene("tutorial-pickup-orb-prompt");
+                this.state = State.BEAT_ACTIVE;
             }
-            this.state = State.BEAT_ACTIVE;
+        } else if (this.storyBeat == Beat.TUTORIAL_DROP_ORB) {
+            if (this.state == State.BEAT_FIRST_UPDATE) {
+                dm.SetFile("intro");
+                dm.StartScene("tutorial-drop-orb");
+                this.state = State.BEAT_ACTIVE;
+            } else if (this.state == State.BEAT_ACTIVE) {
+                if (dm.endOfScene) {
+                    this.GotoBeat(Beat.TUTORIAL_DROP_ORB_INSTRUCTIONS);
+                }
+            }
+        } else if (this.storyBeat == Beat.TUTORIAL_DROP_ORB_INSTRUCTIONS) {
+            if (this.state == State.BEAT_FIRST_UPDATE) {
+                dm.SetFile("intro");
+                dm.StartScene("tutorial-drop-orb-instructions", false);
+                this.state = State.BEAT_ACTIVE;
+            }
         }
-
-        if (this.storyBeat == Beat.B)
+        /*
+        if (this.storyBeat == Beat.TUTORIAL_DROP_ORB)
         {
             if (this.state == State.BEAT_FIRST_UPDATE)
             {
@@ -182,26 +210,17 @@ public class StoryManager : MonoBehaviour
             }
             this.state = State.BEAT_ACTIVE;
         }
-
+        */
         /*        this.beatTimer -= Time.deltaTime;
                 if (this.isBeatTimed && this.beatTimer < 0f) {
                     this.NextBeat();
                 }*/
-
-        if (this.state == State.BEAT_FIRST_UPDATE)
-        {
-            this.state = State.BEAT_ACTIVE;
-        }
     }
 
     // Trigger the story beat (can be called from outside when actions done).
-    public void NextBeat() {
-        this.beatIdx += 1;
-        if (this.beatIdx < this.order.Length)
-        {
-            this.storyBeat = this.order[this.beatIdx];
-            this.state = State.BEAT_FIRST_UPDATE;
-        }
+    public void GotoBeat(Beat beat) {
+        this.storyBeat = beat;
+        this.state = State.BEAT_FIRST_UPDATE;
     }
 
     public void Prompt()
