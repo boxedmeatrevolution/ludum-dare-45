@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Fire
+  m_Name: Ghost
   serializedVersion: 6
   m_Legacy: 0
   m_Compressed: 0
@@ -20,13 +20,10 @@ AnimationClip:
   m_PPtrCurves:
   - curve:
     - time: 0
-      value: {fileID: 1098286324429101383, guid: c0ceb5078719f88429420d75cad9c843,
+      value: {fileID: -5899927303015767666, guid: 4457a21efd8ab1d448c247d7cf31ea11,
         type: 3}
     - time: 0.016666668
-      value: {fileID: 7419590508823533442, guid: c0ceb5078719f88429420d75cad9c843,
-        type: 3}
-    - time: 0.033333335
-      value: {fileID: 2333874723133794383, guid: c0ceb5078719f88429420d75cad9c843,
+      value: {fileID: 6824852377700625651, guid: 4457a21efd8ab1d448c247d7cf31ea11,
         type: 3}
     attribute: m_Sprite
     path: 
@@ -47,15 +44,14 @@ AnimationClip:
       customType: 23
       isPPtrCurve: 1
     pptrCurveMapping:
-    - {fileID: 1098286324429101383, guid: c0ceb5078719f88429420d75cad9c843, type: 3}
-    - {fileID: 7419590508823533442, guid: c0ceb5078719f88429420d75cad9c843, type: 3}
-    - {fileID: 2333874723133794383, guid: c0ceb5078719f88429420d75cad9c843, type: 3}
+    - {fileID: -5899927303015767666, guid: 4457a21efd8ab1d448c247d7cf31ea11, type: 3}
+    - {fileID: 6824852377700625651, guid: 4457a21efd8ab1d448c247d7cf31ea11, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 0.050000004
+    m_StopTime: 0.033333335
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0

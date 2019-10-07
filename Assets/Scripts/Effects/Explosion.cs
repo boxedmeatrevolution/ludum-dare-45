@@ -4,19 +4,28 @@ using UnityEngine;
 
 public class Explosion : MonoBehaviour
 {
-    private Animator animator;
+    private float lifetime = 0.6f;
+    private float tickTimer;
     // Start is called before the first frame update
     void Start()
     {
-        this.animator = GetComponentInChildren<Animator>();
-        this.animator.Play("Explosion");
+        this.tickTimer = 0.1f;
+        // Choose z position.
+        Vector2 pos = this.transform.position;
+        this.transform.position = new Vector3(pos.x, pos.y, -10f);
     }
 
     // Update is called once per frame
     public void Update()
     {
-        if (this.animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f) {
+        this.lifetime -= Time.deltaTime;
+        if (this.lifetime < 0f) {
             Destroy(this.gameObject);
+        }
+        this.tickTimer -= Time.deltaTime;
+        if (this.tickTimer < 0f) {
+            this.transform.rotation *= Quaternion.Euler(0f, 0f, Random.Range(90f, 270f));
+            this.tickTimer = 0.1f;
         }
     }
 

@@ -35,8 +35,8 @@ public class Monster : MonoBehaviour {
     // No matter what, any pairwise interactions require one and only one partner.
     private Monster target;
 
+    public GameObject fireAnchor;
     public float friction = 2f;
-    public float fireHeight = 0.5f;
     public float accel = 3f;
     public float wanderSpeed = 0.5f;
     public float sprintSpeed = 2f;
@@ -472,9 +472,8 @@ public class Monster : MonoBehaviour {
     public void Enflame() {
         if (this.CanBurn()) {
             this.enflamed = true;
-            GameObject fireObj = Instantiate(PrefabManager.FIRE_PREFAB, this.renderer.transform);
+            GameObject fireObj = Instantiate(PrefabManager.FIRE_PREFAB, this.fireAnchor.transform);
             this.fire = fireObj.GetComponentInChildren<Fire>();
-            this.fire.transform.localPosition = new Vector2(0, this.fireHeight - this.renderer.transform.localPosition.y);
         }
     }
 
