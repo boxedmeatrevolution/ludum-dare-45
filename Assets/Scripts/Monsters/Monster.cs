@@ -68,7 +68,8 @@ public class Monster : MonoBehaviour {
     public Orb[] orbs = new Orb[0];
     private OrbManager orbManager;
 
-    private float ambientSoundTimer = 3f;
+    private float ambientSoundTimer = 2f;
+    private float fightNoiseTimer;
 
     private AudioSource audioSource;
     public AudioClip threatenSound;
@@ -216,11 +217,13 @@ public class Monster : MonoBehaviour {
                         if (choice == State.FLEE) {
                             this.state = State.FLEE;
                             this.target = monster;
+                            this.audioSource.Stop();
                             this.audioSource.PlayOneShot(this.fleeSound, 0.75f);
                         }
                         if (monsterChoice == State.FLEE) {
                             monster.state = State.FLEE;
                             monster.target = this;
+                            monster.audioSource.Stop();
                             monster.audioSource.PlayOneShot(monster.fleeSound, 0.75f);
                         }
                         if (choice == State.THREATEN) {
@@ -229,6 +232,7 @@ public class Monster : MonoBehaviour {
                             this.target = monster;
                             monster.Avoid(this);
                             this.Avoid(monster);
+                            this.audioSource.Stop();
                             this.audioSource.PlayOneShot(this.threatenSound, 0.75f);
                         }
                         if (monsterChoice == State.THREATEN) {
@@ -237,6 +241,7 @@ public class Monster : MonoBehaviour {
                             monster.target = this;
                             this.Avoid(monster);
                             monster.Avoid(this);
+                            monster.audioSource.Stop();
                             monster.audioSource.PlayOneShot(monster.threatenSound, 0.75f);
                         }
                         if (isThreaten) {
@@ -255,14 +260,18 @@ public class Monster : MonoBehaviour {
                             monster.state = State.MESMERIZED;
                             this.target = monster;
                             monster.target = this;
-                            this.audioSource.PlayOneShot(this.lureSound);
+                            this.audioSource.Stop();
+                            monster.audioSource.Stop();
+                            this.audioSource.PlayOneShot(this.lureSound, 0.75f);
                         }
                         if (monsterChoice == State.LURE) {
                             this.state = State.MESMERIZED;
                             monster.state = State.LURE;
                             this.target = monster;
                             monster.target = this;
-                            monster.audioSource.PlayOneShot(monster.lureSound);
+                            this.audioSource.Stop();
+                            monster.audioSource.Stop();
+                            monster.audioSource.PlayOneShot(monster.lureSound, 0.75f);
                         }
                     }
                 }
@@ -313,9 +322,17 @@ public class Monster : MonoBehaviour {
                 monster.fightCloud = this.fightCloud;
                 this.fightCloud.fighter1 = this;
                 this.fightCloud.fighter2 = monster;
+                this.fightNoiseTimer = 0.2f;
+                monster.fightNoiseTimer = float.PositiveInfinity;
             }
         }
         else if (state == State.FIGHT) {
+            this.fightNoiseTimer -= Time.deltaTime;
+            if (this.fightNoiseTimer < 0f) {
+                this.fightNoiseTimer = Random.Range(0.3f, 0.5f);
+                this.audioSource.pitch = Random.Range(0.9f, 1.1f);
+                this.audioSource.PlayOneShot(this.fightSound, 0.3f);
+            }
             Monster monster = this.target;
             this.velocity = Vector2.zero;
             if (Random.value > 1 - Time.deltaTime / 0.2f) {
@@ -346,22 +363,28 @@ public class Monster : MonoBehaviour {
                     monster.stateTimer = Monster.DYING_TIME;
                     monster.OnDying();
                     monster.target = null;
-                    monster.audioSource.PlayOneShot(monster.deathSound);
+                    monster.audioSource.pitch = 1f;
+                    monster.audioSource.Stop();
+                    monster.audioSource.PlayOneShot(monster.deathSound, 0.6f);
                 }
                 else {
                     monster.state = State.POST_FIGHT;
                     monster.stateTimer = Monster.POST_FIGHT_TIME;
+                    monster.audioSource.pitch = 1f;
                 }
                 if (monster.KillOpponent(this)) {
                     this.state = State.DYING;
                     this.stateTimer = Monster.DYING_TIME;
                     this.OnDying();
                     this.target = null;
-                    this.audioSource.PlayOneShot(this.deathSound);
+                    this.audioSource.pitch = 1f;
+                    this.audioSource.Stop();
+                    this.audioSource.PlayOneShot(this.deathSound, 0.6f);
                 }
                 else {
                     this.state = State.POST_FIGHT;
                     this.stateTimer = Monster.POST_FIGHT_TIME;
+                    this.audioSource.pitch = 1f;
                 }
             }
         }
