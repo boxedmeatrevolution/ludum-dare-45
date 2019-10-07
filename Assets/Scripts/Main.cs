@@ -8,6 +8,7 @@ public class Main : MonoBehaviour
     private new Camera camera;
     private Vector2 waypoint;
     private Item targetItem = null;
+    private Orb targetOrb = null;
     private Gate gate;
 
     private Machine machine;
@@ -22,6 +23,8 @@ public class Main : MonoBehaviour
     public float height = 1.2f;
     public Item item = null;
 
+    private StoryManager storyManager;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -31,6 +34,7 @@ public class Main : MonoBehaviour
         this.machine = GameObject.Find("Machine").GetComponent<Machine>();
         this.voido = GameObject.Find("Void").GetComponent<Void>();
         this.orbManager = GameObject.Find("OrbManager").GetComponent<OrbManager>();
+        this.storyManager = GameObject.Find("StoryManager").GetComponent<StoryManager>();
         this.gate = FindObjectOfType<Gate>();
     }
 
@@ -52,7 +56,25 @@ public class Main : MonoBehaviour
                 Item hitItem = hit.transform.gameObject.GetComponent<Item>();
                 if (hitItem != null) {
                     this.targetItem = hitItem;
+                    this.targetOrb = hit.transform.gameObject.GetComponent<Orb>();
                     break;
+                }
+            }
+        }
+
+        if (storyManager.storyBeat == StoryManager.Beat.A && storyManager.state == StoryManager.State.BEAT_ACTIVE)
+        {
+            if ((this.targetOrb == null && Input.GetMouseButtonDown(0)) || this.targetOrb.orbColor != Orb.OrbColor.BLUE)
+            {
+                this.targetItem = null;
+                storyManager.Prompt();
+                return;
+            }
+            if (this.orbManager.IsOrbPickedUp())
+            {
+                if (this.orbManager.GetPickedUpOrb().orbColor == Orb.OrbColor.BLUE)
+                {
+                    this.storyManager.NextBeat();
                 }
             }
         }
