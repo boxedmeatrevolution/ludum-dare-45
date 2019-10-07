@@ -158,7 +158,7 @@ public class Machine : MonoBehaviour
                 spawnedObj = Instantiate(PrefabManager.LIVING_FLAME_PREFAB, (Vector2)this.spawnWaypoint.transform.position, Quaternion.identity);
             }
             else if (orbs[0].orbColor == Orb.OrbColor.BROWN && orbs[1].orbColor == Orb.OrbColor.BROWN) {
-                spawnedObj = Instantiate(PrefabManager.GHOST_SLUG_PREFAB, (Vector2)this.spawnWaypoint.transform.position, Quaternion.identity);
+                spawnedObj = Instantiate(PrefabManager.COPYCAT_PREFAB, (Vector2)this.spawnWaypoint.transform.position, Quaternion.identity);
             }
             else if ((orbs[0].orbColor == Orb.OrbColor.BLUE && orbs[1].orbColor == Orb.OrbColor.RED) || (orbs[0].orbColor == Orb.OrbColor.RED && orbs[1].orbColor == Orb.OrbColor.BLUE)) {
                 spawnedObj = Instantiate(PrefabManager.GOBLIN_PREFAB, (Vector2)this.spawnWaypoint.transform.position, Quaternion.identity);

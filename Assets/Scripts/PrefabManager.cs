@@ -8,6 +8,8 @@ public class PrefabManager : MonoBehaviour
     public static GameObject FIGHT_CLOUD_PREFAB;
     public static GameObject FIRE_PREFAB;
     public static GameObject EXPLOSION_PREFAB;
+    public static GameObject FIRE_PARTICLE_PREFAB;
+    public static GameObject COPYCAT_PARTICLE_PREFAB;
 
     public static GameObject COPYCAT_PREFAB;
     public static GameObject FIRE_SALAMANDER_PREFAB;
@@ -15,10 +17,13 @@ public class PrefabManager : MonoBehaviour
     public static GameObject GOBLIN_PREFAB;
     public static GameObject LIVING_FLAME_PREFAB;
     public static GameObject PLANT_OGRE_PREFAB;
+    public static GameObject GHOST_PREFAB;
 
     public GameObject fightCloudPrefab;
     public GameObject firePrefab;
     public GameObject explosionPrefab;
+    public GameObject fireParticlePrefab;
+    public GameObject copycatParticlePrefab;
 
     public GameObject copycatPrefab;
     public GameObject fireSalamanderPrefab;
@@ -26,18 +31,23 @@ public class PrefabManager : MonoBehaviour
     public GameObject goblinPrefab;
     public GameObject livingFlamePrefab;
     public GameObject plantOgrePrefab;
+    public GameObject ghostPrefab;
     // Start is called before the first frame update
     void Start()
     {
         PrefabManager.FIGHT_CLOUD_PREFAB = this.fightCloudPrefab;
         PrefabManager.FIRE_PREFAB = this.firePrefab;
         PrefabManager.EXPLOSION_PREFAB = this.explosionPrefab;
+        PrefabManager.FIRE_PARTICLE_PREFAB = this.fireParticlePrefab;
+        PrefabManager.COPYCAT_PARTICLE_PREFAB = this.copycatParticlePrefab;
 
+        PrefabManager.COPYCAT_PREFAB = this.copycatPrefab;
         PrefabManager.FIRE_SALAMANDER_PREFAB = this.fireSalamanderPrefab;
         PrefabManager.GHOST_SLUG_PREFAB = this.ghostSlugPrefab;
         PrefabManager.GOBLIN_PREFAB = this.goblinPrefab;
         PrefabManager.LIVING_FLAME_PREFAB = this.livingFlamePrefab;
         PrefabManager.PLANT_OGRE_PREFAB = this.plantOgrePrefab;
+        PrefabManager.GHOST_PREFAB = this.ghostPrefab;
     }
 
     public static GameObject GetMonsterPrefab(Type type) {
@@ -58,6 +68,9 @@ public class PrefabManager : MonoBehaviour
         }
         else if (type.Equals(typeof(PlantOgre))) {
             return PrefabManager.PLANT_OGRE_PREFAB;
+        }
+        else if (type.Equals(typeof(Ghost))) {
+            return PrefabManager.GHOST_PREFAB;
         }
         else {
             return null;

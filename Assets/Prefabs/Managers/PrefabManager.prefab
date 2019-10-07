@@ -49,6 +49,12 @@ MonoBehaviour:
     type: 3}
   explosionPrefab: {fileID: 1356667879521864304, guid: 9be60bf9b0b146446a6bc2fb76fe62aa,
     type: 3}
+  fireParticlePrefab: {fileID: 8303277792603263552, guid: 3c74363be4bbc33439c86b47a6f59f52,
+    type: 3}
+  copycatParticlePrefab: {fileID: 1296010066469953936, guid: 52858f3bdb6b98c4b927f931a1a05efd,
+    type: 3}
+  copycatPrefab: {fileID: 6502865246611780335, guid: db547bb7c10b27245be47124f39c3b6c,
+    type: 3}
   fireSalamanderPrefab: {fileID: 8771925034287457327, guid: a9b74bf7dc76bac4283873f33141bbf3,
     type: 3}
   ghostSlugPrefab: {fileID: 2222248345680053309, guid: f1f7d0d89e2946e40a99328f42674795,
@@ -58,4 +64,6 @@ MonoBehaviour:
   livingFlamePrefab: {fileID: 4484125969662896625, guid: 639d0bd964bfafe4fb7334f2c14e3300,
     type: 3}
   plantOgrePrefab: {fileID: 749479084716213232, guid: 4ccce016c77cdba44b85c4b88d2be0a1,
+    type: 3}
+  ghostPrefab: {fileID: 2668826303800293046, guid: e26ecf96daaa7c4429d7be39b5ab6d8c,
     type: 3}

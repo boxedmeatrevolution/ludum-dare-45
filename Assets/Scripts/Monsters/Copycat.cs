@@ -5,20 +5,18 @@ using System;
 
 public class Copycat : Monster {
     private readonly static float COPYCAT_TIME = 20f;
-    private Item item;
     private Dictionary<Type, float> copycatProcess;
 
     // Start is called before the first frame update
     protected override void Start() {
         base.Start();
         this.copycatProcess = new Dictionary<Type, float>();
-        this.item = GetComponentInChildren<Item>();
     }
 
     // Update is called once per frame
     protected override void Update() {
         base.Update();
-        if (this.item.state == Item.State.ON_GROUND) {
+        if (this.GetItem().state == Item.State.ON_GROUND) {
             Monster minMonster = null;
             float minDistance = float.PositiveInfinity;
             foreach (Monster monster in FindObjectsOfType<Monster>()) {
@@ -41,6 +39,11 @@ public class Copycat : Monster {
                     Monster monster = Instantiate(prefab, this.transform.position, Quaternion.identity).GetComponent<Monster>();
                     monster.SetCopycat(true);
                     Destroy(this.gameObject);
+                }
+                if (UnityEngine.Random.value > 1 - Time.deltaTime / 0.5f) {
+                    GameObject particleObj = Instantiate(PrefabManager.COPYCAT_PARTICLE_PREFAB, minMonster.transform.position, Quaternion.identity);
+                    Particle particle = particleObj.GetComponent<Particle>();
+                    particle.target = this.gameObject;
                 }
             }
         }
