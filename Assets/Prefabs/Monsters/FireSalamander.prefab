@@ -1,5 +1,42 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &7663378561142375306
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8771925034287457327}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9ff1640d321e024289e9ec040a95137, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: 0
+  fireAnchor: {fileID: 2164118123788989336}
+  friction: 0.15
+  accel: 3
+  wanderSpeed: 0.15
+  sprintSpeed: 0.2
+  fleeRadius: 2
+  threatenRadius: 1
+  averageWaitTime: 7
+  threatenTime: 2
+  transformOrb: {fileID: 0}
+  createdFromVoid: 0
+  orbs: []
+  threaten1Sound: {fileID: 0}
+  threaten2Sound: {fileID: 0}
+  threaten3Sound: {fileID: 0}
+  flee1Sound: {fileID: 0}
+  flee2Sound: {fileID: 0}
+  flee3Sound: {fileID: 0}
+  fightSound: {fileID: 0}
+  footstepSound: {fileID: 0}
+  ambient1Sound: {fileID: 8300000, guid: 867786a598c31af4b965e8907c199683, type: 3}
+  ambient2Sound: {fileID: 8300000, guid: c5a351886c268fb44b196c149ba8655b, type: 3}
+  ambient3Sound: {fileID: 8300000, guid: cbd18a921bdff7a43a9b9668ec46be9c, type: 3}
+  deathSound: {fileID: 8300000, guid: 27c12d59e4dab3e4db2ff306b786150b, type: 3}
 --- !u!212 &3190779841108439946
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -69,31 +106,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &7663378561142375306
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8771925034287457327}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9ff1640d321e024289e9ec040a95137, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  state: 0
-  fireAnchor: {fileID: 2164118123788989336}
-  friction: 0.15
-  accel: 3
-  wanderSpeed: 0.15
-  sprintSpeed: 0.2
-  fleeRadius: 2
-  threatenRadius: 1
-  averageWaitTime: 7
-  threatenTime: 2
-  burningOrb: {fileID: 0}
-  createdFromVoid: 0
-  orbs: []
 --- !u!1001 &6421017810744816507
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -161,6 +173,41 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2350926259135567699, guid: d9f950da24d5aac4d85f8f7989c3878c,
+        type: 3}
+      propertyPath: m_Radius
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2350926258969330477, guid: d9f950da24d5aac4d85f8f7989c3878c,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2350926258969330477, guid: d9f950da24d5aac4d85f8f7989c3878c,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 4862028965401385086, guid: d9f950da24d5aac4d85f8f7989c3878c,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4862028965401385086, guid: d9f950da24d5aac4d85f8f7989c3878c,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6734386402322385656, guid: d9f950da24d5aac4d85f8f7989c3878c,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.115
+      objectReference: {fileID: 0}
+    - target: {fileID: 6734386402322385656, guid: d9f950da24d5aac4d85f8f7989c3878c,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.045
+      objectReference: {fileID: 0}
     - target: {fileID: 2350926259135567697, guid: d9f950da24d5aac4d85f8f7989c3878c,
         type: 3}
       propertyPath: averageWaitTime
@@ -212,41 +259,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: f29604688a032624dafba4cddcf702c3,
         type: 3}
-    - target: {fileID: 2350926259135567699, guid: d9f950da24d5aac4d85f8f7989c3878c,
-        type: 3}
-      propertyPath: m_Radius
-      value: 0.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 2350926258969330477, guid: d9f950da24d5aac4d85f8f7989c3878c,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 2350926258969330477, guid: d9f950da24d5aac4d85f8f7989c3878c,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0.05
-      objectReference: {fileID: 0}
-    - target: {fileID: 4862028965401385086, guid: d9f950da24d5aac4d85f8f7989c3878c,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 4862028965401385086, guid: d9f950da24d5aac4d85f8f7989c3878c,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6734386402322385656, guid: d9f950da24d5aac4d85f8f7989c3878c,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.115
-      objectReference: {fileID: 0}
-    - target: {fileID: 6734386402322385656, guid: d9f950da24d5aac4d85f8f7989c3878c,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.045
-      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2350926259135567697, guid: d9f950da24d5aac4d85f8f7989c3878c, type: 3}
     - {fileID: 2350926258969330476, guid: d9f950da24d5aac4d85f8f7989c3878c, type: 3}

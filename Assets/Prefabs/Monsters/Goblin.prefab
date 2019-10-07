@@ -1,5 +1,42 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &4368623573896433012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8626661086894526499}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49a63e3b8aaf6d24fb8c8c09c51b1d03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: 0
+  fireAnchor: {fileID: 1156387358923982740}
+  friction: 0.4
+  accel: 3
+  wanderSpeed: 0.4
+  sprintSpeed: 1.5
+  fleeRadius: 2.5
+  threatenRadius: 1.5
+  averageWaitTime: 2
+  threatenTime: 2
+  transformOrb: {fileID: 0}
+  createdFromVoid: 0
+  orbs: []
+  threaten1Sound: {fileID: 0}
+  threaten2Sound: {fileID: 0}
+  threaten3Sound: {fileID: 0}
+  flee1Sound: {fileID: 0}
+  flee2Sound: {fileID: 0}
+  flee3Sound: {fileID: 0}
+  fightSound: {fileID: 0}
+  footstepSound: {fileID: 0}
+  ambient1Sound: {fileID: 8300000, guid: f165d8a1139a74c46905da576878ce8f, type: 3}
+  ambient2Sound: {fileID: 8300000, guid: 03bca45aba285e444961ce1f2a3dd7dc, type: 3}
+  ambient3Sound: {fileID: 8300000, guid: 747310cd10b247f40b0c4fa6528528cf, type: 3}
+  deathSound: {fileID: 0}
 --- !u!212 &4558313416269007756
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -69,31 +106,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &4368623573896433012
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8626661086894526499}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 49a63e3b8aaf6d24fb8c8c09c51b1d03, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  state: 0
-  fireAnchor: {fileID: 1156387358923982740}
-  friction: 0.4
-  accel: 3
-  wanderSpeed: 0.4
-  sprintSpeed: 1.5
-  fleeRadius: 2.5
-  threatenRadius: 1.5
-  averageWaitTime: 2
-  threatenTime: 2
-  burningOrb: {fileID: 0}
-  createdFromVoid: 0
-  orbs: []
 --- !u!1001 &6275806176053643127
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -161,12 +173,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2350926258969330476, guid: d9f950da24d5aac4d85f8f7989c3878c,
-        type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 7e7f7a642ae858d4884ddb4155aeaea3,
-        type: 3}
     - target: {fileID: 2350926259135567699, guid: d9f950da24d5aac4d85f8f7989c3878c,
         type: 3}
       propertyPath: m_Radius
@@ -202,6 +208,12 @@ PrefabInstance:
       propertyPath: m_LocalPosition.x
       value: -0.082
       objectReference: {fileID: 0}
+    - target: {fileID: 2350926258969330476, guid: d9f950da24d5aac4d85f8f7989c3878c,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 7e7f7a642ae858d4884ddb4155aeaea3,
+        type: 3}
     m_RemovedComponents:
     - {fileID: 2350926259135567697, guid: d9f950da24d5aac4d85f8f7989c3878c, type: 3}
     - {fileID: 2350926258969330476, guid: d9f950da24d5aac4d85f8f7989c3878c, type: 3}

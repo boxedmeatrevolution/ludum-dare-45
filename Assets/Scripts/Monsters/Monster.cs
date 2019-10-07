@@ -57,6 +57,8 @@ public class Monster : MonoBehaviour {
     private float deadWaitTime = 1f;
     private Void voido;
 
+    private float forgetAvoidTimer = 0f;
+
     public Orb transformOrb;
     private float transformOrbStartTime = 0f;
     private float transformOrbTotalTime = 1f;
@@ -65,6 +67,22 @@ public class Monster : MonoBehaviour {
 
     public Orb[] orbs = new Orb[0];
     private OrbManager orbManager;
+
+    private float ambientSoundTimer = 3f;
+
+    private AudioSource audioSource;
+    public AudioClip threaten1Sound;
+    public AudioClip threaten2Sound;
+    public AudioClip threaten3Sound;
+    public AudioClip flee1Sound;
+    public AudioClip flee2Sound;
+    public AudioClip flee3Sound;
+    public AudioClip fightSound;
+    public AudioClip footstepSound;
+    public AudioClip ambient1Sound;
+    public AudioClip ambient2Sound;
+    public AudioClip ambient3Sound;
+    public AudioClip deathSound;
 
     public enum State {
         WANDER,
@@ -111,6 +129,7 @@ public class Monster : MonoBehaviour {
         this.state = State.WANDER;
         this.waypoint = this.ChooseWaypoint(this.pen);
         this.orbManager = GameObject.Find("OrbManager").GetComponent<OrbManager>();
+        this.audioSource = GetComponent<AudioSource>();
 
 
         if (this.createdFromVoid)
@@ -154,6 +173,20 @@ public class Monster : MonoBehaviour {
             return;
         }
         if (this.state == State.WANDER) {
+            // Sound.
+            this.ambientSoundTimer -= Time.deltaTime;
+            if (this.ambientSoundTimer < 0f) {
+                this.ambientSoundTimer = Random.Range(8f, 14f);
+                AudioClip ambientSound = null;
+                if (Random.value < 0.333) {
+                    ambientSound = this.ambient1Sound;
+                } else if (Random.value < 0.5) {
+                    ambientSound = this.ambient2Sound;
+                } else {
+                    ambientSound = this.ambient3Sound;
+                }
+                this.audioSource.PlayOneShot(ambientSound, 0.65f);
+            }
             // Actions.
             Vector2 displacement = this.waypoint - (Vector2)this.transform.position;
             if (displacement.magnitude > 0.1) {
@@ -203,13 +236,15 @@ public class Monster : MonoBehaviour {
                             this.state = State.THREATEN;
                             this.stateTimer = this.threatenTime;
                             this.target = monster;
-                            monster.avoid = this;
+                            monster.Avoid(this);
+                            this.Avoid(monster);
                         }
                         if (monsterChoice == State.THREATEN) {
                             monster.state = State.THREATEN;
                             monster.stateTimer = monster.threatenTime;
                             monster.target = this;
-                            this.avoid = monster;
+                            this.Avoid(monster);
+                            monster.Avoid(this);
                         }
                         if (isThreaten) {
                             if (choice == State.IGNORE) {
@@ -502,6 +537,11 @@ public class Monster : MonoBehaviour {
             Destroy(this.gameObject);
         }
 
+        this.forgetAvoidTimer -= Time.deltaTime;
+        if (this.forgetAvoidTimer < 0f) {
+            this.avoid = null;
+        }
+
         this.stateTimer -= Time.deltaTime;
         // Physics
         float gateX = this.gate.transform.position.x + this.gate.width;
@@ -532,6 +572,11 @@ public class Monster : MonoBehaviour {
         // Maintain z ordering.
         Vector2 pos = this.transform.position;
         this.transform.position = new Vector3(pos.x, pos.y, pos.y / 300f);
+    }
+
+    public void Avoid(Monster monster) {
+        this.avoid = monster;
+        this.forgetAvoidTimer = 8f;
     }
 
     // Choose whether to threaten, hypnotize, flee, or ignore when another monster wanders into range.
