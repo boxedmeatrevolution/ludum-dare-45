@@ -16,6 +16,9 @@ public class Particle : MonoBehaviour
         Vector2 displacement = target - (Vector2)this.transform.position;
         this.velocity = displacement * 0.5f + 1.5f * Random.insideUnitCircle;
         this.renderer = GetComponentInChildren<SpriteRenderer>();
+        // Choose z position.
+        Vector2 pos = this.transform.position;
+        this.transform.position = new Vector3(pos.x, pos.y, -12f);
     }
 
     // Update is called once per frame

@@ -13,9 +13,6 @@ public class FightCloud : MonoBehaviour
     {
         this.swapTimer = 0.4f;
         this.rotationSpeed = Random.Range(-180f, 180f);
-        // Choose z position.
-        Vector2 pos = this.transform.position;
-        this.transform.position = new Vector3(pos.x, pos.y, -10f);
     }
 
     // Update is called once per frame
@@ -24,6 +21,9 @@ public class FightCloud : MonoBehaviour
         Vector2 averagePosition = 0.5f * (this.fighter1.transform.position + this.fighter2.transform.position);
         this.transform.position = averagePosition;
         this.transform.rotation *= Quaternion.Euler(0f, 0f, this.rotationSpeed * Time.deltaTime);
+        // Choose z position.
+        Vector2 pos = this.transform.position;
+        this.transform.position = new Vector3(pos.x, pos.y, -10f);
         this.swapTimer -= Time.deltaTime;
         if (this.swapTimer < 0f) {
             this.swapTimer = 0.4f;

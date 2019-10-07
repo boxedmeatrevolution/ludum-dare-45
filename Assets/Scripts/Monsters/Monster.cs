@@ -7,12 +7,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Monster : MonoBehaviour {
-    private readonly static float FIGHT_TIME = 2f;
-    private readonly static float POST_FIGHT_TIME = 3f;
-    private readonly static float DYING_TIME = 2f;
-    private readonly static float DEVOUR_TIME = 1f;
-    private readonly static float DIGEST_TIME = 4f;
-    private readonly static float GOO_TIME = 5f;
+    public readonly static float FIGHT_TIME = 4f;
+    public readonly static float POST_FIGHT_TIME = 3f;
+    public readonly static float DYING_TIME = 4f;
+    public readonly static float DEVOUR_TIME = 1f;
+    public readonly static float DIGEST_TIME = 4f;
+    public readonly static float GOO_TIME = 5f;
 
     private bool initialized = false;
     private bool copycat;

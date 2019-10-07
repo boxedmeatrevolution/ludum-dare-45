@@ -53,6 +53,8 @@ MonoBehaviour:
     type: 3}
   copycatParticlePrefab: {fileID: 1296010066469953936, guid: 52858f3bdb6b98c4b927f931a1a05efd,
     type: 3}
+  ectoplasmPrefab: {fileID: 4894211257501124042, guid: 51b1cdb0804f5a847bf699df26ef8522,
+    type: 3}
   copycatPrefab: {fileID: 6502865246611780335, guid: db547bb7c10b27245be47124f39c3b6c,
     type: 3}
   fireSalamanderPrefab: {fileID: 8771925034287457327, guid: a9b74bf7dc76bac4283873f33141bbf3,

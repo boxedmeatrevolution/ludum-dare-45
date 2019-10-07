@@ -10,6 +10,7 @@ public class PrefabManager : MonoBehaviour
     public static GameObject EXPLOSION_PREFAB;
     public static GameObject FIRE_PARTICLE_PREFAB;
     public static GameObject COPYCAT_PARTICLE_PREFAB;
+    public static GameObject ECTOPLASM_PREFAB;
 
     public static GameObject COPYCAT_PREFAB;
     public static GameObject FIRE_SALAMANDER_PREFAB;
@@ -24,6 +25,7 @@ public class PrefabManager : MonoBehaviour
     public GameObject explosionPrefab;
     public GameObject fireParticlePrefab;
     public GameObject copycatParticlePrefab;
+    public GameObject ectoplasmPrefab;
 
     public GameObject copycatPrefab;
     public GameObject fireSalamanderPrefab;
@@ -40,6 +42,7 @@ public class PrefabManager : MonoBehaviour
         PrefabManager.EXPLOSION_PREFAB = this.explosionPrefab;
         PrefabManager.FIRE_PARTICLE_PREFAB = this.fireParticlePrefab;
         PrefabManager.COPYCAT_PARTICLE_PREFAB = this.copycatParticlePrefab;
+        PrefabManager.ECTOPLASM_PREFAB = this.ectoplasmPrefab;
 
         PrefabManager.COPYCAT_PREFAB = this.copycatPrefab;
         PrefabManager.FIRE_SALAMANDER_PREFAB = this.fireSalamanderPrefab;
