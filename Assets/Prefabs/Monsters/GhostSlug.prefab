@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bdb0d8efc3a4cc4b9f64e8a17c7f54d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  state: 0
+  fireAnchor: {fileID: 8746937949554709386}
   friction: 2
-  fireHeight: 0.5
   accel: 3
   wanderSpeed: 0.4
   sprintSpeed: 0.8
@@ -21,6 +22,7 @@ MonoBehaviour:
   threatenRadius: 1.5
   averageWaitTime: 6
   threatenTime: 2
+  orbs: []
 --- !u!212 &4309050479738114211
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -188,6 +190,16 @@ PrefabInstance:
       propertyPath: m_LocalPosition.x
       value: -0.175
       objectReference: {fileID: 0}
+    - target: {fileID: 6734386402322385656, guid: d9f950da24d5aac4d85f8f7989c3878c,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.301
+      objectReference: {fileID: 0}
+    - target: {fileID: 6734386402322385656, guid: d9f950da24d5aac4d85f8f7989c3878c,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.201
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2350926258969330476, guid: d9f950da24d5aac4d85f8f7989c3878c, type: 3}
     - {fileID: 2350926259135567697, guid: d9f950da24d5aac4d85f8f7989c3878c, type: 3}
@@ -201,6 +213,12 @@ GameObject:
 --- !u!1 &2222248345850417223 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2350926258969330478, guid: d9f950da24d5aac4d85f8f7989c3878c,
+    type: 3}
+  m_PrefabInstance: {fileID: 4501112406274757481}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8746937949554709386 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5121846608229286115, guid: d9f950da24d5aac4d85f8f7989c3878c,
     type: 3}
   m_PrefabInstance: {fileID: 4501112406274757481}
   m_PrefabAsset: {fileID: 0}
