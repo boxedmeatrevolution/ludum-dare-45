@@ -81,6 +81,7 @@ public class Monster : MonoBehaviour {
     public AudioClip ambient3Sound;
     public AudioClip lureSound;
     public AudioClip deathSound;
+    public AudioClip spawnSound;
 
     public enum State {
         WANDER,
@@ -147,6 +148,7 @@ public class Monster : MonoBehaviour {
             if (this.IsAtVoidWaypoint())
             {
                 this.state = State.IN_VOID;
+                this.audioSource.PlayOneShot(this.spawnSound);
             }
             return;
         }
@@ -163,6 +165,7 @@ public class Monster : MonoBehaviour {
                 this.state = State.WANDER;
                 this.item.state = Item.State.ON_GROUND;
                 this.transform.localScale = new Vector3(1f, 1f, 1f);
+                this.audioSource.PlayOneShot(this.spawnSound);
             }
             return;
         }
@@ -738,6 +741,7 @@ public class Monster : MonoBehaviour {
         this.item.SendToVoid();
         this.voidWaypoint = waypoint;
         this.voidStartpoint = this.transform.position;
+        this.audioSource.PlayOneShot(this.deathSound);
     }
 
     private void MoveToVoidWaypoint(bool shrink)

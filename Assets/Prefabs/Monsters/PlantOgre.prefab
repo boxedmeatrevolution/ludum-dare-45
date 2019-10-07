@@ -33,7 +33,8 @@ MonoBehaviour:
   ambient2Sound: {fileID: 8300000, guid: c9358319282a4154b845cf0360967af4, type: 3}
   ambient3Sound: {fileID: 8300000, guid: 981bc1c2aaecba747b3cd5dfb1215c19, type: 3}
   lureSound: {fileID: 0}
-  deathSound: {fileID: 0}
+  deathSound: {fileID: 8300000, guid: e39839616973b4f44866a1ffb0db33ad, type: 3}
+  spawnSound: {fileID: 8300000, guid: 22705b28314377f44900aa3644ae2e05, type: 3}
 --- !u!212 &8250654856270717134
 SpriteRenderer:
   m_ObjectHideFlags: 0

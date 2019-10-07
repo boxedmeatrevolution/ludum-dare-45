@@ -34,6 +34,7 @@ MonoBehaviour:
   ambient3Sound: {fileID: 8300000, guid: cbd18a921bdff7a43a9b9668ec46be9c, type: 3}
   lureSound: {fileID: 0}
   deathSound: {fileID: 8300000, guid: 27c12d59e4dab3e4db2ff306b786150b, type: 3}
+  spawnSound: {fileID: 8300000, guid: 22705b28314377f44900aa3644ae2e05, type: 3}
 --- !u!212 &3190779841108439946
 SpriteRenderer:
   m_ObjectHideFlags: 0
