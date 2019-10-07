@@ -191,7 +191,15 @@ public class Machine : MonoBehaviour
                 spawnedObj = Instantiate(PrefabManager.COPYCAT_PREFAB, (Vector2)this.spawnWaypoint.transform.position, Quaternion.identity);
             }
             else if ((orbs[0].orbColor == Orb.OrbColor.BLUE && orbs[1].orbColor == Orb.OrbColor.RED) || (orbs[0].orbColor == Orb.OrbColor.RED && orbs[1].orbColor == Orb.OrbColor.BLUE)) {
-                spawnedObj = Instantiate(PrefabManager.GOBLIN_PREFAB, (Vector2)this.spawnWaypoint.transform.position, Quaternion.identity);
+                StoryManager storyManager = FindObjectOfType<StoryManager>();
+                if (storyManager.storyBeat == StoryManager.Beat.FREE_PLAY_1) {
+                    storyManager.GotoBeat(StoryManager.Beat.INTERLUDE_1_PABS_EMERGE, 2f);
+                    orbs[0].item.ReturnToLab();
+                    orbs[1].item.ReturnToLab();
+                }
+                else {
+                    spawnedObj = Instantiate(PrefabManager.GOBLIN_PREFAB, (Vector2)this.spawnWaypoint.transform.position, Quaternion.identity);
+                }
             }
             else if ((orbs[0].orbColor == Orb.OrbColor.BLUE && orbs[1].orbColor == Orb.OrbColor.BROWN) || (orbs[0].orbColor == Orb.OrbColor.BROWN && orbs[1].orbColor == Orb.OrbColor.BLUE)) {
                 spawnedObj = Instantiate(PrefabManager.PLANT_OGRE_PREFAB, (Vector2)this.spawnWaypoint.transform.position, Quaternion.identity);

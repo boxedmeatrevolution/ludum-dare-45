@@ -54,16 +54,16 @@ public class StoryCharacter : MonoBehaviour
             } 
         }
 
-        if (this.state == State.COMING_OUT_OF_VOID)
+        if (this.state == State.RETURNING_TO_VOID)
         {
-            float percent = eventDelta / despawnTime;
+            float percent = 1f - eventDelta / despawnTime;
 
             if (percent > 1)
             {
                 percent = 1f;
             }
             this.transform.localScale = new Vector3(percent, percent, 1f);
-            Vector3 displacement = this.despawn.transform.position - this.spawn.transform.position;
+            Vector3 displacement = this.spawn.transform.position - this.despawn.transform.position;
             displacement *= percent;
             this.transform.position = this.despawn.transform.position + displacement;
 

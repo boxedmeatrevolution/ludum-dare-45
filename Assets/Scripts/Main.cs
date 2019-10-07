@@ -45,7 +45,7 @@ public class Main : MonoBehaviour
 
     // Update is called once per frame
     void Update() {
-        if (Time.timeScale < 0.0001f)
+        if (Time.timeScale < 0.0001f || storyManager.storyBeat == StoryManager.Beat.TUTORIAL_GHOSTIGHOST_EMERGE)
         {
             return;
         }
