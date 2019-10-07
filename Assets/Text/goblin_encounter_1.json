@@ -3,7 +3,7 @@
         1: "Goblin",
         2: "You"
     },
-    "scene1" : {
+    "interlude1-pabs-talk" : {
         "dialogue": [
         {
             "speaker": 1,

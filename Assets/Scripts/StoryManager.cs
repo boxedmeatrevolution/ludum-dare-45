@@ -13,6 +13,9 @@ public class StoryManager : MonoBehaviour
     private Main main;
     private DialogueManager dm;
 
+    private StoryCharacter ghostighost;
+    private StoryCharacter pabs;
+
 
     public enum State
     {
@@ -23,6 +26,7 @@ public class StoryManager : MonoBehaviour
     public enum Beat
     {
         START,
+        TUTORIAL_GHOSTIGHOST_EMERGE,
         TUTORIAL_PICKUP_ORB,
         TUTORIAL_PICKUP_ORB_INSTRUCTIONS,
         TUTORIAL_DROP_ORB,
@@ -34,32 +38,42 @@ public class StoryManager : MonoBehaviour
         TUTORIAL_SALAMANDER,
         TUTORIAL_SALAMANDER_ESCAPE,
         TUTORIAL_ENDING,
-        FREE_PLAY_1
+        FREE_PLAY_1,
+        INTERLUDE_1_PABS_EMERGE,
+        INTERLUDE_1_PABS_TALK,
+        FREE_PLAY_2
     }
 
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
+        this.dm = FindObjectOfType<DialogueManager>();
+        this.main = FindObjectOfType<Main>();
         if (this.storyBeat == Beat.START)
         {
-            this.storyBeat = Beat.TUTORIAL_PICKUP_ORB;
+            this.storyBeat = Beat.TUTORIAL_GHOSTIGHOST_EMERGE;
+            this.beatTimer = 2f;
+            this.state = State.BEAT_FIRST_UPDATE;
         }
         this.beatTimer = 5f;
         this.isBeatTimed = false;
         this.state = State.BEAT_FIRST_UPDATE;
-
-        this.dm = FindObjectOfType<DialogueManager>();
-        this.main = FindObjectOfType<Main>();
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
         Debug.Log(this.storyBeat);
+        this.beatTimer -= Time.deltaTime;
         // Do updates based on story beat.
-        if (this.storyBeat == Beat.TUTORIAL_PICKUP_ORB) {
-            if (this.state == State.BEAT_FIRST_UPDATE)
-            {
+        if (this.storyBeat == Beat.TUTORIAL_GHOSTIGHOST_EMERGE) {
+            if (this.state == State.BEAT_FIRST_UPDATE) {
+                this.ghostighost = Instantiate(PrefabManager.GHOSTIGHOST_PREFAB).GetComponent<StoryCharacter>();
+                this.state = State.BEAT_ACTIVE;
+            }
+            if (this.beatTimer < 0f) {
+                this.GotoBeat(Beat.TUTORIAL_PICKUP_ORB);
+            }
+        } else if (this.storyBeat == Beat.TUTORIAL_PICKUP_ORB) {
+            if (this.state == State.BEAT_FIRST_UPDATE) {
                 dm.SetFile("intro");
                 dm.StartScene("tutorial-pickup-orb");
                 this.state = State.BEAT_ACTIVE;
@@ -203,6 +217,8 @@ public class StoryManager : MonoBehaviour
             }
             else if (this.state == State.BEAT_ACTIVE) {
                 if (dm.endOfScene) {
+                    this.ghostighost.ReturnToVoid();
+                    this.ghostighost = null;
                     this.GotoBeat(Beat.FREE_PLAY_1);
                 }
             }
@@ -210,13 +226,41 @@ public class StoryManager : MonoBehaviour
             if (this.state == State.BEAT_FIRST_UPDATE) {
                 this.state = State.BEAT_ACTIVE;
             }
+        } else if (this.storyBeat == Beat.INTERLUDE_1_PABS_EMERGE) {
+            if (this.state == State.BEAT_FIRST_UPDATE) {
+                this.state = State.BEAT_ACTIVE;
+                this.pabs = Instantiate(PrefabManager.PABS_PREFAB).GetComponent<StoryCharacter>();
+            } else if (this.state == State.BEAT_ACTIVE) {
+                if (this.beatTimer < 0f) {
+                    this.GotoBeat(Beat.INTERLUDE_1_PABS_TALK);
+                }
+            }
+        } else if (this.storyBeat == Beat.INTERLUDE_1_PABS_TALK) {
+            if (this.state == State.BEAT_FIRST_UPDATE) {
+                dm.SetFile("goblin_encounter_1");
+                dm.StartScene("interlude1-pabs-talk");
+                this.state = State.BEAT_ACTIVE;
+            }
+            else if (this.state == State.BEAT_ACTIVE) {
+                if (dm.endOfScene) {
+                    this.pabs.ReturnToVoid();
+                    this.pabs = null;
+                    this.GotoBeat(Beat.FREE_PLAY_2);
+                }
+            }
+        }
+        else if (this.storyBeat == Beat.FREE_PLAY_2) {
+            if (this.state == State.BEAT_FIRST_UPDATE) {
+                this.state = State.BEAT_ACTIVE;
+            }
         }
     }
 
     // Trigger the story beat (can be called from outside when actions done).
-    public void GotoBeat(Beat beat) {
+    public void GotoBeat(Beat beat, float timer = 0f) {
         this.dm.EndScene();
         this.storyBeat = beat;
+        this.beatTimer = timer;
         this.state = State.BEAT_FIRST_UPDATE;
     }
 
