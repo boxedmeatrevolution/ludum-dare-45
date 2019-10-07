@@ -8,6 +8,10 @@ public class FireSalamander : Monster {
         base.Start();
     }
 
+    public override void OnDying() {
+        this.GetComponentInChildren<Animator>().Play("FireSalamander_Dead");
+    }
+
     // Update is called once per frame
     protected override void Update() {
         base.Update();

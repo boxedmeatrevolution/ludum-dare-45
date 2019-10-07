@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Goblin : Monster {
     private static uint goblinIndex = 0;
+    private uint myGoblinIndex;
     private Animator animator;
     // Start is called before the first frame update
     protected override void Start() {
@@ -11,7 +12,12 @@ public class Goblin : Monster {
         this.animator = GetComponentInChildren<Animator>();
         Goblin.goblinIndex += 1;
         Goblin.goblinIndex = Goblin.goblinIndex % 3;
-        this.animator.Play("Goblin_" + Goblin.goblinIndex.ToString());
+        this.myGoblinIndex = Goblin.goblinIndex;
+        this.animator.Play("Goblin_" + this.myGoblinIndex.ToString());
+    }
+
+    public override void OnDying() {
+        this.GetComponentInChildren<Animator>().Play("Goblin_" + this.myGoblinIndex.ToString() + "_Dead");
     }
 
     // Update is called once per frame

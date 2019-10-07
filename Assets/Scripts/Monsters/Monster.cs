@@ -21,6 +21,8 @@ public class Monster : MonoBehaviour {
     public State state;
     private bool enflamed;
     private Item item;
+    // Shoved allows a monster to temporarily move faster than its max velocity.
+    private bool shoved;
 
     private Pen pen;
     private Gate gate;
@@ -101,6 +103,7 @@ public class Monster : MonoBehaviour {
         this.item = GetComponent<Item>();
         this.renderer = GetComponentInChildren<SpriteRenderer>();
         this.emotion = GetComponentInChildren<Emotion>();
+        this.shoved = false;
         this.fightCloud = null;
         this.fire = null;
         this.target = null;
@@ -155,11 +158,11 @@ public class Monster : MonoBehaviour {
             Vector2 displacement = this.waypoint - (Vector2)this.transform.position;
             if (displacement.magnitude > 0.1) {
                 // Move towards waypoint, avoiding the other monster.
-                this.velocity += this.accel * displacement.normalized * Time.deltaTime;
+                this.Accel(this.accel * displacement.normalized);
                 if (this.avoid != null) {
                     Vector2 avoidDisplacement = this.avoid.transform.position - this.transform.position;
                     if (avoidDisplacement.magnitude < this.fleeRadius) {
-                        this.velocity -= this.accel * avoidDisplacement.normalized * Time.deltaTime;
+                        this.Accel(-this.accel * avoidDisplacement.normalized);
                     }
                 }
             }
@@ -241,7 +244,7 @@ public class Monster : MonoBehaviour {
             Vector2 displacement = this.waypoint - (Vector2)this.transform.position;
             if (displacement.magnitude > 0.1) {
                 // Move towards waypoint.
-                this.velocity += this.accel * displacement.normalized * Time.deltaTime;
+                this.Accel(this.accel * displacement.normalized);
             }
             else {
                 // Choose a new waypoint.
@@ -266,19 +269,13 @@ public class Monster : MonoBehaviour {
             Monster monster = this.target;
             Vector2 displacement = monster.transform.position - this.transform.position;
             if (displacement.magnitude > 0.1) {
-                this.velocity += this.accel * displacement.normalized * Time.deltaTime;
+                this.Accel(this.accel * displacement.normalized);
             }
             else {
                 this.state = State.FIGHT;
                 this.stateTimer = Monster.FIGHT_TIME;
                 monster.state = State.FIGHT;
                 monster.stateTimer = Monster.FIGHT_TIME;
-                if (this.IsFiery()) {
-                    monster.Enflame();
-                }
-                if (monster.IsFiery()) {
-                    this.Enflame();
-                }
 
                 // Make fight cloud.
                 GameObject fightCloudObj = Instantiate(PrefabManager.FIGHT_CLOUD_PREFAB, this.transform.position, Quaternion.identity);
@@ -299,17 +296,25 @@ public class Monster : MonoBehaviour {
                 monster.transform.rotation = Quaternion.identity;
                 // Destroy fight cloud.
                 Destroy(this.fightCloud.gameObject);
-                // Give velocities.
-                monster.velocity = new Vector2(
-                    Random.Range(1f, 2f),
-                    Random.Range(-1f, 1f));
-                this.velocity = new Vector2(
-                    Random.Range(-2f, -1f),
-                    Random.Range(-1f, 1f));
                 this.fightCloud = null;
+                // Give velocities.
+                monster.Shove(new Vector2(
+                    Random.Range(0.4f, 0.6f),
+                    Random.Range(-0.1f, 0.1f)));
+                this.Shove(new Vector2(
+                    Random.Range(-0.6f, -0.4f),
+                    Random.Range(-0.1f, 0.1f)));
+                // Burn
+                if (this.IsFiery()) {
+                    monster.Enflame();
+                }
+                if (monster.IsFiery()) {
+                    this.Enflame();
+                }
                 if (this.KillOpponent(monster)) {
                     monster.state = State.DYING;
                     monster.stateTimer = Monster.DYING_TIME;
+                    monster.OnDying();
                     monster.target = null;
                 }
                 else {
@@ -319,6 +324,7 @@ public class Monster : MonoBehaviour {
                 if (monster.KillOpponent(this)) {
                     this.state = State.DYING;
                     this.stateTimer = Monster.DYING_TIME;
+                    this.OnDying();
                     this.target = null;
                 }
                 else {
@@ -343,7 +349,7 @@ public class Monster : MonoBehaviour {
                     float angle = 2 * Mathf.PI * Random.value;
                     displacement = 0.1f * new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
                 }
-                this.velocity -= this.accel * displacement.normalized * Time.deltaTime;
+                this.Accel(this.accel * displacement.normalized);
             }
         }
         else if (this.state == State.LURE) {
@@ -363,7 +369,7 @@ public class Monster : MonoBehaviour {
                 float angle = 2 * Mathf.PI * Random.value;
                 displacement = 0.1f * new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
             }
-            this.velocity += this.accel * displacement.normalized * Time.deltaTime;
+            this.Accel(this.accel * displacement.normalized);
         }
         else if (this.state == State.DEVOURING) {
             Monster monster = this.target;
@@ -403,7 +409,7 @@ public class Monster : MonoBehaviour {
                     GameObject ectoplasmObj = Instantiate(PrefabManager.ECTOPLASM_PREFAB, monster.transform);
                     ectoplasmObj.transform.localPosition = new Vector3(0f, -0.01f, 0f);
                     float angle = 2f * Mathf.PI * Random.value;
-                    monster.velocity = Random.Range(1f, 2f) * new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+                    this.Shove(Random.Range(1f, 2f) * new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)));
                 }
             }
         }
@@ -419,7 +425,7 @@ public class Monster : MonoBehaviour {
                 float angle = 2 * Mathf.PI * Random.value;
                 displacement = 0.1f * new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
             }
-            this.velocity -= this.accel * displacement.normalized * Time.deltaTime;
+            this.Accel(this.accel * displacement.normalized);
             if (displacement.magnitude > this.fleeRadius && displacement.magnitude > monster.fleeRadius) {
                 this.state = State.WANDER;
                 if (monster.state == State.THREATEN || monster.state == State.FLEE) {
@@ -454,10 +460,9 @@ public class Monster : MonoBehaviour {
             }
             else
             {
-                Vector2 disp = this.transformOrb.transform.position - this.transform.position;
-                if (disp.magnitude > 0.001f)
-                {
-                    this.velocity += this.accel * disp.normalized * Time.deltaTime;
+                Vector2 displacement = this.transformOrb.transform.position - this.transform.position;
+                if (displacement.magnitude > 0.001f) {
+                    this.Accel(this.accel * displacement.normalized);
                 }
                 else
                 {
@@ -504,8 +509,11 @@ public class Monster : MonoBehaviour {
             }
         }
         speed = this.velocity.magnitude;
-        if (speed > maxSpeed) {
+        if (speed > maxSpeed && !this.shoved) {
             this.velocity *= maxSpeed / speed;
+        }
+        if (speed < maxSpeed) {
+            this.shoved = false;
         }
         if (this.transform.position.x < gateX && this.velocity.x < 0) {
             this.velocity = new Vector2(-0.5f * this.velocity.x, this.velocity.y);
@@ -553,7 +561,7 @@ public class Monster : MonoBehaviour {
         float x2 = x1 + pen.width;
         float y1 = pen.transform.position.y;
         float y2 = y1 + pen.height;
-        Vector2 result = (Vector2)this.transform.position + 256f * Random.insideUnitCircle;
+        Vector2 result = (Vector2)this.transform.position + 0.75f * Random.insideUnitCircle;
         result.x = Mathf.Clamp(result.x, x1, x2);
         result.y = Mathf.Clamp(result.y, y1, y2);
         return result;
@@ -575,6 +583,20 @@ public class Monster : MonoBehaviour {
             Destroy(this.fire.gameObject);
             this.fire = null;
         }
+    }
+
+    public void Accel(Vector2 accel) {
+        if (!this.shoved) {
+            this.velocity += accel * Time.deltaTime;
+        }
+    }
+    public void Shove(Vector2 impulse) {
+        this.velocity += impulse;
+        this.shoved = true;
+    }
+
+    public virtual void OnDying() {
+
     }
 
     public bool IsFiery() {

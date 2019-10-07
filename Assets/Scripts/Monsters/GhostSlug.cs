@@ -9,6 +9,10 @@ public class GhostSlug : Monster {
         base.Start();
     }
 
+    public override void OnDying() {
+        this.GetComponentInChildren<Animator>().Play("GhostSlug_Dead");
+    }
+
     // Update is called once per frame
     protected override void Update() {
         if (this.state == State.TRAVEL_TO_TRANSFORM_ORB && (!this.transformOrb.enflamed || this.transformOrb.item.state != Item.State.ON_GROUND))

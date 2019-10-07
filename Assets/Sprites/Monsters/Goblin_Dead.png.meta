@@ -1,16 +1,16 @@
 fileFormatVersion: 2
-guid: 7e7f7a642ae858d4884ddb4155aeaea3
+guid: 2f9e530165e5f794a8b310968e525f26
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8749302817991680212
-    second: Goblin_0
+      213: -1544829533463327705
+    second: Goblin_Dead_0
   - first:
-      213: 4475375876111409798
-    second: Goblin_1
+      213: -7051444986948552115
+    second: Goblin_Dead_1
   - first:
-      213: 3386398104049418772
-    second: Goblin_2
+      213: -2038601995636865954
+    second: Goblin_Dead_2
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -107,64 +107,64 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Goblin_0
+      name: Goblin_Dead_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 115
+        width: 116
         height: 121
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 09c75a492f0843b49b466b414d4a1a69
-      internalID: 8749302817991680212
+      spriteID: 09b08feaeb8af5341bd758988cc6acf0
+      internalID: -1544829533463327705
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Goblin_1
+      name: Goblin_Dead_1
       rect:
         serializedVersion: 2
         x: 139
         y: 0
-        width: 115
+        width: 116
         height: 121
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 088b4614249a4f54491179cfc75c4b14
-      internalID: 4475375876111409798
+      spriteID: 41fa94c56768764458ba0bd49ec16fa8
+      internalID: -7051444986948552115
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Goblin_2
+      name: Goblin_Dead_2
       rect:
         serializedVersion: 2
         x: 279
         y: 0
-        width: 115
+        width: 116
         height: 121
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c8f68e9bd3331d5418ed67dd7cb9e8ee
-      internalID: 3386398104049418772
+      spriteID: dfaee92315d93944498fca41aa0befae
+      internalID: -2038601995636865954
       vertices: []
       indices: 
       edges: []

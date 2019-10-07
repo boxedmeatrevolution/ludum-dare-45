@@ -8,6 +8,10 @@ public class PlantOgre : Monster {
         base.Start();
     }
 
+    public override void OnDying() {
+        this.GetComponentInChildren<Animator>().Play("PlantOgre_Dead");
+    }
+
     // Update is called once per frame
     protected override void Update() {
         base.Update();
