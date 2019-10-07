@@ -24,6 +24,8 @@ public class DialogueManager : MonoBehaviour
     private bool isRenderingText = false;
     private float textSpeed = 1f;
 
+    private bool interrupting;
+
     public string currentFile = "";
 
 
@@ -42,9 +44,10 @@ public class DialogueManager : MonoBehaviour
     {
         if (this.currScene != null)
         {
-            if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
-            {
-                this.Step();
+            if (this.interrupting) {
+                if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) {
+                    this.Step();
+                }
             }
             this.Display();
         }
@@ -70,7 +73,7 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
-    public void StartScene(string scene) {
+    public void StartScene(string scene, bool interrupting = true) {
         // invalidate scene indexes
         this.dialogueIdx = 0;
         this.lineIdx = 0;
@@ -78,7 +81,10 @@ public class DialogueManager : MonoBehaviour
         this.endOfScene = false;
 
         // freeze time
-        Time.timeScale = 0.0f;
+        if (interrupting) {
+            Time.timeScale = 0.0f;
+        }
+        this.interrupting = interrupting;
 
         // set the scene
         this.currScene = this.json[scene];
