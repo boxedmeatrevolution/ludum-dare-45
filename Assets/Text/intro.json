@@ -3,7 +3,7 @@
         1: "Lord Ghostighost",
         2: "Exposition"
     },
-    "scene1" : {
+    "tutorial-pickup-orb" : {
         "dialogue": [
         {
             "speaker": 2,
@@ -19,39 +19,49 @@
             "lines": [
                 "Slave.",
                 "Amuse me.",
-                "Pick up a Blue Orb"
+                "Pick up a Blue Orb."
             ]
         },
         ]
     },
-    "s2" : {
+    "tutorial-pickup-orb-instructions" : {
+      "dialogue": [
+      {
+        "speaker": 2,
+        "lines": [
+          "Pick up a Blue Orb using LEFT CLICK."
+        ]
+      }
+      ]
+    },
+    "tutorial-pickup-orb-prompt" : {
+      "dialogue": [
+      {
+        "speaker": 1,
+        "lines": [
+          "Leave that orb alone. I command you to take a Blue Orb."
+        ]
+      }
+      ]
+    },
+    "tutorial-drop-orb" : {
         "dialogue": [
         {
             "speaker": 1,
             "lines": [
                 "You toil.",
                 "It pleases me.",
-                "Put the orb down"
+                "Put the orb down."
             ]
         },
         ]
     },
-    "pickupPrompt" : {
+    "tutorial-drop-orb-instructions" : {
         "dialogue": [
         {
             "speaker": 2,
             "lines": [
-                "LEFT CLICK a Blue Orb."
-            ]
-        },
-        ]
-    },
-    "putdownPrompt" : {
-        "dialogue": [
-        {
-            "speaker": 2,
-            "lines": [
-                "RIGHT CLICK to drop an item."
+                "RIGHT CLICK to drop the orb."
             ]
         },
         ]

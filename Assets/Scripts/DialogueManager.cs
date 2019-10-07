@@ -94,6 +94,7 @@ public class DialogueManager : MonoBehaviour
     }
 
     public void StartScene(string scene, bool interrupting = true) {
+        this.EndScene();
         // invalidate scene indexes
         this.dialogueIdx = 0;
         this.lineIdx = 0;

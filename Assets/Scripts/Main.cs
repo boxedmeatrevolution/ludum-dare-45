@@ -36,10 +36,10 @@ public class Main : MonoBehaviour
         this.animator = GetComponentInChildren<Animator>();
         this.camera = FindObjectOfType<Camera>();
         this.waypoint = this.transform.position;
-        this.machine = GameObject.Find("Machine").GetComponent<Machine>();
-        this.voido = GameObject.Find("Void").GetComponent<Void>();
-        this.orbManager = GameObject.Find("OrbManager").GetComponent<OrbManager>();
-        this.storyManager = GameObject.Find("StoryManager").GetComponent<StoryManager>();
+        this.machine = FindObjectOfType<Machine>();
+        this.voido = FindObjectOfType<Void>();
+        this.orbManager = FindObjectOfType<OrbManager>();
+        this.storyManager = FindObjectOfType<StoryManager>();
         this.gate = FindObjectOfType<Gate>();
     }
 
@@ -185,6 +185,15 @@ public class Main : MonoBehaviour
         }
         // If you don't already have an item, then pick it up.
         if (this.item == null && this.targetItem != null && displacement.magnitude < this.pickupRange) {
+            if (this.storyManager.storyBeat == StoryManager.Beat.TUTORIAL_PICKUP_ORB_INSTRUCTIONS) {
+                Orb orb = this.targetItem.GetComponent<Orb>();
+                if (orb != null && orb.orbColor != Orb.OrbColor.BLUE) {
+                    this.storyManager.state = StoryManager.State.PROMPT;
+                    this.targetItem = null;
+                    this.waypoint = this.transform.position;
+                    goto skipOrb;
+                }
+            }
             if (this.targetItem.Pickup()) {
                 this.item = this.targetItem;
                 this.item.audioSource.PlayOneShot(this.item.pickupSound, 0.5f);
@@ -192,6 +201,7 @@ public class Main : MonoBehaviour
             this.waypoint = this.targetItem.transform.position;
             this.targetItem = null;
         }
+        skipOrb:
 
         // Maintain z ordering.
         Vector2 pos = this.transform.position;
