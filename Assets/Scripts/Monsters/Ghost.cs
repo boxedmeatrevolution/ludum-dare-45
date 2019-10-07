@@ -29,6 +29,10 @@ public class Ghost : Monster {
 
     // Choose whether you survive the fight with the other monster.
     public override bool KillOpponent(Monster other) {
+        return false;
+    }
+
+    public override bool KillDigestedOpponent(Monster other) {
         return true;
     }
 }
