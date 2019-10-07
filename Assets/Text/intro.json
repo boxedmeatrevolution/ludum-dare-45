@@ -100,53 +100,7 @@
       }
       ]
     },
-    "pickupBrown": {
-        "dialogue": [
-        {
-            "speaker": 2,
-            "lines": [
-                "LEFT CLICK a Brown Orb"
-            ]
-        },
-        ]
-    },"pickupRed": {
-        "dialogue": [
-        {
-            "speaker": 2,
-            "lines": [
-                "LEFT CLICK a Red Orb"
-            ]
-        },
-        ]
-    },"brownInMachine": {
-        "dialogue": [
-        {
-            "speaker": 2,
-            "lines": [
-                "LEFT CLICK the Machine to load first orb"
-            ]
-        },
-        ]
-    },"redInMachine": {
-        "dialogue": [
-        {
-            "speaker": 2,
-            "lines": [
-                "LEFT CLICK the Machine to load second orb"
-            ]
-        },
-        ]
-    },"clickMachine": {
-        "dialogue": [
-        {
-            "speaker": 2,
-            "lines": [
-                "LEFT CLICK the Machine to send orbs to the Void"
-            ]
-        },
-        ]
-    },
-    "toss": {
+    "tutorial-release-monster": {
         "dialogue": [
         {
             "speaker": 1,
@@ -159,12 +113,12 @@
         },
         ]
     },
-    "pickupMonster": {
+    "tutorial-release-monster-instructions": {
         "dialogue": [
         {
             "speaker": 2,
             "lines": [
-                "LEFT CLICK a Monster to pick it up."
+                "Pick up a monser and LEFT CLICK the void to throw it in and reclaim your orbs."
             ]
         },
         ]

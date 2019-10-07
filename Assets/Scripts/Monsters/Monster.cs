@@ -569,6 +569,9 @@ public class Monster : MonoBehaviour {
         {
             Destroy(this.gameObject);
         }
+        else if (this.state == State.IN_VOID) {
+            Destroy(this.gameObject);
+        }
 
         this.forgetAvoidTimer -= Time.deltaTime;
         if (this.forgetAvoidTimer < 0f) {

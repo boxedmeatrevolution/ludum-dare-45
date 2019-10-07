@@ -30,7 +30,8 @@ public class StoryManager : MonoBehaviour
         TUTORIAL_SUMMON_MONSTER,
         TUTORIAL_SUMMON_MONSTER_INSTRUCTIONS,
         TUTORIAL_RELEASE_MONSTER,
-        TUTORIAL_RELEASE_MONSTER_INSTRUCTIONS
+        TUTORIAL_RELEASE_MONSTER_INSTRUCTIONS,
+        TUTORIAL_ENDING
     }
 
     // Start is called before the first frame update
@@ -137,6 +138,29 @@ public class StoryManager : MonoBehaviour
             else if (this.state == State.PROMPT) {
                 dm.StartScene("tutorial-summon-monster-prompt");
                 this.state = State.BEAT_ACTIVE;
+            }
+        } else if (this.storyBeat == Beat.TUTORIAL_RELEASE_MONSTER) {
+            if (this.state == State.BEAT_FIRST_UPDATE) {
+                dm.SetFile("intro");
+                dm.StartScene("tutorial-release-monster");
+                this.state = State.BEAT_ACTIVE;
+            }
+            else if (this.state == State.BEAT_ACTIVE) {
+                if (dm.endOfScene) {
+                    this.GotoBeat(Beat.TUTORIAL_RELEASE_MONSTER_INSTRUCTIONS);
+                }
+            }
+        } else if (this.storyBeat == Beat.TUTORIAL_RELEASE_MONSTER_INSTRUCTIONS) {
+            if (this.state == State.BEAT_FIRST_UPDATE) {
+                dm.SetFile("intro");
+                dm.StartScene("tutorial-release-monster-instructions", false);
+                this.state = State.BEAT_ACTIVE;
+            }
+            else if (this.state == State.BEAT_ACTIVE) {
+                FireSalamander salamander = FindObjectOfType<FireSalamander>();
+                if (salamander == null) {
+                    this.GotoBeat(Beat.TUTORIAL_ENDING);
+                }
             }
         }
         /*
