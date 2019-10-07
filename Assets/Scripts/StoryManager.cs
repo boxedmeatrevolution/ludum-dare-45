@@ -15,6 +15,7 @@ public class StoryManager : MonoBehaviour
 
     private StoryCharacter ghostighost;
     private StoryCharacter pabs;
+    private MusicManager musicManager;
 
 
     public enum State
@@ -65,6 +66,8 @@ public class StoryManager : MonoBehaviour
         this.beatTimer = 5f;
         this.isBeatTimed = false;
         this.state = State.BEAT_FIRST_UPDATE;
+        this.musicManager = FindObjectOfType<MusicManager>();
+        this.musicManager.PlayGhostighostTheme();
     }
 
     // Update is called once per frame
@@ -74,6 +77,7 @@ public class StoryManager : MonoBehaviour
         // Do updates based on story beat.
         if (this.storyBeat == Beat.TUTORIAL_GHOSTIGHOST_EMERGE) {
             if (this.state == State.BEAT_FIRST_UPDATE) {
+                this.musicManager.PlayGhostighostTheme();
                 this.ghostighost = Instantiate(PrefabManager.GHOSTIGHOST_PREFAB).GetComponent<StoryCharacter>();
                 this.state = State.BEAT_ACTIVE;
             }
@@ -250,11 +254,13 @@ public class StoryManager : MonoBehaviour
         }
         else if (this.storyBeat == Beat.FREE_PLAY_1) {
             if (this.state == State.BEAT_FIRST_UPDATE) {
+                this.musicManager.PlayMainTheme();
                 this.state = State.BEAT_ACTIVE;
             }
         }
         else if (this.storyBeat == Beat.INTERLUDE_1_PABS_EMERGE) {
             if (this.state == State.BEAT_FIRST_UPDATE) {
+                this.musicManager.PlayPabsTheme();
                 this.state = State.BEAT_ACTIVE;
                 this.pabs = Instantiate(PrefabManager.PABS_PREFAB).GetComponent<StoryCharacter>();
             }
@@ -279,6 +285,7 @@ public class StoryManager : MonoBehaviour
             }
             else if (this.storyBeat == Beat.FREE_PLAY_2) {
                 if (this.state == State.BEAT_FIRST_UPDATE) {
+                    this.musicManager.PlayMainTheme();
                     this.state = State.BEAT_ACTIVE;
                 }
                 if (this.state == State.BEAT_ACTIVE) {
@@ -295,6 +302,7 @@ public class StoryManager : MonoBehaviour
                 }
                 else if (this.storyBeat == Beat.INTERLUDE_2_PABS_EMERGE) {
                     if (this.state == State.BEAT_FIRST_UPDATE) {
+                        this.musicManager.PlayPabsTheme();
                         this.state = State.BEAT_ACTIVE;
                         this.pabs = Instantiate(PrefabManager.PABS_PREFAB).GetComponent<StoryCharacter>();
                     }
@@ -343,11 +351,13 @@ public class StoryManager : MonoBehaviour
                 }
                 else if (this.storyBeat == Beat.FREE_PLAY_4) {
                     if (this.state == State.BEAT_FIRST_UPDATE) {
+                        this.musicManager.PlayMainTheme();
                         this.state = State.BEAT_ACTIVE;
                     }
                 }
                 else if (this.storyBeat == Beat.ENDING_PABS_EMERGE) {
                     if (this.state == State.BEAT_FIRST_UPDATE) {
+                        this.musicManager.PlayPabsTheme();
                         this.state = State.BEAT_ACTIVE;
                         this.pabs = Instantiate(PrefabManager.PABS_PREFAB).GetComponent<StoryCharacter>();
                     }
@@ -373,6 +383,7 @@ public class StoryManager : MonoBehaviour
                 }
                 else if (this.storyBeat == Beat.FREE_PLAY_5) {
                     if (this.state == State.BEAT_FIRST_UPDATE) {
+                        this.musicManager.PlayGhostighostTheme();
                         this.state = State.BEAT_ACTIVE;
                     }
                 }
