@@ -28,6 +28,13 @@ public class DialogueManager : MonoBehaviour
 
     public string currentFile = "";
 
+    private Image defaultHeadshot;
+    private Image characterHeadshot;
+    private Image ghostHeadshot;
+    private Image goblinHeadshot;
+    private Image[] headshots;
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -37,6 +44,19 @@ public class DialogueManager : MonoBehaviour
         this.nameTxt = GameObject.Find("DialogueName").GetComponentInChildren<TextMeshProUGUI>();
         this.dialogueTxt = GameObject.Find("DialogueText").GetComponentInChildren<TextMeshProUGUI>();
         this.canvas.enabled = false;
+
+        this.defaultHeadshot = GameObject.Find("DefaultHeadshot").GetComponentInChildren<Image>();
+        this.characterHeadshot = GameObject.Find("CharacterHeadshot").GetComponentInChildren<Image>();
+        this.ghostHeadshot = GameObject.Find("GhostHeadshot").GetComponentInChildren<Image>();
+        this.goblinHeadshot = GameObject.Find("GoblinHeadshot").GetComponentInChildren<Image>();
+
+        this.headshots = new Image[]{
+            this.defaultHeadshot,
+            this.ghostHeadshot,
+            this.goblinHeadshot,
+            this.characterHeadshot
+        };
+        this.SetHeadshot(this.defaultHeadshot);
     }
 
     // Update is called once per frame
@@ -98,13 +118,46 @@ public class DialogueManager : MonoBehaviour
     {
         return this.json["speakers"][(string)(this.currScene["dialogue"][this.dialogueIdx]["speaker"])];
     }
+
+    public void UpdateUIToDisplayCurrentSpeaker()
+    {
+        this.nameTxt.text = GetCurrentSpeaker();
+        switch(GetCurrentSpeaker()) {
+            case "Lord Ghostighost":
+                SetHeadshot(ghostHeadshot);
+                break;
+            case "Exposition":
+                SetHeadshot(defaultHeadshot);
+                break;
+            case "You":
+                SetHeadshot(characterHeadshot);
+                break;
+            case "Pabs":
+                SetHeadshot(goblinHeadshot);
+                break;
+            default:
+                SetHeadshot(defaultHeadshot);
+                break;
+        }
+    }
+
+    public void SetHeadshot(Image img)
+    {
+        for (int i = 0; i < this.headshots.Length; i++ )
+        {
+            this.headshots[i].enabled = false;
+        }
+        img.enabled = true;
+
+    }
+
     public void Display()
     {
         if (!this.endOfScene && this.isRenderingText == true)
         {
             if (this.lineIdx == 0)
             {
-                this.nameTxt.text = GetCurrentSpeaker();
+                this.UpdateUIToDisplayCurrentSpeaker();
             }
             string fullText = this.currScene["dialogue"][this.dialogueIdx]["lines"][this.lineIdx];
 

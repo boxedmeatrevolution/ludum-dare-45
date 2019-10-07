@@ -83,6 +83,9 @@ public class Monster : MonoBehaviour {
     public AudioClip deathSound;
     public AudioClip spawnSound;
 
+
+    private Main main;
+
     public enum State {
         WANDER,
         THREATEN,
@@ -128,6 +131,7 @@ public class Monster : MonoBehaviour {
         this.state = State.WANDER;
         this.waypoint = this.ChooseWaypoint(this.pen);
         this.orbManager = GameObject.Find("OrbManager").GetComponent<OrbManager>();
+        this.main = GameObject.Find("Main").GetComponent<Main>();
         this.audioSource = GetComponent<AudioSource>();
 
 
@@ -169,6 +173,12 @@ public class Monster : MonoBehaviour {
             }
             return;
         }
+
+        if (this.item.state == Item.State.PICKED_UP && !this.ShouldBeDropped())
+        {
+            this.main.DropItem();
+            return;
+        } 
 
         if (this.item.state != Item.State.ON_GROUND) {
             return;
@@ -665,6 +675,17 @@ public class Monster : MonoBehaviour {
         float y2 = y1 + pen.height;
 
         return (pos.x > x1 && pos.x < x2 & pos.y > y1 && pos.y < y2);
+    }    
+    
+    public bool ShouldBeDropped()
+    {
+        float x1 = pen.transform.position.x;
+        float x2 = x1 + pen.width;
+        float y1 = pen.transform.position.y;
+        float y2 = y1 + pen.height;
+
+        Vector2 pos = this.transform.position;
+        return (pos.x > x1 && pos.x < x2 & pos.y > y1); // do not check upper y bound because then sometimes monster is dropped when returning to void
     }
 
     public void Extinguish() {
