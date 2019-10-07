@@ -91,9 +91,7 @@ public class Item : MonoBehaviour
         }
         if (this.state == State.BEING_PUT_IN_MACHINE)
         {
-            Vector3 setZ = this.transform.position;
-            setZ.z = 6; // this puts it between the drawer of the machine and the machine
-            this.transform.position = setZ;
+            this.SetZIndex(6); // this puts it between the drawer of the machine and the machine
             if (this.pickupZ > 0.00001f)
             {
                 // undo the pickupz but keep the ball in place
@@ -109,13 +107,12 @@ public class Item : MonoBehaviour
         }
         if (this.state == State.TRANSFORMING)
         {
-            Vector3 setZ = this.transform.position;
-            setZ.z = 10; // this puts it behind the machine
-            this.transform.position = setZ;
+            this.SetZIndex(10); // behind the machine
             this.MoveAlongPath();
             if (this.IsAtEndOfPath())
             {
                 this.state = State.TRANSFORMED;
+                this.SetZIndex(this.initialZ);
             }
         }
 
@@ -219,5 +216,12 @@ public class Item : MonoBehaviour
         this.state = State.TRANSFORMING;
         this.waypointPath = path;
         this.pathIdx = 0;
+    }
+
+    void SetZIndex(float z)
+    {
+        Vector3 setZ = this.transform.position;
+        setZ.z = z; 
+        this.transform.position = setZ;
     }
 }
