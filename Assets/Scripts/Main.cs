@@ -81,10 +81,25 @@ public class Main : MonoBehaviour
             }
             if (this.orbManager.IsOrbPickedUp())
             {
-                if (this.orbManager.GetPickedUpOrb().orbColor == Orb.OrbColor.BLUE)
+                Orb orb = this.orbManager.GetPickedUpOrb();
+                if (orb.orbColor == Orb.OrbColor.BLUE && orb.item.state == Item.State.PICKED_UP)
                 {
                     this.storyManager.NextBeat();
                 }
+            }
+        }
+
+        if (storyManager.storyBeat == StoryManager.Beat.B && storyManager.state == StoryManager.State.BEAT_ACTIVE)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                this.targetItem = null;
+                storyManager.Prompt();
+                return;
+            }
+            if (this.targetOrb == null || this.targetOrb.item.state == Item.State.ON_GROUND)
+            {
+                this.storyManager.NextBeat();
             }
         }
 

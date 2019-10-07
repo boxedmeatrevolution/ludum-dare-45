@@ -71,6 +71,20 @@ public class StoryManager : MonoBehaviour
             this.state = State.BEAT_ACTIVE;
         }
 
+        if (this.storyBeat == Beat.C)
+        {
+            if (this.state == State.BEAT_FIRST_UPDATE)
+            {
+                dm.SetFile("intro");
+                dm.StartScene("scene1.5");
+            }
+            if (this.state == State.PROMPT)
+            {
+                
+            }
+            this.state = State.BEAT_ACTIVE;
+        }
+
 /*        this.beatTimer -= Time.deltaTime;
         if (this.isBeatTimed && this.beatTimer < 0f) {
             this.NextBeat();

@@ -34,6 +34,7 @@
                 "Put the orb down"
             ]
         },
+        ]
     },
     "pickupPrompt" : {
         "dialogue": [
@@ -60,9 +61,10 @@
         {
             "speaker": 1,
             "lines": [
-                "Slave.",
-                "Amuse me.",
-                "Earth and Fire a Salamander make."
+                "Haha.",
+                "I feel great mirth.",
+                "We must create life."
+                "The MACHINE beckons. Feed it EARTH and FIRE",
             ]
         },
         ]
