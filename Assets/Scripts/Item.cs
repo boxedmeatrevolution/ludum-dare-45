@@ -34,7 +34,10 @@ public class Item : MonoBehaviour
         IN_MACHINE,
         TRANSFORMING, 
         TRANSFORMED, 
-        RETURNING_TO_LAB
+        RETURNING_TO_LAB,
+
+        // Monsters only
+        VOIDING
     }
 
     // Start is called before the first frame update
@@ -247,5 +250,18 @@ public class Item : MonoBehaviour
     public void ReturnToLab()
     {
         this.state = State.RETURNING_TO_LAB;
+    }    
+    
+    //For MONSTERS ONLY
+    public void SendToVoid()
+    {
+        this.state = State.VOIDING;
+        if (this.pickupZ > 0.00001f)
+        {
+            // undo the pickupz but keep the ball in place
+            Vector3 removePickupZ = new Vector3(0, this.pickupZ, 0);
+            this.transform.position += removePickupZ;
+            this.pickupZ = 0f;
+        }
     }
 }

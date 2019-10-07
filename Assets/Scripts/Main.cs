@@ -10,8 +10,10 @@ public class Main : MonoBehaviour
     private Item targetItem = null;
 
     private Machine machine;
+    private Void voido;
     private OrbManager orbManager;
     private bool isTargettingMachine = false;
+    private bool isTargettingVoid = false;
     
     public float pickupRange = 0.5f;
     public float walkRange = 0.05f;
@@ -26,6 +28,7 @@ public class Main : MonoBehaviour
         this.camera = FindObjectOfType<Camera>();
         this.waypoint = this.transform.position;
         this.machine = GameObject.Find("Machine").GetComponent<Machine>();
+        this.voido = GameObject.Find("Void").GetComponent<Void>();
         this.orbManager = GameObject.Find("OrbManager").GetComponent<OrbManager>();
     }
 
@@ -40,6 +43,7 @@ public class Main : MonoBehaviour
         if (Input.GetMouseButtonDown(0)) {
             this.targetItem = null;
             this.isTargettingMachine = false;
+            this.isTargettingVoid = false;
             Ray ray = this.camera.ScreenPointToRay(Input.mousePosition);
             RaycastHit2D[] hits = Physics2D.GetRayIntersectionAll(ray);
             foreach (RaycastHit2D hit in hits) {
@@ -51,9 +55,11 @@ public class Main : MonoBehaviour
             }
         }
 
-        // Otherwise, just set the target to the position clicked... Or, go to the machine.
+        // Otherwise, just set the target to the position clicked... Or, go to the machine. Or void
         if (Input.GetMouseButton(0)) {
-            // Check if player should go to machine
+            // Check if player should go to machine OR Void
+            this.isTargettingVoid = false;
+            this.isTargettingMachine = false;
             Ray ray = this.camera.ScreenPointToRay(Input.mousePosition);
             RaycastHit2D[] hits = Physics2D.GetRayIntersectionAll(ray);
             foreach (RaycastHit2D hit in hits)
@@ -65,11 +71,24 @@ public class Main : MonoBehaviour
                     this.targetItem = null;
                     break;
                 }
+
+                Void voido = hit.transform.gameObject.GetComponentInParent<Void>();
+                if (voido != null)
+                {
+                    this.isTargettingVoid = true;
+                    this.targetItem = null;
+                    break;
+                }
             }
             if (this.isTargettingMachine)
             {
                 // Go to machine
-                this.waypoint = this.machine.GetWaypoint().position;
+                this.waypoint = this.machine.GetWaypoint();
+            }
+            else if (this.isTargettingVoid)
+            {
+                // Go to void
+                this.waypoint = this.voido.GetFrontalWaypoint();
             }
             else if (this.targetItem == null)
             {
@@ -108,9 +127,17 @@ public class Main : MonoBehaviour
             // If character has made it to the machine, then interact with the machine
             if (this.isTargettingMachine)
             {
-                this.DropItem();
                 this.machine.Interact();
+                this.item = null;
                 this.isTargettingMachine = false;
+            }
+
+            // If character made it to void
+            if (this.isTargettingVoid)
+            {
+                this.voido.Interact();
+                this.item = null;
+                this.isTargettingVoid = false;
             }
         }
         // If you don't already have an item, then pick it up.

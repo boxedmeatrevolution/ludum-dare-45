@@ -18,7 +18,7 @@ public class Monster : MonoBehaviour {
     private bool copycat;
     private float stateTimer;
     private Vector2 velocity;
-    private State state;
+    public State state;
     private bool enflamed;
     private Item item;
 
@@ -45,6 +45,11 @@ public class Monster : MonoBehaviour {
     public float averageWaitTime = 5f;
     public float threatenTime = 2f;
 
+    private Vector3 voidWaypoint;
+    private Vector3 voidStartpoint;
+    private float voidWaypointVel = 0f;
+    private float voidWaypointAccel = 0.0005f;
+
     public Orb[] orbs = new Orb[0];
 
     public enum State {
@@ -63,7 +68,9 @@ public class Monster : MonoBehaviour {
         DIGESTING,
         GOOED, // Get gooed by slugs
         DYING,
-        DEAD
+        DEAD,
+        SENDING_TO_VOID,
+        IN_VOID
     }
 
     // Start is called before the first frame update
@@ -86,6 +93,21 @@ public class Monster : MonoBehaviour {
     }
 
     protected virtual void Update() {
+        if (this.state == State.SENDING_TO_VOID)
+        {
+            this.MoveToVoidWaypoint();
+            if (this.IsAtVoidWaypoint())
+            {
+                this.state = State.IN_VOID;
+            }
+            return;
+        }
+        if (this.state == State.IN_VOID)
+        {
+            this.ReturnOrbs();
+            this.renderer.enabled = false;
+        }
+
         if (this.item.state != Item.State.ON_GROUND) {
             return;
         }
@@ -368,11 +390,7 @@ public class Monster : MonoBehaviour {
         }
         else if (this.state == State.DEAD)
         {
-            for (int i = 0; i < this.orbs.Length; i++)
-            {
-                this.orbs[i].item.ReturnToLab();
-            }
-            this.orbs = new Orb[0];
+            this.ReturnOrbs();
         }
 
         this.stateTimer -= Time.deltaTime;
@@ -484,5 +502,71 @@ public class Monster : MonoBehaviour {
     public void GiveOrbs(Orb[] orbs)
     {
         this.orbs = orbs;
+    }
+
+    public Item GetItem()
+    {
+        return this.item;
+    }
+
+    public void SendToVoid(Vector3 waypoint)
+    {
+        this.state = State.SENDING_TO_VOID;
+        this.item.SendToVoid();
+        this.voidWaypoint = waypoint;
+        this.voidStartpoint = this.transform.position;
+    }
+
+    private void MoveToVoidWaypoint()
+    {
+        if (this.voidWaypoint == null)
+        {
+            Debug.Log("Cannot move to waypoint: waypoint is null");
+            return;
+        }
+        Vector2 displacement = this.voidWaypoint - this.transform.position;
+        Vector2 direction = displacement.normalized;
+        this.voidWaypointVel += this.voidWaypointAccel;
+        Vector2 delta = direction * voidWaypointVel;
+        if (delta.magnitude > displacement.magnitude)
+        {
+            // move the rest of the way
+            this.transform.position += (Vector3)displacement;
+        }
+        else
+        {
+            // move a bit closer
+            this.transform.position += (Vector3)delta;
+        }
+
+        float scale = displacement.magnitude / ((Vector2)this.voidStartpoint - (Vector2)this.voidWaypoint).magnitude;
+        if (!float.IsNaN(scale))
+        {
+            this.transform.localScale = new Vector3(scale, scale, 1f);
+        }
+
+        if (this.IsAtVoidWaypoint())
+        {
+            this.voidWaypointVel = 0f;
+        }
+    }
+
+    private bool IsAtVoidWaypoint()
+    {
+        if (this.voidWaypoint == null)
+        {
+            Debug.Log("Cannot move to waypoint: waypoint is null");
+            return true;
+        }
+        return ((Vector2)this.voidWaypoint - (Vector2)this.transform.position).magnitude < 0.0001f;
+    }
+
+    private void ReturnOrbs()
+    {
+        for (int i = 0; i < this.orbs.Length; i++)
+        {
+            this.orbs[i].item.ReturnToLab();
+        }
+        this.orbs = new Orb[0];
     }
 }

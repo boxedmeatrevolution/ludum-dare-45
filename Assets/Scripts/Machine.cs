@@ -83,21 +83,21 @@ public class Machine : MonoBehaviour
         }
     }
 
-    public Transform GetWaypoint()
+    public Vector3 GetWaypoint()
     {
         if (this.orbManager.IsOrbPickedUp() && this.orbs.Count == 0)
         {
-            return this.slot1Waypoint;
+            return this.slot1Waypoint.position;
         }
         else if (this.orbManager.IsOrbPickedUp() && this.orbs.Count == 1)
         {
-            return this.slot2Waypoint;
+            return this.slot2Waypoint.position;
         } 
         else if (this.orbs.Count == 2 && this.state == State.OPEN)
         {
-            return this.leverWaypoint;
+            return this.leverWaypoint.position;
         }
-        return this.emptyWaypoint;
+        return this.emptyWaypoint.position;
     }
 
     public void Interact()
