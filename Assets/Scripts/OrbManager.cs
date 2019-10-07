@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class OrbManager : MonoBehaviour
 {
-    private Orb[] orbs;
+    public Orb[] orbs;
     private bool orbIsPickedUp;
     private Orb pickedUpOrb;
 

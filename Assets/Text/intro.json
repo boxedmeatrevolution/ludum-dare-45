@@ -69,6 +69,113 @@
         },
         ]
     },
+    "pickupBrown": {
+        "dialogue": [
+        {
+            "speaker": 2,
+            "lines": [
+                "LEFT CLICK a Brown Orb"
+            ]
+        },
+        ]
+    },"pickupRed": {
+        "dialogue": [
+        {
+            "speaker": 2,
+            "lines": [
+                "LEFT CLICK a Red Orb"
+            ]
+        },
+        ]
+    },"brownInMachine": {
+        "dialogue": [
+        {
+            "speaker": 2,
+            "lines": [
+                "LEFT CLICK the Machine to load first orb"
+            ]
+        },
+        ]
+    },"redInMachine": {
+        "dialogue": [
+        {
+            "speaker": 2,
+            "lines": [
+                "LEFT CLICK the Machine to load second orb"
+            ]
+        },
+        ]
+    },"clickMachine": {
+        "dialogue": [
+        {
+            "speaker": 2,
+            "lines": [
+                "LEFT CLICK the Machine to send orbs to the Void"
+            ]
+        },
+        ]
+    },
+    "toss": {
+        "dialogue": [
+        {
+            "speaker": 1,
+            "lines": [
+                "The Fire Salamander.",
+                "See it grin.",
+                "It bores me.",
+                "Toss it back into the void."
+            ]
+        },
+        ]
+    },
+    "pickupMonster": {
+        "dialogue": [
+        {
+            "speaker": 2,
+            "lines": [
+                "LEFT CLICK a Monster to pick it up."
+            ]
+        },
+        ]
+    },
+    "monsterToVoid": {
+        "dialogue": [
+        {
+            "speaker": 2,
+            "lines": [
+                "LEFT CLICK the void when holding a monster to return it to the void."
+            ]
+        },
+        ]
+    },
+    "good": {
+        "dialogue": [
+        {
+            "speaker": 1,
+            "lines": [
+                "Good Good.",
+                "Make more salamanders",
+                "...",
+                "Make them forever",
+                "I'll wait"
+            ]
+        },
+        ]
+    },
+    "bad": {
+        "dialogue": [
+        {
+            "speaker": 1,
+            "lines": [
+                "YOU DARE DEFY ME!",
+                "I REQUESTED SALAMANDERS",
+                "You will be punished.",
+                "I will return in 1000 years.",
+                "Think on the errors in your ways."
+            ]
+        },
+        ]
+    },
     "scene2": {
         "dialogue": [
         {
