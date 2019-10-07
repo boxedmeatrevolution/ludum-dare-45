@@ -6,10 +6,13 @@ public class FightCloud : MonoBehaviour
 {
     public Monster fighter1 = null;
     public Monster fighter2 = null;
+    public float swapTimer = 0f;
+    public float rotationSpeed = 90f;
     // Start is called before the first frame update
     void Start()
     {
-        
+        this.swapTimer = 0.4f;
+        this.rotationSpeed = Random.Range(-180f, 180f);
     }
 
     // Update is called once per frame
@@ -17,9 +20,14 @@ public class FightCloud : MonoBehaviour
     {
         Vector2 averagePosition = 0.5f * (this.fighter1.transform.position + this.fighter2.transform.position);
         this.transform.position = averagePosition;
-    }
-
-    public void FightOver() {
-        Destroy(this.gameObject);
+        this.transform.rotation *= Quaternion.Euler(0f, 0f, this.rotationSpeed * Time.deltaTime);
+        this.swapTimer -= Time.deltaTime;
+        if (this.swapTimer < 0f) {
+            this.swapTimer = 0.4f;
+            this.transform.localScale = new Vector3(
+                2f * Mathf.Round(Random.value) - 1f,
+                2f * Mathf.Round(Random.value) - 1f, 1f);
+            this.rotationSpeed = Random.Range(-180f, 180f);
+        }
     }
 }
