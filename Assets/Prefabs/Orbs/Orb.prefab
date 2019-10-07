@@ -85,7 +85,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   orbColor: 0
   item: {fileID: 0}
-  enflamed: 1
+  enflamed: 0
   childOrbs: []
 --- !u!82 &5359447429111382857
 AudioSource:
