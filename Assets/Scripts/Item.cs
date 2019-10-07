@@ -28,6 +28,10 @@ public class Item : MonoBehaviour
     public AudioClip dropSound;
     public AudioClip machineSound;
 
+    private int loadedInDrawerZIndex = 15;
+    private int behindMachineZIndex = 30;
+
+
     public enum State {
         ON_GROUND,
         BEING_LIFTED,
@@ -108,7 +112,7 @@ public class Item : MonoBehaviour
         }
         if (this.state == State.BEING_PUT_IN_MACHINE)
         {
-            this.SetZIndex(6); // this puts it between the drawer of the machine and the machine
+            this.SetZIndex(this.loadedInDrawerZIndex); // this puts it between the drawer of the machine and the machine
             if (this.pickupZ > 0.00001f)
             {
                 // undo the pickupz but keep the ball in place
@@ -127,7 +131,7 @@ public class Item : MonoBehaviour
         }
         if (this.state == State.TRANSFORMING)
         {
-            this.SetZIndex(10); // behind the machine
+            this.SetZIndex(this.behindMachineZIndex); // behind the machine
             this.MoveAlongPath();
             if (this.IsAtEndOfPath())
             {
@@ -150,8 +154,14 @@ public class Item : MonoBehaviour
         this.sprite.transform.localPosition = newSpritePos;
 
         // Maintain z ordering.
-        Vector2 pos = this.transform.position;
-        this.transform.position = new Vector3(pos.x, pos.y, pos.y / 300f);
+        if (this.state != State.BEING_PUT_IN_MACHINE
+            && this.state != State.IN_MACHINE
+            && this.state != State.TRANSFORMING
+            && this.state != State.TRANSFORMED 
+        ) {
+            Vector2 pos = this.transform.position;
+            this.transform.position = new Vector3(pos.x, pos.y, pos.y / 300f);
+        }
     }
 
     public bool Pickup() {
