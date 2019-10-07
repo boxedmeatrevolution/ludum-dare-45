@@ -41,7 +41,16 @@ public class StoryManager : MonoBehaviour
         FREE_PLAY_1,
         INTERLUDE_1_PABS_EMERGE,
         INTERLUDE_1_PABS_TALK,
-        FREE_PLAY_2
+        FREE_PLAY_2,
+        INTERLUDE_2_PABS_EMERGE,
+        INTERLUDE_2_PABS_TALK,
+        FREE_PLAY_3,
+        INTERLUDE_3_PABS_EMERGE,
+        INTERLUDE_3_PABS_TALK,
+        FREE_PLAY_4,
+        ENDING_PABS_EMERGE,
+        ENDING_PABS_TALK,
+        FREE_PLAY_5
     }
 
     // Start is called before the first frame update
@@ -51,7 +60,7 @@ public class StoryManager : MonoBehaviour
         if (this.storyBeat == Beat.START)
         {
             this.storyBeat = Beat.TUTORIAL_GHOSTIGHOST_EMERGE;
-            this.beatTimer = 2f;
+            this.beatTimer = 1.25f;
             this.state = State.BEAT_FIRST_UPDATE;
         }
         this.beatTimer = 5f;
@@ -72,22 +81,26 @@ public class StoryManager : MonoBehaviour
             if (this.beatTimer < 0f) {
                 this.GotoBeat(Beat.TUTORIAL_PICKUP_ORB);
             }
-        } else if (this.storyBeat == Beat.TUTORIAL_PICKUP_ORB) {
+        }
+        else if (this.storyBeat == Beat.TUTORIAL_PICKUP_ORB) {
             if (this.state == State.BEAT_FIRST_UPDATE) {
                 dm.SetFile("intro");
                 dm.StartScene("tutorial-pickup-orb");
                 this.state = State.BEAT_ACTIVE;
-            } else if (this.state == State.BEAT_ACTIVE) {
+            }
+            else if (this.state == State.BEAT_ACTIVE) {
                 if (dm.endOfScene) {
                     this.GotoBeat(Beat.TUTORIAL_PICKUP_ORB_INSTRUCTIONS);
                 }
             }
-        } else if (this.storyBeat == Beat.TUTORIAL_PICKUP_ORB_INSTRUCTIONS) {
+        }
+        else if (this.storyBeat == Beat.TUTORIAL_PICKUP_ORB_INSTRUCTIONS) {
             if (this.state == State.BEAT_FIRST_UPDATE) {
                 dm.SetFile("intro");
                 dm.StartScene("tutorial-pickup-orb-instructions", false);
                 this.state = State.BEAT_ACTIVE;
-            } else if (this.state == State.BEAT_ACTIVE) {
+            }
+            else if (this.state == State.BEAT_ACTIVE) {
                 if (this.main.item != null) {
                     Orb orb = this.main.item.GetComponent<Orb>();
                     if (orb != null) {
@@ -96,26 +109,31 @@ public class StoryManager : MonoBehaviour
                         }
                     }
                 }
-            } else if (this.state == State.PROMPT) {
+            }
+            else if (this.state == State.PROMPT) {
                 dm.StartScene("tutorial-pickup-orb-prompt");
                 this.state = State.BEAT_ACTIVE;
             }
-        } else if (this.storyBeat == Beat.TUTORIAL_DROP_ORB) {
+        }
+        else if (this.storyBeat == Beat.TUTORIAL_DROP_ORB) {
             if (this.state == State.BEAT_FIRST_UPDATE) {
                 dm.SetFile("intro");
                 dm.StartScene("tutorial-drop-orb");
                 this.state = State.BEAT_ACTIVE;
-            } else if (this.state == State.BEAT_ACTIVE) {
+            }
+            else if (this.state == State.BEAT_ACTIVE) {
                 if (dm.endOfScene) {
                     this.GotoBeat(Beat.TUTORIAL_DROP_ORB_INSTRUCTIONS);
                 }
             }
-        } else if (this.storyBeat == Beat.TUTORIAL_DROP_ORB_INSTRUCTIONS) {
+        }
+        else if (this.storyBeat == Beat.TUTORIAL_DROP_ORB_INSTRUCTIONS) {
             if (this.state == State.BEAT_FIRST_UPDATE) {
                 dm.SetFile("intro");
                 dm.StartScene("tutorial-drop-orb-instructions", false);
                 this.state = State.BEAT_ACTIVE;
-            } else if (this.state == State.BEAT_ACTIVE) {
+            }
+            else if (this.state == State.BEAT_ACTIVE) {
                 bool allOnGround = true;
                 foreach (Orb orb in FindObjectsOfType<Orb>()) {
                     Item item = orb.GetComponent<Item>();
@@ -128,17 +146,20 @@ public class StoryManager : MonoBehaviour
                     this.GotoBeat(Beat.TUTORIAL_SUMMON_MONSTER);
                 }
             }
-        } else if (this.storyBeat == Beat.TUTORIAL_SUMMON_MONSTER) {
+        }
+        else if (this.storyBeat == Beat.TUTORIAL_SUMMON_MONSTER) {
             if (this.state == State.BEAT_FIRST_UPDATE) {
                 dm.SetFile("intro");
                 dm.StartScene("tutorial-summon-monster");
                 this.state = State.BEAT_ACTIVE;
-            } else if (this.state == State.BEAT_ACTIVE) {
+            }
+            else if (this.state == State.BEAT_ACTIVE) {
                 if (dm.endOfScene) {
                     this.GotoBeat(Beat.TUTORIAL_SUMMON_MONSTER_INSTRUCTIONS);
                 }
             }
-        } else if (this.storyBeat == Beat.TUTORIAL_SUMMON_MONSTER_INSTRUCTIONS) {
+        }
+        else if (this.storyBeat == Beat.TUTORIAL_SUMMON_MONSTER_INSTRUCTIONS) {
             if (this.state == State.BEAT_FIRST_UPDATE) {
                 dm.SetFile("intro");
                 dm.StartScene("tutorial-summon-monster-instructions", false);
@@ -156,7 +177,8 @@ public class StoryManager : MonoBehaviour
                 dm.StartScene("tutorial-summon-monster-prompt");
                 this.state = State.BEAT_ACTIVE;
             }
-        } else if (this.storyBeat == Beat.TUTORIAL_RELEASE_MONSTER) {
+        }
+        else if (this.storyBeat == Beat.TUTORIAL_RELEASE_MONSTER) {
             if (this.state == State.BEAT_FIRST_UPDATE) {
                 dm.SetFile("intro");
                 dm.StartScene("tutorial-release-monster");
@@ -167,7 +189,8 @@ public class StoryManager : MonoBehaviour
                     this.GotoBeat(Beat.TUTORIAL_RELEASE_MONSTER_INSTRUCTIONS);
                 }
             }
-        } else if (this.storyBeat == Beat.TUTORIAL_RELEASE_MONSTER_INSTRUCTIONS) {
+        }
+        else if (this.storyBeat == Beat.TUTORIAL_RELEASE_MONSTER_INSTRUCTIONS) {
             if (this.state == State.BEAT_FIRST_UPDATE) {
                 dm.SetFile("intro");
                 dm.StartScene("tutorial-release-monster-instructions", false);
@@ -179,7 +202,8 @@ public class StoryManager : MonoBehaviour
                     this.GotoBeat(Beat.TUTORIAL_SALAMANDER);
                 }
             }
-        } else if (this.storyBeat == Beat.TUTORIAL_SALAMANDER) {
+        }
+        else if (this.storyBeat == Beat.TUTORIAL_SALAMANDER) {
             if (this.state == State.BEAT_FIRST_UPDATE) {
                 dm.SetFile("intro");
                 dm.StartScene("tutorial-salamander");
@@ -190,7 +214,8 @@ public class StoryManager : MonoBehaviour
                     this.GotoBeat(Beat.TUTORIAL_SALAMANDER_ESCAPE);
                 }
             }
-        } else if (this.storyBeat == Beat.TUTORIAL_SALAMANDER_ESCAPE) {
+        }
+        else if (this.storyBeat == Beat.TUTORIAL_SALAMANDER_ESCAPE) {
             if (this.state == State.BEAT_FIRST_UPDATE) {
                 dm.SetFile("intro");
                 dm.StartScene("tutorial-salamander-escape", false);
@@ -209,7 +234,8 @@ public class StoryManager : MonoBehaviour
                     this.GotoBeat(Beat.TUTORIAL_ENDING);
                 }
             }
-        } else if (this.storyBeat == Beat.TUTORIAL_ENDING) {
+        }
+        else if (this.storyBeat == Beat.TUTORIAL_ENDING) {
             if (this.state == State.BEAT_FIRST_UPDATE) {
                 dm.SetFile("intro");
                 dm.StartScene("tutorial-ending");
@@ -222,20 +248,24 @@ public class StoryManager : MonoBehaviour
                     this.GotoBeat(Beat.FREE_PLAY_1);
                 }
             }
-        } else if (this.storyBeat == Beat.FREE_PLAY_1) {
+        }
+        else if (this.storyBeat == Beat.FREE_PLAY_1) {
             if (this.state == State.BEAT_FIRST_UPDATE) {
                 this.state = State.BEAT_ACTIVE;
             }
-        } else if (this.storyBeat == Beat.INTERLUDE_1_PABS_EMERGE) {
+        }
+        else if (this.storyBeat == Beat.INTERLUDE_1_PABS_EMERGE) {
             if (this.state == State.BEAT_FIRST_UPDATE) {
                 this.state = State.BEAT_ACTIVE;
                 this.pabs = Instantiate(PrefabManager.PABS_PREFAB).GetComponent<StoryCharacter>();
-            } else if (this.state == State.BEAT_ACTIVE) {
+            }
+            else if (this.state == State.BEAT_ACTIVE) {
                 if (this.beatTimer < 0f) {
                     this.GotoBeat(Beat.INTERLUDE_1_PABS_TALK);
                 }
             }
-        } else if (this.storyBeat == Beat.INTERLUDE_1_PABS_TALK) {
+        }
+        else if (this.storyBeat == Beat.INTERLUDE_1_PABS_TALK) {
             if (this.state == State.BEAT_FIRST_UPDATE) {
                 dm.SetFile("goblin_encounter_1");
                 dm.StartScene("interlude1-pabs-talk");
@@ -248,10 +278,100 @@ public class StoryManager : MonoBehaviour
                     this.GotoBeat(Beat.FREE_PLAY_2);
                 }
             }
-        }
-        else if (this.storyBeat == Beat.FREE_PLAY_2) {
-            if (this.state == State.BEAT_FIRST_UPDATE) {
-                this.state = State.BEAT_ACTIVE;
+            else if (this.storyBeat == Beat.FREE_PLAY_2) {
+                if (this.state == State.BEAT_FIRST_UPDATE) {
+                    this.state = State.BEAT_ACTIVE;
+                }
+            }
+            else if (this.storyBeat == Beat.INTERLUDE_2_PABS_EMERGE) {
+                if (this.state == State.BEAT_FIRST_UPDATE) {
+                    this.state = State.BEAT_ACTIVE;
+                    this.pabs = Instantiate(PrefabManager.PABS_PREFAB).GetComponent<StoryCharacter>();
+                }
+                else if (this.state == State.BEAT_ACTIVE) {
+                    if (this.beatTimer < 0f) {
+                        this.GotoBeat(Beat.INTERLUDE_2_PABS_TALK);
+                    }
+                }
+            }
+            else if (this.storyBeat == Beat.INTERLUDE_2_PABS_TALK) {
+                if (this.state == State.BEAT_FIRST_UPDATE) {
+                    dm.SetFile("goblin_encounter_1");
+                    dm.StartScene("interlude1-pabs-talk");
+                    this.state = State.BEAT_ACTIVE;
+                }
+                else if (this.state == State.BEAT_ACTIVE) {
+                    if (dm.endOfScene) {
+                        this.pabs.ReturnToVoid();
+                        this.pabs = null;
+                        this.GotoBeat(Beat.FREE_PLAY_3);
+                    }
+                }
+            }
+            else if (this.storyBeat == Beat.FREE_PLAY_3) {
+                if (this.state == State.BEAT_FIRST_UPDATE) {
+                    this.state = State.BEAT_ACTIVE;
+                }
+            }
+            else if (this.storyBeat == Beat.INTERLUDE_3_PABS_EMERGE) {
+                if (this.state == State.BEAT_FIRST_UPDATE) {
+                    this.state = State.BEAT_ACTIVE;
+                    this.pabs = Instantiate(PrefabManager.PABS_PREFAB).GetComponent<StoryCharacter>();
+                }
+                else if (this.state == State.BEAT_ACTIVE) {
+                    if (this.beatTimer < 0f) {
+                        this.GotoBeat(Beat.INTERLUDE_3_PABS_TALK);
+                    }
+                }
+            }
+            else if (this.storyBeat == Beat.INTERLUDE_3_PABS_TALK) {
+                if (this.state == State.BEAT_FIRST_UPDATE) {
+                    dm.SetFile("goblin_encounter_1");
+                    dm.StartScene("interlude1-pabs-talk");
+                    this.state = State.BEAT_ACTIVE;
+                }
+                else if (this.state == State.BEAT_ACTIVE) {
+                    if (dm.endOfScene) {
+                        this.pabs.ReturnToVoid();
+                        this.pabs = null;
+                        this.GotoBeat(Beat.FREE_PLAY_4);
+                    }
+                }
+            }
+            else if (this.storyBeat == Beat.FREE_PLAY_4) {
+                if (this.state == State.BEAT_FIRST_UPDATE) {
+                    this.state = State.BEAT_ACTIVE;
+                }
+            }
+            else if (this.storyBeat == Beat.ENDING_PABS_EMERGE) {
+                if (this.state == State.BEAT_FIRST_UPDATE) {
+                    this.state = State.BEAT_ACTIVE;
+                    this.pabs = Instantiate(PrefabManager.PABS_PREFAB).GetComponent<StoryCharacter>();
+                }
+                else if (this.state == State.BEAT_ACTIVE) {
+                    if (this.beatTimer < 0f) {
+                        this.GotoBeat(Beat.ENDING_PABS_TALK);
+                    }
+                }
+            }
+            else if (this.storyBeat == Beat.ENDING_PABS_TALK) {
+                if (this.state == State.BEAT_FIRST_UPDATE) {
+                    dm.SetFile("goblin_encounter_1");
+                    dm.StartScene("interlude1-pabs-talk");
+                    this.state = State.BEAT_ACTIVE;
+                }
+                else if (this.state == State.BEAT_ACTIVE) {
+                    if (dm.endOfScene) {
+                        this.pabs.ReturnToVoid();
+                        this.pabs = null;
+                        this.GotoBeat(Beat.FREE_PLAY_5);
+                    }
+                }
+            }
+            else if (this.storyBeat == Beat.FREE_PLAY_5) {
+                if (this.state == State.BEAT_FIRST_UPDATE) {
+                    this.state = State.BEAT_ACTIVE;
+                }
             }
         }
     }
