@@ -737,11 +737,14 @@ public class Monster : MonoBehaviour {
 
     public void SendToVoid(Vector3 waypoint)
     {
+        State originalState = this.state;
         this.state = State.SENDING_TO_VOID;
         this.item.SendToVoid();
         this.voidWaypoint = waypoint;
         this.voidStartpoint = this.transform.position;
-        this.audioSource.PlayOneShot(this.deathSound);
+        if (originalState != State.DEAD && originalState != State.DYING) {
+            this.audioSource.PlayOneShot(this.deathSound);
+        }
     }
 
     private void MoveToVoidWaypoint(bool shrink)
