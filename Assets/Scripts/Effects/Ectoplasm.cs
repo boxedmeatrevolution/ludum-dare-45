@@ -23,5 +23,8 @@ public class Ectoplasm : MonoBehaviour
             Destroy(this.gameObject);
         }
         this.renderer.color = new Color(1f, 1f, 1f, (this.alpha0 - 0.1f) * (this.lifetime / Monster.GOO_TIME) + 0.1f);
+        // Maintain z ordering.
+        Vector2 pos = this.transform.position;
+        this.transform.position = new Vector3(pos.x, pos.y, pos.y / 300f);
     }
 }

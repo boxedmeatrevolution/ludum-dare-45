@@ -394,6 +394,8 @@ public class Monster : MonoBehaviour {
                     monster.state = State.GOOED;
                     monster.stateTimer = Monster.GOO_TIME;
                     monster.Extinguish();
+                    GameObject ectoplasmObj = Instantiate(PrefabManager.ECTOPLASM_PREFAB, monster.transform);
+                    ectoplasmObj.transform.localPosition = new Vector3(0f, -0.01f, 0f);
                     float angle = 2f * Mathf.PI * Random.value;
                     monster.velocity = Random.Range(1f, 2f) * new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
                 }
@@ -532,7 +534,7 @@ public class Monster : MonoBehaviour {
     }
 
     public void Enflame() {
-        if (this.CanBurn()) {
+        if (this.CanBurn() && !this.enflamed) {
             this.enflamed = true;
             GameObject fireObj = Instantiate(PrefabManager.FIRE_PREFAB, this.fireAnchor.transform);
             this.fire = fireObj.GetComponentInChildren<Fire>();
