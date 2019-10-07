@@ -49,3 +49,13 @@ MonoBehaviour:
     type: 3}
   explosionPrefab: {fileID: 1356667879521864304, guid: 9be60bf9b0b146446a6bc2fb76fe62aa,
     type: 3}
+  fireSalamanderPrefab: {fileID: 8771925034287457327, guid: a9b74bf7dc76bac4283873f33141bbf3,
+    type: 3}
+  ghostSlugPrefab: {fileID: 2222248345680053309, guid: f1f7d0d89e2946e40a99328f42674795,
+    type: 3}
+  goblinPrefab: {fileID: 8626661086894526499, guid: a142069d81986d545af6e11aec98c370,
+    type: 3}
+  livingFlamePrefab: {fileID: 4484125969662896625, guid: 639d0bd964bfafe4fb7334f2c14e3300,
+    type: 3}
+  plantOgrePrefab: {fileID: 749479084716213232, guid: 4ccce016c77cdba44b85c4b88d2be0a1,
+    type: 3}

@@ -14,6 +14,7 @@ public class Machine : MonoBehaviour
     private Transform slot2OrbWaypoint;
     private Transform orbPathWaypoint1;
     private Transform orbPathWaypoint2;
+    private Transform spawnWaypoint;
     private List<Transform> orbPath;
 
     private SpriteRenderer drawerSprite;
@@ -42,6 +43,7 @@ public class Machine : MonoBehaviour
         this.slot2OrbWaypoint = GameObject.Find("Slot2OrbWaypoint").GetComponentInChildren<Transform>();
         this.orbPathWaypoint1 = GameObject.Find("OrbPathWaypoint1").GetComponentInChildren<Transform>();
         this.orbPathWaypoint2 = GameObject.Find("OrbPathWaypoint2").GetComponentInChildren<Transform>();
+        this.spawnWaypoint = GameObject.Find("SpawnWaypoint").GetComponentInChildren<Transform>();
 
         this.orbPath = new List<Transform>();
         orbPath.Add(this.orbPathWaypoint1);
@@ -146,34 +148,22 @@ public class Machine : MonoBehaviour
         {
             if (orbs[0].orbColor == Orb.OrbColor.BLUE && orbs[1].orbColor == Orb.OrbColor.BLUE)
             {
-                //Ghost slug
-                Debug.Log("MACHINE MAKES Ghost slug");
+                Instantiate(PrefabManager.GHOST_SLUG_PREFAB, this.spawnWaypoint.transform.position, Quaternion.identity);
             }
-            else if (orbs[0].orbColor == Orb.OrbColor.RED && orbs[1].orbColor == Orb.OrbColor.RED)
-            {
-                //Living flame
-                Debug.Log("MACHINE MAKES Living flame");
-
+            else if (orbs[0].orbColor == Orb.OrbColor.RED && orbs[1].orbColor == Orb.OrbColor.RED) {
+                Instantiate(PrefabManager.LIVING_FLAME_PREFAB, this.spawnWaypoint.transform.position, Quaternion.identity);
             }
-            else if (orbs[0].orbColor == Orb.OrbColor.BROWN && orbs[1].orbColor == Orb.OrbColor.BROWN)
-            {
-                //Clay copycat
-                Debug.Log("MACHINE MAKES Clay copycat");
+            else if (orbs[0].orbColor == Orb.OrbColor.BROWN && orbs[1].orbColor == Orb.OrbColor.BROWN) {
+                Instantiate(PrefabManager.GHOST_SLUG_PREFAB, this.spawnWaypoint.transform.position, Quaternion.identity);
             }
-            else if ((orbs[0].orbColor == Orb.OrbColor.BLUE && orbs[1].orbColor == Orb.OrbColor.RED) || (orbs[0].orbColor == Orb.OrbColor.RED && orbs[1].orbColor == Orb.OrbColor.BLUE))
-            {
-                //Goblin
-                Debug.Log("MACHINE MAKES Goblin");
+            else if ((orbs[0].orbColor == Orb.OrbColor.BLUE && orbs[1].orbColor == Orb.OrbColor.RED) || (orbs[0].orbColor == Orb.OrbColor.RED && orbs[1].orbColor == Orb.OrbColor.BLUE)) {
+                Instantiate(PrefabManager.GOBLIN_PREFAB, this.spawnWaypoint.transform.position, Quaternion.identity);
             }
-            else if ((orbs[0].orbColor == Orb.OrbColor.BLUE && orbs[1].orbColor == Orb.OrbColor.BROWN) || (orbs[0].orbColor == Orb.OrbColor.BROWN && orbs[1].orbColor == Orb.OrbColor.BLUE))
-            {
-                //Plant Ogre
-                Debug.Log("MACHINE MAKES Plant Ogre");
+            else if ((orbs[0].orbColor == Orb.OrbColor.BLUE && orbs[1].orbColor == Orb.OrbColor.BROWN) || (orbs[0].orbColor == Orb.OrbColor.BROWN && orbs[1].orbColor == Orb.OrbColor.BLUE)) {
+                Instantiate(PrefabManager.PLANT_OGRE_PREFAB, this.spawnWaypoint.transform.position, Quaternion.identity);
             }
-            else if ((orbs[0].orbColor == Orb.OrbColor.RED && orbs[1].orbColor == Orb.OrbColor.BROWN) || (orbs[0].orbColor == Orb.OrbColor.BROWN && orbs[1].orbColor == Orb.OrbColor.RED))
-            {
-                //Fire salamander
-                Debug.Log("MACHINE MAKES Fire salamander");
+            else if ((orbs[0].orbColor == Orb.OrbColor.RED && orbs[1].orbColor == Orb.OrbColor.BROWN) || (orbs[0].orbColor == Orb.OrbColor.BROWN && orbs[1].orbColor == Orb.OrbColor.RED)) {
+                Instantiate(PrefabManager.FIRE_SALAMANDER_PREFAB, this.spawnWaypoint.transform.position, Quaternion.identity);
             }
 
             // orbs are no longer in machine

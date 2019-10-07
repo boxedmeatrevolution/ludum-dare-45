@@ -90,6 +90,36 @@ Transform:
   m_Father: {fileID: 5132175986530234682}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4334213426377456974
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2857460841942969586}
+  m_Layer: 0
+  m_Name: SpawnWaypoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2857460841942969586
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4334213426377456974}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3, y: -2, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5132175986530234682}
+  m_RootOrder: 9
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5132175985808656149
 GameObject:
   m_ObjectHideFlags: 0
@@ -287,6 +317,7 @@ Transform:
   - {fileID: 9072892870987586858}
   - {fileID: 3074667343400126043}
   - {fileID: 2496720244487514915}
+  - {fileID: 2857460841942969586}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -302,7 +333,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bba7d24e592bc574d856178b092ec4a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spriteState: 0
+  state: 0
 --- !u!1 &5132175986948759158
 GameObject:
   m_ObjectHideFlags: 0
