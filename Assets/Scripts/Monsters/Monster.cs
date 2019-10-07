@@ -50,6 +50,12 @@ public class Monster : MonoBehaviour {
     private float voidWaypointVel = 0f;
     private float voidWaypointAccel = 0.0005f;
 
+    private float deadTime = 0f;
+    private float deadWaitTime = 1f;
+    private Void voido;
+
+    public bool createdFromVoid = false;
+
     public Orb[] orbs = new Orb[0];
 
     public enum State {
@@ -70,7 +76,8 @@ public class Monster : MonoBehaviour {
         DYING,
         DEAD,
         SENDING_TO_VOID,
-        IN_VOID
+        IN_VOID,
+        SPAWNING_FROM_VOID
     }
 
     // Start is called before the first frame update
@@ -90,12 +97,21 @@ public class Monster : MonoBehaviour {
         this.avoid = null;
         this.state = State.WANDER;
         this.waypoint = this.ChooseWaypoint(this.pen);
+
+        if (this.createdFromVoid)
+        {
+            this.state = State.SPAWNING_FROM_VOID;
+            this.transform.localScale = new Vector3(0f, 0f, 1f);
+        }
+
+        this.voido = GameObject.Find("Void").GetComponent<Void>();
+
     }
 
     protected virtual void Update() {
         if (this.state == State.SENDING_TO_VOID)
         {
-            this.MoveToVoidWaypoint();
+            this.MoveToVoidWaypoint(true);
             if (this.IsAtVoidWaypoint())
             {
                 this.state = State.IN_VOID;
@@ -106,6 +122,17 @@ public class Monster : MonoBehaviour {
         {
             this.ReturnOrbs();
             this.renderer.enabled = false;
+        }
+        if (this.state == State.SPAWNING_FROM_VOID)
+        {
+            this.MoveToVoidWaypoint(false);
+            if (this.IsAtVoidWaypoint())
+            {
+                this.state = State.WANDER;
+                this.item.state = Item.State.ON_GROUND;
+                this.transform.localScale = new Vector3(1f, 1f, 1f);
+            }
+            return;
         }
 
         if (this.item.state != Item.State.ON_GROUND) {
@@ -383,6 +410,7 @@ public class Monster : MonoBehaviour {
         else if (this.state == State.DYING) {
             if (this.stateTimer < 0f) {
                 this.state = State.DEAD;
+                this.deadTime = Time.realtimeSinceStartup;
                 if (this.IsExplosive()) {
                     Instantiate(PrefabManager.EXPLOSION_PREFAB, this.transform.position, Quaternion.identity);
                 }
@@ -390,7 +418,13 @@ public class Monster : MonoBehaviour {
         }
         else if (this.state == State.DEAD)
         {
-            this.ReturnOrbs();
+            if (Time.realtimeSinceStartup - this.deadTime > this.deadWaitTime)
+            {
+                if (this.voido != null)
+                {
+                    this.voido.SendToVoid(this);
+                }
+            }
         }
 
         this.stateTimer -= Time.deltaTime;
@@ -517,7 +551,7 @@ public class Monster : MonoBehaviour {
         this.voidStartpoint = this.transform.position;
     }
 
-    private void MoveToVoidWaypoint()
+    private void MoveToVoidWaypoint(bool shrink)
     {
         if (this.voidWaypoint == null)
         {
@@ -542,6 +576,10 @@ public class Monster : MonoBehaviour {
         float scale = displacement.magnitude / ((Vector2)this.voidStartpoint - (Vector2)this.voidWaypoint).magnitude;
         if (!float.IsNaN(scale))
         {
+            if (!shrink)
+            {
+                scale = Mathf.Abs(scale - 1);
+            }
             this.transform.localScale = new Vector3(scale, scale, 1f);
         }
 
@@ -568,5 +606,13 @@ public class Monster : MonoBehaviour {
             this.orbs[i].item.ReturnToLab();
         }
         this.orbs = new Orb[0];
+    }
+
+    public void EjectFromTo(Vector3 from, Vector3 to)
+    {
+        this.state = State.SPAWNING_FROM_VOID;
+        this.voidWaypoint = to;
+        this.transform.position = from;
+        this.voidStartpoint = from;
     }
 }

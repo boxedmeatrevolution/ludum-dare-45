@@ -250,6 +250,7 @@ public class Item : MonoBehaviour
     public void ReturnToLab()
     {
         this.state = State.RETURNING_TO_LAB;
+        this.pickedUp = false;
     }    
     
     //For MONSTERS ONLY
@@ -263,5 +264,11 @@ public class Item : MonoBehaviour
             this.transform.position += removePickupZ;
             this.pickupZ = 0f;
         }
+        this.pickedUp = false;
+    }
+    public void SpawnFromVoid()
+    {
+        this.state = State.VOIDING;
+        this.pickedUp = false;
     }
 }

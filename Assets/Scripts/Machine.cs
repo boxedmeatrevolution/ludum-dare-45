@@ -21,6 +21,8 @@ public class Machine : MonoBehaviour
     private SpriteRenderer openSprite;
     private SpriteRenderer closedSprite;
 
+    private Void voido;
+
     public State state;
     private float closedStartTime = 0f;
 
@@ -53,6 +55,7 @@ public class Machine : MonoBehaviour
         this.openSprite = GameObject.Find("SlotMachineOpen").GetComponentInChildren<SpriteRenderer>();
         this.closedSprite = GameObject.Find("SlotMachineClosed").GetComponentInChildren<SpriteRenderer>();
 
+        this.voido = GameObject.Find("Void").GetComponent<Void>();
 
         this.state = State.OPEN;
     }
@@ -175,6 +178,8 @@ public class Machine : MonoBehaviour
                     Orb[] monsterOrbs = { this.orbs[0], this.orbs[1] };
                     spawnedMonster.GiveOrbs(monsterOrbs);
                 }
+
+                this.voido.EjectMonster(spawnedMonster);
             }
 
             // orbs are no longer in machine
