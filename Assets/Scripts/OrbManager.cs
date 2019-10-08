@@ -55,10 +55,10 @@ public class OrbManager : MonoBehaviour
         return this.pickedUpOrb;
     }
 
-    public void MakeGhostOrb(Orb primaryOrb, Orb[] otherOrbs)
+    public Orb MakeGhostOrb(Orb primaryOrb, Orb[] otherOrbs)
     {
         if (this.inactiveGhostOrbs.Count < 0) {
-            return;
+            return null;
         }
 
         StoryManager storyManager = FindObjectOfType<StoryManager>();
@@ -82,5 +82,6 @@ public class OrbManager : MonoBehaviour
         ghostOrb.item.transform.position = primaryOrb.transform.position;
         ghostOrb.item.initialPosition = ghostOrb.item.transform.position;
 
+        return ghostOrb;
     }
 }
