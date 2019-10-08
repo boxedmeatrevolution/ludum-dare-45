@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   state: 0
   fireAnchor: {fileID: 6453251927097376326}
-  friction: 0.75
+  friction: 0.5
   accel: 3
   wanderSpeed: 0.6
   sprintSpeed: 1.2

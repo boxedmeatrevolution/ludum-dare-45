@@ -32,8 +32,8 @@ public class GhostSlug : Monster {
                     break;
                 }
             }
-            if (this.fireTarget != null && !this.fireTarget.IsFiery()) {
-                this.fireTarget = null;
+            if (this.fireTarget == null || !this.fireTarget.IsFiery()) {
+                this.ChooseFieryTarget();
             }
             GameObject chasingTarget = null;
             if (this.transformOrb != null) {
@@ -54,7 +54,7 @@ public class GhostSlug : Monster {
         base.Update();
     }
 
-    public override Vector2 ChooseWaypoint(Pen pen) {
+    public void ChooseFieryTarget() {
         this.fireTarget = null;
         foreach (Monster monster in FindObjectsOfType<Monster>()) {
             if (!monster.Initialized()) {
@@ -65,6 +65,9 @@ public class GhostSlug : Monster {
                 break;
             }
         }
+    }
+
+    public override Vector2 ChooseWaypoint(Pen pen) {
         if (this.fireTarget != null) {
             return this.fireTarget.transform.position;
         }
