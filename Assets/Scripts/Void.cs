@@ -46,6 +46,13 @@ public class Void : MonoBehaviour
                 break;
             }
         }
+        foreach (Orb orb in FindObjectsOfType<Orb>())
+        {
+            if (orb.item.pickedUp)
+            {
+                orb.BreakOrb();
+            }
+        }
     }
 
     public void SendToVoid(Monster monster)

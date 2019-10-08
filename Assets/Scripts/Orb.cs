@@ -71,11 +71,6 @@ public class Orb : MonoBehaviour
         {
             this.Extinguish();
         }
-
-        if (this.item.state == Item.State.BEING_DROPPED)
-        {
-            this.BreakOrb();
-        }
     }
 
     public void Enflame()
@@ -104,6 +99,7 @@ public class Orb : MonoBehaviour
         if (this.orbColor == Orb.OrbColor.WHITE)
         {
             // undo the pickupz but keep the ball in place
+            this.item.Drop();
             Vector3 removePickupZ = new Vector3(0, this.item.pickupZ, 0);
             this.item.transform.position += removePickupZ;
             for (int i = 0; i < this.childOrbs.Count; i++)
