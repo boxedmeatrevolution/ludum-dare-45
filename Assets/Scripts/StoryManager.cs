@@ -288,18 +288,6 @@ public class StoryManager : MonoBehaviour
                 this.musicManager.PlayMainTheme();
                 this.state = State.BEAT_ACTIVE;
             }
-            if (this.state == State.BEAT_ACTIVE) {
-                bool hasGhostOrb = false;
-                foreach (Orb orb in FindObjectsOfType<Orb>()) {
-                    if (orb.orbColor == Orb.OrbColor.WHITE) {
-                        hasGhostOrb = true;
-                        break;
-                    }
-                }
-                if (hasGhostOrb) {
-                    this.GotoBeat(Beat.INTERLUDE_2_PABS_EMERGE, 2f);
-                }
-            }
         }
         else if (this.storyBeat == Beat.INTERLUDE_2_PABS_EMERGE) {
             if (this.state == State.BEAT_FIRST_UPDATE) {
@@ -338,7 +326,7 @@ public class StoryManager : MonoBehaviour
         }
         else if (this.storyBeat == Beat.INTERLUDE_3_PABS_TALK) {
             if (this.state == State.BEAT_FIRST_UPDATE) {
-                dm.SetFile("goblin_encounter_1");
+                dm.SetFile("win_encounter");
                 dm.StartScene("one_orb_to_summon");
                 this.state = State.BEAT_ACTIVE;
             }
@@ -370,7 +358,7 @@ public class StoryManager : MonoBehaviour
         }
         else if (this.storyBeat == Beat.ENDING_PABS_TALK) {
             if (this.state == State.BEAT_FIRST_UPDATE) {
-                dm.SetFile("goblin_encounter_1");
+                dm.SetFile("win_encounter");
                 dm.StartScene("win_scene");
                 this.state = State.BEAT_ACTIVE;
             }
