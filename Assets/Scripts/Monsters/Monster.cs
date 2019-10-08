@@ -570,15 +570,22 @@ public class Monster : MonoBehaviour {
             if (delta < this.transformOrbTotalTime)
             {
                 float scale = Mathf.Abs((delta / this.transformOrbTotalTime) - 1);
-                this.transform.localScale = new Vector3(scale, scale, 1f);
+                this.transformOrb.transform.localScale = new Vector3(scale, scale, 1f);
+                Vector2 displacement = this.transformOrb.transform.position - this.transform.position;
+                if (displacement.magnitude > 0.01f) {
+                    this.transformOrb.transform.position -= (Vector3)displacement * Time.deltaTime / (delta + 0.01f);
+                }
+                //this.transform.localScale = new Vector3(scale, scale, 1f);
             }
             else
             {
                 // time to transform orb
                 this.transformOrb.Extinguish();
-                this.orbManager.MakeGhostOrb(this.transformOrb, this.orbs);
+                Orb orb = this.orbManager.MakeGhostOrb(this.transformOrb, this.orbs);
                 this.orbs = new Orb[2];
                 this.state = State.ORBED;
+                Instantiate(PrefabManager.EXPLOSION_PREFAB, this.transform.position, Quaternion.identity);
+                orb.Extinguish();
             }
         }
         else if (this.state == State.ORBED)
