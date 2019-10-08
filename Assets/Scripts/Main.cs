@@ -20,7 +20,7 @@ public class Main : MonoBehaviour
     
     public float pickupRange = 0.5f;
     public float walkRange = 0.05f;
-    public float speed = 1;
+    public float speed = 3;
     public float height = 1.2f;
     public Item item = null;
 
