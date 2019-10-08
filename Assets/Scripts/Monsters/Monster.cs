@@ -705,8 +705,8 @@ public class Monster : MonoBehaviour {
     
     public bool ShouldBeDropped()
     {
-        float x1 = pen.transform.position.x;
-        float x2 = x1 + pen.width;
+        float x1 = pen.transform.position.x - 0.5f;
+        float x2 = x1 + pen.width + 0.8f;
         float y1 = pen.transform.position.y;
         float y2 = y1 + pen.height;
 
