@@ -47,8 +47,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pickupRange: 0.1
-  walkRange: 0.01
-  speed: 1
+  walkRange: 0.03
+  speed: 2
   height: 0.64
   item: {fileID: 0}
   footstepSound: {fileID: 8300000, guid: 8e9bf9c8e19424949b62d041835a0065, type: 3}
