@@ -19,7 +19,7 @@ MonoBehaviour:
   wanderSpeed: 0.15
   sprintSpeed: 0.2
   fleeRadius: 2
-  threatenRadius: 1
+  threatenRadius: 1.5
   averageWaitTime: 7
   threatenTime: 2
   transformOrb: {fileID: 0}

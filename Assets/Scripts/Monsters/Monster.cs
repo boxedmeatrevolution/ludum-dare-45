@@ -15,7 +15,7 @@ public class Monster : MonoBehaviour {
     public readonly static float GOO_TIME = 5f;
 
     private bool initialized = false;
-    private bool copycat;
+    private bool copycat = false;
     private float stateTimer;
     private Vector2 velocity;
     public State state;
@@ -114,7 +114,6 @@ public class Monster : MonoBehaviour {
     // Start is called before the first frame update
     protected virtual void Start() {
         this.initialized = true;
-        this.copycat = false;
         this.stateTimer = 0f;
         this.velocity = Vector2.zero;
         this.enflamed = false;
@@ -147,7 +146,7 @@ public class Monster : MonoBehaviour {
 
     protected virtual void Update() {
         if (this.copycat) {
-            renderer.color = new Color(255, 134, 97);
+            renderer.color = new Color(1f, 134f / 255, 97f / 255);
         }
         if (this.state == State.IN_VOID) {
             Destroy(this.gameObject);
@@ -766,11 +765,9 @@ public class Monster : MonoBehaviour {
     public bool CanPickup() {
         if (this.state == State.IGNORE) {
             Monster monster = this.target;
-            if (monster.state == State.THREATEN || monster.state == State.FLEE) {
-                monster.state = State.WANDER;
-                monster.target = null;
-            }
-            return true;
+            monster.state = State.WANDER;
+            monster.target = null;
+            this.state = State.WANDER;
         }
         return this.state == State.WANDER;
     }

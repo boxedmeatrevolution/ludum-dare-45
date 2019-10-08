@@ -20,11 +20,11 @@ public class Copycat : Monster {
     // Update is called once per frame
     protected override void Update() {
         base.Update();
-        if (this.GetItem().state == Item.State.ON_GROUND && this.state != State.DEAD && this.state != State.DYING) {
+        if (this.GetItem().state == Item.State.ON_GROUND && this.state == State.WANDER) {
             Monster minMonster = null;
             float minDistance = float.PositiveInfinity;
             foreach (Monster monster in FindObjectsOfType<Monster>()) {
-                if (monster.Initialized() && monster != this) {
+                if (monster.Initialized() && monster != this && monster.state != State.DEAD && monster.state != State.DYING) {
                     float distance = ((Vector2)monster.transform.position - (Vector2)this.transform.position).magnitude;
                     if (distance < minDistance) {
                         minDistance = distance;
@@ -42,6 +42,7 @@ public class Copycat : Monster {
                     GameObject prefab = PrefabManager.GetMonsterPrefab(monsterType);
                     Monster monster = Instantiate(prefab, this.transform.position, Quaternion.identity).GetComponent<Monster>();
                     monster.SetCopycat(true);
+                    monster.orbs = this.orbs;
                     Destroy(this.gameObject);
                 }
                 if (UnityEngine.Random.value > 1 - Time.deltaTime / 0.5f) {
