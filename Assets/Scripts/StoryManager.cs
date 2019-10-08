@@ -319,7 +319,7 @@ public class StoryManager : MonoBehaviour
             }
             if (this.state == State.BEAT_ACTIVE) {
                 Ghost ghost = FindObjectOfType<Ghost>();
-                if (ghost != null) {
+                if (ghost != null && ghost.state == Monster.State.WANDER) {
                     this.GotoBeat(Beat.INTERLUDE_3_PABS_TALK);
                 }
             }

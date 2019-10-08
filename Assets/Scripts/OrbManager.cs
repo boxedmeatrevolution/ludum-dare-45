@@ -57,12 +57,8 @@ public class OrbManager : MonoBehaviour
 
     public Orb MakeGhostOrb(Orb primaryOrb, Orb[] otherOrbs)
     {
-        if (this.inactiveGhostOrbs.Count < 0) {
-            return null;
-        }
-
         StoryManager storyManager = FindObjectOfType<StoryManager>();
-        if (storyManager.storyBeat == StoryManager.Beat.FREE_PLAY_1) {
+        if (storyManager.storyBeat == StoryManager.Beat.FREE_PLAY_2) {
             storyManager.GotoBeat(StoryManager.Beat.INTERLUDE_2_PABS_EMERGE, 2f);
         }
 

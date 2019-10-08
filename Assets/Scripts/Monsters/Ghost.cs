@@ -23,7 +23,7 @@ public class Ghost : Monster {
         {
             foreach (Orb orb in FindObjectsOfType<Orb>())
             {
-                if (orb.item.state == Item.State.ON_GROUND && this.IsPositionInPen(orb.transform.position))
+                if (orb.item.state == Item.State.ON_GROUND && this.IsPositionInPen(orb.transform.position) && orb.orbColor != Orb.OrbColor.WHITE)
                 {
                     this.state = State.TRAVEL_TO_TRANSFORM_ORB;
                     this.transformOrb = orb;

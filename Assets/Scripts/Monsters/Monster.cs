@@ -583,6 +583,7 @@ public class Monster : MonoBehaviour {
             {
                 // time to transform orb
                 this.transformOrb.Extinguish();
+                this.transformOrb.transform.localScale = new Vector3(1f, 1f, 0f);
                 Orb orb = this.orbManager.MakeGhostOrb(this.transformOrb, this.orbs);
                 this.orbs = new Orb[2];
                 this.state = State.ORBED;
