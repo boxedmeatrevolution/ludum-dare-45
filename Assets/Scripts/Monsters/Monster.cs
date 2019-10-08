@@ -472,6 +472,19 @@ public class Monster : MonoBehaviour {
                 monster.gameObject.SetActive(true);
                 monster.transform.localScale = new Vector3(1f, 1f, 1f);
                 if (this.KillDigestedOpponent(monster)) {
+                    int numOrbs = this.orbs.Length + monster.orbs.Length;
+                    Orb[] orbs = new Orb[numOrbs];
+                    for (int i = 0; i < numOrbs; i++)
+                    {
+                        if (i < this.orbs.Length)
+                        {
+                            orbs[i] = this.orbs[i];
+                        } else
+                        {
+                            orbs[i] = monster.orbs[i - this.orbs.Length];
+                        }
+                    }
+                    this.orbs = orbs;
                     Destroy(monster.gameObject);
                 } else {
                     monster.state = State.GOOED;
