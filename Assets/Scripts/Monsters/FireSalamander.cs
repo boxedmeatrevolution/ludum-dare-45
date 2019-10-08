@@ -31,18 +31,15 @@ public class FireSalamander : Monster {
 
     // Choose whether to threaten, panic, or just keep wandering when another monster wanders into range.
     protected override State ChooseThreatenOffensive(Monster other) {
-        if (other is GhostSlug) {
+        if (other is GhostSlug || other is Ghost) {
             return State.FLEE;
         }
-        return State.WANDER;
+        return State.IGNORE;
     }
 
     // Choose whether to threaten, panic, or just keep wandering when another monster threatens.
     protected override State ChooseThreatenDefensive(Monster other) {
-        if (other is GhostSlug) {
-            return State.FLEE;
-        }
-        return State.WANDER;
+        return this.ChooseThreatenOffensive(other);
     }
 
     // Choose whether you survive the fight with the other monster.

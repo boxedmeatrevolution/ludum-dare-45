@@ -41,6 +41,9 @@ public class Ghost : Monster {
 
     // Choose whether to threaten, panic, or just keep wandering when another monster wanders into range.
     protected override State ChooseThreatenOffensive(Monster other) {
+        if (other is Ghost) {
+            return State.IGNORE;
+        }
         return State.LURE;
     }
 

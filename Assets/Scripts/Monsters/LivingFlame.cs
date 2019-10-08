@@ -27,12 +27,12 @@ public class LivingFlame : Monster {
 
     // Choose whether to threaten, panic, or just keep wandering when another monster wanders into range.
     protected override State ChooseThreatenOffensive(Monster other) {
-        if (other is PlantOgre || other is Goblin) {
+        if (other is PlantOgre || other is Goblin || other is Copycat) {
             return State.THREATEN;
-        } else if (other is GhostSlug) {
+        } else if (other is GhostSlug || other is Ghost) {
             return State.FLEE;
         } else {
-            return State.WANDER;
+            return State.IGNORE;
         }
     }
 

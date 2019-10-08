@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 
 public class Copycat : Monster {
-    private readonly static float COPYCAT_TIME = 20f;
+    private readonly static float COPYCAT_TIME = 12f;
     private Dictionary<Type, float> copycatProcess;
 
     // Start is called before the first frame update
@@ -55,14 +55,14 @@ public class Copycat : Monster {
 
     // Choose whether to threaten, panic, or just keep wandering when another monster wanders into range.
     protected override State ChooseThreatenOffensive(Monster other) {
-        if (other is PlantOgre) {
-            return State.WANDER;
-        }
-        if (other is GhostSlug) {
+        if (other is Ghost) {
             return State.FLEE;
         }
-        else {
+        else if (other is GhostSlug || other is FireSalamander || other is Goblin) {
             return State.THREATEN;
+        }
+        else {
+            return State.IGNORE;
         }
     }
 
@@ -76,7 +76,7 @@ public class Copycat : Monster {
         return true;
     }*/
     public override bool KillOpponent(Monster other) {
-        if (other is PlantOgre) {
+        if (other is PlantOgre || other is Ghost) {
             return false;
         }
         return true;

@@ -146,6 +146,9 @@ public class Monster : MonoBehaviour {
     }
 
     protected virtual void Update() {
+        if (this.copycat) {
+            renderer.color = new Color(255, 134, 97);
+        }
         if (this.state == State.IN_VOID) {
             Destroy(this.gameObject);
         }

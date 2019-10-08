@@ -27,7 +27,7 @@ public class Goblin : Monster {
 
     // Choose whether to threaten, panic, or just keep wandering when another monster wanders into range.
     protected override State ChooseThreatenOffensive(Monster other) {
-        return State.FLEE;
+        return State.IGNORE;
     }
 
     // Choose whether to threaten, panic, or just keep wandering when another monster threatens.

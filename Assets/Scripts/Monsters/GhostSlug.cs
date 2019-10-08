@@ -85,7 +85,7 @@ public class GhostSlug : Monster {
         if (other.IsFiery()) {
             return State.LURE;
         }
-        return State.WANDER;
+        return State.IGNORE;
     }
 
     // Choose whether to threaten, panic, or just keep wandering when another monster threatens.

@@ -20,8 +20,8 @@ public class PlantOgre : Monster {
     // Choose whether to threaten, panic, or just keep wandering when another monster wanders into range.
     protected override State ChooseThreatenOffensive(Monster other) {
         if (other is PlantOgre) {
-            return State.WANDER;
-        } if (other is GhostSlug) {
+            return State.IGNORE;
+        } if (other is GhostSlug || other is Ghost) {
             return State.FLEE;
         } else {
             return State.THREATEN;
@@ -38,7 +38,7 @@ public class PlantOgre : Monster {
         return true;
     }*/
     public override bool KillOpponent(Monster other) {
-        if (other is PlantOgre) {
+        if (other is PlantOgre || other is Ghost) {
             return false;
         }
         return true;
