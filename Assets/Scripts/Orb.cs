@@ -109,7 +109,9 @@ public class Orb : MonoBehaviour
                 orb.item.ReturnToLab();
             }
             this.childOrbs.Clear();
-            this.transform.position = new Vector3(1000, 1000, 0);
+
+            OrbManager om = FindObjectOfType<OrbManager>();
+            om.ReturnGhostOrb(this);
         }
     }
 }

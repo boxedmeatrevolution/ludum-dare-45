@@ -18,9 +18,9 @@ public class Main : MonoBehaviour
     private bool isTargettingMachine = false;
     private bool isTargettingVoid = false;
     
-    public float pickupRange = 0.5f;
+    public float pickupRange = 1f;
     public float walkRange = 0.05f;
-    public float speed = 3;
+    public float speed = 6;
     public float height = 1.2f;
     public Item item = null;
 

@@ -21,7 +21,7 @@ public class OrbManager : MonoBehaviour
 
         for (int i = 0; i < this.orbs.Length; i++)
         {
-            if (this.orbs[i].orbColor == Orb.OrbColor.WHITE)
+            if (this.orbs[i].orbColor == Orb.OrbColor.WHITE && this.inactiveGhostOrbs.Count < 2)
             {
                 this.inactiveGhostOrbs.Push(this.orbs[i]);
             }
@@ -79,5 +79,15 @@ public class OrbManager : MonoBehaviour
         ghostOrb.item.initialPosition = ghostOrb.item.transform.position;
 
         return ghostOrb;
+    }
+
+    public void ReturnGhostOrb(Orb orb)
+    {
+        if (orb.orbColor == Orb.OrbColor.WHITE)
+        {
+            orb.item.transform.position = new Vector3(1000, 1000, 0);
+            orb.item.state = Item.State.ON_GROUND;
+            this.inactiveGhostOrbs.Push(orb);
+        }
     }
 }
