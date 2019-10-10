@@ -21,7 +21,7 @@ public class OrbManager : MonoBehaviour
 
         for (int i = 0; i < this.orbs.Length; i++)
         {
-            if (this.orbs[i].orbColor == Orb.OrbColor.WHITE && this.inactiveGhostOrbs.Count < 2)
+            if (this.orbs[i].orbColor == Orb.OrbColor.WHITE)
             {
                 this.inactiveGhostOrbs.Push(this.orbs[i]);
             }
