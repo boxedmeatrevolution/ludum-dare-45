@@ -62,7 +62,7 @@ public class DialogueManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (this.currScene != null)
+        if (this.IsDialogueActive())
         {
             if (this.interrupting) {
                 if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) {
@@ -75,6 +75,11 @@ public class DialogueManager : MonoBehaviour
         {
             this.EndScene();
         }
+    }
+
+    public bool IsDialogueActive()
+    {
+        return this.currScene != null;
     }
 
     public void SetFile(string filename) {
@@ -210,5 +215,6 @@ public class DialogueManager : MonoBehaviour
         this.canvas.enabled = false;
         Time.timeScale = 1.0f;
         this.endOfScene = true;
+        this.currScene = null;
     }
 }
