@@ -16,6 +16,7 @@ public class StoryManager : MonoBehaviour
     private StoryCharacter ghostighost;
     private StoryCharacter pabs;
     private MusicManager musicManager;
+    private HintManager hintManager;
 
 
     public enum State
@@ -56,6 +57,7 @@ public class StoryManager : MonoBehaviour
     // Start is called before the first frame update
     void Start() {
         this.dm = FindObjectOfType<DialogueManager>();
+        this.hintManager = FindObjectOfType<HintManager>();
         this.main = FindObjectOfType<Main>();
         if (this.storyBeat == Beat.START)
         {
@@ -113,6 +115,7 @@ public class StoryManager : MonoBehaviour
                 }
             }
             else if (this.state == State.PROMPT) {
+                dm.SetFile("intro");
                 dm.StartScene("tutorial-pickup-orb-prompt");
                 this.state = State.BEAT_ACTIVE;
             }
@@ -176,6 +179,7 @@ public class StoryManager : MonoBehaviour
                 }
             }
             else if (this.state == State.PROMPT) {
+                dm.SetFile("intro");
                 dm.StartScene("tutorial-summon-monster-prompt");
                 this.state = State.BEAT_ACTIVE;
             }
@@ -273,6 +277,7 @@ public class StoryManager : MonoBehaviour
             if (this.state == State.BEAT_FIRST_UPDATE) {
                 dm.SetFile("goblin_encounter_1");
                 dm.StartScene("interlude1-pabs-talk");
+                this.hintManager.SetActiveHint(HintManager.Hint.MAKE_GHOST_ORB);
                 this.state = State.BEAT_ACTIVE;
             }
             else if (this.state == State.BEAT_ACTIVE) {
@@ -328,6 +333,7 @@ public class StoryManager : MonoBehaviour
             if (this.state == State.BEAT_FIRST_UPDATE) {
                 dm.SetFile("win_encounter");
                 dm.StartScene("one_orb_to_summon");
+                this.hintManager.SetActiveHint(HintManager.Hint.MAKE_TWO_GHOST_ORBS);
                 this.state = State.BEAT_ACTIVE;
             }
             else if (this.state == State.BEAT_ACTIVE) {
@@ -360,6 +366,7 @@ public class StoryManager : MonoBehaviour
             if (this.state == State.BEAT_FIRST_UPDATE) {
                 dm.SetFile("win_encounter");
                 dm.StartScene("win_scene");
+                this.hintManager.SetActiveHint(HintManager.Hint.YOU_WIN);
                 this.state = State.BEAT_ACTIVE;
             }
             else if (this.state == State.BEAT_ACTIVE) {

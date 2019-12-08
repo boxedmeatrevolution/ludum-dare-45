@@ -1,0 +1,40 @@
+{
+    "speakers": {
+        1: "Exposition"
+    },
+    "make-ghost-orb" : {
+        "dialogue": [
+        {
+            "speaker": 1,
+            "lines": [
+                "There's an old saying: 'Slugs love a burning orb.'",
+                "Maybe if you put an orb near an explosion it would burn...",
+            ]
+        },
+        ]
+    },
+    "make-two-ghost-orbs" : {
+        "dialogue": [
+        {
+            "speaker": 1,
+            "lines": [
+                "There's an old saying: 'One scoop of clay to steal a soul.'",
+                "'Two scoops to copy a ghost'",
+                "... That's definitely relevant."
+            ]
+        },
+        ]
+    },
+    "you-win" : {
+        "dialogue": [
+        {
+            "speaker": 1,
+            "lines": [
+                "NO MORE HINTS!",
+                "NO MORE GAME!",
+                "WINNER IS YOU!"
+            ]
+        },
+        ]
+    },
+}

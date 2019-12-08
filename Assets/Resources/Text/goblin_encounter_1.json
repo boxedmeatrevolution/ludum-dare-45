@@ -1,7 +1,8 @@
 {
     "speakers": {
         1: "Pabs",
-        2: "You"
+        2: "You",
+        3: "Exposition"
     },
     "interlude1-pabs-talk" : {
         "dialogue": [
@@ -67,6 +68,12 @@
                 "I must return now. Call me back when you have the GHOST ORB."
             ]
         },
+        {
+            "speaker": 3,
+            "lines": [
+                "Looks like Pabs gave you a hint!", 
+                "Press 'H' to be reminded of any hints"
+            ]
         ]
     },
 }	
